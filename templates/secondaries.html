@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="game">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Winrate</th>
+                <th>Best Counter</th>
+                <th>Worst Counter</th>
+                <th>Popularity</th>
+                <th>Top Mission</th>
+                <th>Top Secondaries</th>
+            </tr>
+            {% for faction in factions %}
+                <tr>
+                    <td>{{ faction['name'] }}</td>
+                    <td>{{ faction['winRate'] }}</td>
+                    <td>{{ faction['bestCounter'] }}</td>
+                    <td>{{ faction['worstCounter'] }}</td>
+                    <td>{{ faction['popularity'] }}</td>
+                    <td>{{ faction['topMission'] }}</td>
+                    <td>{{ faction['topSecondary'] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

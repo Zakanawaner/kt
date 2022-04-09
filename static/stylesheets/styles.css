@@ -1,0 +1,19 @@
+.game{
+    background: radial-gradient(circle, rgba(159,174,255,1) 0%, rgba(255,154,233,1) 100%);
+}
+
+.navMenu a {
+  color: #121212;
+  text-decoration: none;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  display: inline-block;
+  width: 200px;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+.navMenu a:hover {
+  color: #fddb3a;
+}

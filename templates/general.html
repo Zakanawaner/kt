@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="game">
+        <h2>Games</h2>
+        <p>Total games: {{ gen['totalGames'] }}</p>
+        <p>Avg Score Winner: {{ gen['avgWinner'] }}</p>
+        <p>Avg Score Loser: {{ gen['avgLoser'] }}</p>
+    </div>
+    <div class="game">
+        <h2>Players</h2>
+        <p>Total players: {{ gen['totalPlayers'] }}</p>
+        <p>Top 1: {{ gen['top1Player'] }}</p>
+        <p>Top 2: {{ gen['top2Player'] }}</p>
+        <p>Top 3: {{ gen['top3Player'] }}</p>
+    </div>
+    <div class="game">
+        <h2>Factions</h2>
+        <p>Most played faction: {{ gen['factionMostPlayed'] }}</p>
+        <p>Less played faction: {{ gen['factionLessPlayed'] }}</p>
+        <p>Top faction: {{ gen['factionMostWinRate'] }}</p>
+        <p>Shittier faction: {{ gen['factionLessWinRate'] }}</p>
+    </div>
+    <div class="game">
+        <h2>Missions</h2>
+        <p>Most played mission: {{ gen['missionMostPlayed'] }}</p>
+        <p>Less played mission: {{ gen['missionLessPlayed'] }}</p>
+    </div>
+    <div class="game">
+        <h2>Secondaries</h2>
+        <p>Most played secondary: {{ gen['secondaryMostPlayed'] }}</p>
+        <p>Less played secondary: {{ gen['secondaryLessPlayed'] }}</p>
+    </div>
+{% endblock %}

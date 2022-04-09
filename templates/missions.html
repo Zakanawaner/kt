@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="game">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Games</th>
+                <th>Avg Score</th>
+                <th>Top Faction</th>
+                <th>Top Secondaries</th>
+            </tr>
+            {% for mission in missions %}
+                <tr>
+                    <td>{{ mission['name'] }}</td>
+                    <td>{{ mission['games'] }}</td>
+                    <td>{{ mission['avgScore'] }}</td>
+                    <td>{{ mission['topFaction'] }}</td>
+                    <td>{{ mission['topSecondary'] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

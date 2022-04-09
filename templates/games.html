@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="game">
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Mission</th>
+                <th>Player 1</th>
+                <th>Faction 1</th>
+                <th>Player 2</th>
+                <th>Faction 2</th>
+                <th>Result</th>
+                <th>Winner</th>
+            </tr>
+            {% for game in games %}
+                <tr>
+                    <td>{{ game.date }}</td>
+                    <td>{{ game.mission[0].name }}</td>
+                    <td>{{ game.winner[0].username }}</td>
+                    <td>{{ game.winFaction[0].name }}</td>
+                    <td>{{ game.loser[0].username }}</td>
+                    <td>{{ game.losFaction[0].name }}</td>
+                    <td>{{ game.winTotal }} - {{ game.losTotal }}</td>
+                    {% if not game.tie %}
+                        <td>{{ game.winner[0].username }}</td>
+                    {% else %}
+                        <td>Tie</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

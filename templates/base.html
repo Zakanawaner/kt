@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/styles.css') }}">
+</head>
+<body>
+    <nav>
+      <a href="/">General</a>
+      <a href="/games">Games</a>
+      <a href="/factions">Factions</a>
+      <a href="/players">Players</a>
+      <a href="/missions">Missions</a>
+    </nav>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

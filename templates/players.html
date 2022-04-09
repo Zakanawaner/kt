@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="game">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Rank</th>
+                <th>Win Rate</th>
+                <th>Games</th>
+                <th>Score</th>
+                <th>Wins</th>
+                <th>Loses</th>
+                <th>Ties</th>
+                <th>Avg Score</th>
+                <th>Top faction</th>
+                <th>Top Mission</th>
+                <th>Top Secondary</th>
+            </tr>
+            {% for player in players %}
+                <tr>
+                    <td>{{ player['sql'].username }}</td>
+                    <td>{{ player['sql'].rank[0].name }}</td>
+                    <td>{{ player['winRate'] }} %</td>
+                    <td>{{ player['sql'].wins + player['sql'].loses + player['sql'].ties }}</td>
+                    <td>{{ player['sql'].score }}</td>
+                    <td>{{ player['sql'].wins }}</td>
+                    <td>{{ player['sql'].loses }}</td>
+                    <td>{{ player['sql'].ties }}</td>
+                    <td>{{ player['avgScore'] }}</td>
+                    <td>{{ player['topFaction'] }}</td>
+                    <td>{{ player['topMission'] }}</td>
+                    <td>{{ player['topSecondary'] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
