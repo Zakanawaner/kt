@@ -11,7 +11,7 @@ import operator
 #  mirar si podemos sacar el nombre de la mision
 
 # TODO py
-#  hacer una presentación de datos
+#  descartar lo que venga y no esté bien
 #  securizar el envio intempestivo de botonazos
 
 
@@ -44,7 +44,8 @@ def handlePlayers(db, response, opt):
 def handleFactions(db, response, opt):
     if 'faction' in response[response[opt]].keys():
         if not Faction.query.filter_by(name=response[response[opt]]['faction']).first():
-            faction = Faction(name=response[response[opt]]['faction'])
+            faction = Faction(name=response[response[opt]]['faction'],
+                              shortName=response[response[opt]]['faction'].lower().replace(' ', ''))
         else:
             faction = Faction.query.filter_by(name=response[response[opt]]['faction']).first()
     else:
@@ -57,10 +58,11 @@ def handleFactions(db, response, opt):
 
 def handleMission(db, response):
     if 'mission' in response.keys():
-        if not Mission.query.filter_by(name=response['mission']).first():
-            mission = Mission(name=response['mission'])
+        if not Mission.query.filter_by(name=response['mission']['name']).first():
+            mission = Mission(name=response['mission']['name'],
+                              code=response['mission']['code'])
         else:
-            mission = Mission.query.filter_by(name=response['mission']).first()
+            mission = Mission.query.filter_by(name=response['mission']['name']).first()
     else:
         mission = None
     response['mission'] = mission
@@ -145,8 +147,9 @@ def handleGameData(response, db):
     game.winner.append(winnerSql)
     game.loser.append(loserSql)
 
-    response['tournament'].games.append(game)
-    db.session.add(response['tournament'])
+    if 'tournament' in response.keys():
+        response['tournament'].games.append(game)
+        db.session.add(response['tournament'])
     db.session.add(game)
     db.session.commit()
 
@@ -243,6 +246,7 @@ def getFactions():
     for faction in Faction.query.all():
         factions[faction.name] = {
             'name': faction.name,
+            'shortName': faction.shortName,
             'wins': [],
             'loses': [],
             'ties': [],
@@ -261,6 +265,7 @@ def getFactions():
                 factions[faction.name]['winRate'] = 0.0
         else:
             factions[faction.name]['winRate'] = 0.0
+
         for counter in Faction.query.all():
             factions[faction.name]['counter'][counter.name] = 0
             for game in factions[faction.name]['wins']:
@@ -309,6 +314,50 @@ def getFactions():
         factions[faction.name]['topMission'] = next(iter(factions[faction.name]['missions'].keys()))
         factions[faction.name]['topSecondary'] = next(iter(factions[faction.name]['secondaries'].keys()))
     return [faction for faction in factions.values()]
+
+
+def getFaction(fact):
+    faction = {
+        'sql': Faction.query.filter_by(shortName=fact).first(),
+        'bestCounter': {},
+        'worstCounter': {},
+        'tieCounter': {}
+    }
+    for counter in Faction.query.all():
+        if Game.query.filter(Game.winFaction.contains(faction['sql'])).filter(Game.losFaction.contains(counter)).all():
+            faction['bestCounter'][counter.name] = Game.query.filter(Game.winFaction.contains(faction['sql'])).filter(Game.losFaction.contains(counter)).all()
+    for counter in Faction.query.all():
+        if Game.query.filter(Game.losFaction.contains(faction['sql'])).filter(Game.winFaction.contains(counter)).all():
+            faction['worstCounter'][counter.name] = Game.query.filter(Game.losFaction.contains(faction['sql'])).filter(Game.winFaction.contains(counter)).all()
+    for counter in faction['bestCounter'].keys():
+        for i, game in enumerate(faction['bestCounter'][counter]):
+            if game.tie:
+                faction['bestCounter'][counter].pop(i)
+                if counter in faction['tieCounter'].keys():
+                    faction['tieCounter'][counter].append(game)
+                else:
+                    faction['tieCounter'][counter] = [game]
+        if not faction['bestCounter'][counter]:
+            faction['bestCounter'].pop(counter, None)
+    for counter in faction['worstCounter'].keys():
+        for i, game in enumerate(faction['worstCounter'][counter]):
+            if game.tie:
+                faction['worstCounter'][counter].pop(i)
+                if counter in faction['tieCounter'].keys():
+                    faction['tieCounter'][counter].append(game)
+                else:
+                    faction['tieCounter'][counter] = [game]
+        if not faction['worstCounter'][counter]:
+            faction['worstCounter'].pop(counter, None)
+
+    if len(faction['bestCounter']) + len(faction['worstCounter']) + len(faction['tieCounter']) > 0:
+        faction['winRate'] = float("{:.2f}".format(len(faction['bestCounter']) * 100 / (len(faction['bestCounter']) + len(faction['worstCounter']) + len(faction['tieCounter']))))
+    else:
+        faction['winRate'] = 0.0
+    faction['bestFactions'] = sorted(faction['bestCounter'], key=lambda k: len(faction['bestCounter'][k]), reverse=True)
+    faction['worstFactions'] = sorted(faction['worstCounter'], key=lambda k: len(faction['worstCounter'][k]), reverse=True)
+    faction['tieFactions'] = sorted(faction['tieCounter'], key=lambda k: len(faction['tieCounter'][k]), reverse=True)
+    return faction
 
 
 def getMissions():
@@ -471,6 +520,12 @@ def randomize_data(db):
         "Hive Fleets",
         "Brood Coven",
     ]
+    factions = [
+        "Space Marines",
+        "Grey Knights",
+        "Imperial Guard",
+        "Veteran Guardsmen",
+    ]
     secondaries = [
         "headhunter",
         "challenge",
@@ -497,12 +552,13 @@ def randomize_data(db):
         "overrun"
     ]
     tournaments = [
+        'Open Game',
         'I Liga Meercenaria',
         'II Liga Meercenaria',
         'III Liga Meercenaria'
     ]
     players = [names.get_full_name() for i in range(0, 10)]
-    for i in range(0, 100):
+    for i in range(0, 1000):
         random.seed(i)
         d = random.randint(1, int(time.time()))
         datetime.fromtimestamp(d)
@@ -513,7 +569,44 @@ def randomize_data(db):
                 ok = True
         response = {
             'tournament': random.choice(tournaments),
-            'mission': random.choice([1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3]),
+            'mission': random.choice([
+                {
+                    "code": 1.1,
+                    "name": "Loot and Salvage",
+                },
+                {
+                    "code": 1.2,
+                    "name": "Consecration",
+                },
+                {
+                    "code": 1.3,
+                    "name": "Awaken the data Spirits",
+                },
+                {
+                    "code": 2.1,
+                    "name": "Escalating Hostilities",
+                },
+                {
+                    "code": 2.2,
+                    "name": "Seize Ground",
+                },
+                {
+                    "code": 2.3,
+                    "name": "Domination",
+                },
+                {
+                    "code": 3.1,
+                    "name": "Secure Archeotech",
+                },
+                {
+                    "code": 3.2,
+                    "name": "Duel of wits",
+                },
+                {
+                    "code": 3.3,
+                    "name": "Master the terminals",
+                },
+            ]),
             'rollOffWinner': random.choice(playersName),
             'rollOffWinnerSelection': random.choice(["attacker", "defender"]),
             playersName[0]: {

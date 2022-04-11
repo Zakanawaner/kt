@@ -36,6 +36,12 @@ def factions():
     return render_template('factions.html', title="Factions", factions=fct)
 
 
+@app.route("/factions/<fact>", methods={"GET", "POST"})
+def faction(fact):
+    fct = getFaction(fact)
+    return render_template('faction.html', title=fact, faction=fct)
+
+
 @app.route("/missions", methods={"GET", "POST"})
 def missions():
     mss = getMissions()
@@ -44,6 +50,7 @@ def missions():
 
 @app.route("/randomize", methods={"GET", "POST"})
 def randomize():
+    createDatabase(db)
     os.remove(os.path.abspath('source/db/db.sqlite'))
     randomize_data(db)
     return {'status': 'ok'}, 200

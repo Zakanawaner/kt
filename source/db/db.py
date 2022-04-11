@@ -170,7 +170,8 @@ class Game(db.Model):
 class Mission(db.Model):
     __tablename__ = 'mission'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Float)
+    name = db.Column(db.String(50))
+    code = db.Column(db.Float)
 
 
 class Secondary(db.Model):
@@ -183,6 +184,7 @@ class Faction(db.Model):
     __tablename__ = 'faction'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+    shortName = db.Column(db.String(100))
 
 
 class Rank(db.Model):
