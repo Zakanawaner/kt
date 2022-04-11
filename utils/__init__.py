@@ -231,9 +231,9 @@ def getPlayers():
         players[player.username]['factions'] = {k: v for k, v in sorted(players[player.username]['factions'].items(), key=operator.itemgetter(1), reverse=True)}
         players[player.username]['missions'] = {k: v for k, v in sorted(players[player.username]['missions'].items(), key=operator.itemgetter(1), reverse=True)}
         players[player.username]['secondaries'] = {k: v for k, v in sorted(players[player.username]['secondaries'].items(), key=operator.itemgetter(1), reverse=True)}
-        players[player.username]['topFaction'] = next(iter(players[player.username]['factions'].keys()))
-        players[player.username]['topMission'] = next(iter(players[player.username]['missions'].keys()))
-        players[player.username]['topSecondary'] = next(iter(players[player.username]['secondaries'].keys()))
+        players[player.username]['topFaction'] = Faction.query.filter_by(name=next(iter(players[player.username]['factions'].keys()))).first()
+        players[player.username]['topMission'] = Mission.query.filter_by(name=next(iter(players[player.username]['missions'].keys()))).first()
+        players[player.username]['topSecondary'] = Secondary.query.filter_by(name=next(iter(players[player.username]['secondaries'].keys()))).first()
         if len(players[player.username]['wins']) + len(players[player.username]['loses']) + len(players[player.username]['ties']):
             players[player.username]['avgScore'] = round(player.score / (len(players[player.username]['wins']) + len(players[player.username]['loses']) + len(players[player.username]['ties'])))
         else:
@@ -247,6 +247,7 @@ def getFactions():
         factions[faction.name] = {
             'name': faction.name,
             'shortName': faction.shortName,
+            'sql': faction,
             'wins': [],
             'loses': [],
             'ties': [],
@@ -302,23 +303,23 @@ def getFactions():
                     factions[faction.name]['secondaries'][secondary.name] -= 1
 
         factions[faction.name]['counter'] = {k: v for k, v in sorted(factions[faction.name]['counter'].items(), key=operator.itemgetter(1), reverse=True)}
-        factions[faction.name]['bestCounter'] = next(iter(factions[faction.name]['counter'].keys()))
+        factions[faction.name]['bestCounter'] = Faction.query.filter_by(name=next(iter(factions[faction.name]['counter'].keys()))).first()
         factions[faction.name]['counter'] = {k: v for k, v in sorted(factions[faction.name]['counter'].items(), key=operator.itemgetter(1))}
-        factions[faction.name]['worstCounter'] = next(iter(factions[faction.name]['counter'].keys()))
+        factions[faction.name]['worstCounter'] = Faction.query.filter_by(name=next(iter(factions[faction.name]['counter'].keys()))).first()
         if len(Game.query.all()) > 0:
             factions[faction.name]['popularity'] = len(factions[faction.name]['wins'] + factions[faction.name]['loses'] + factions[faction.name]['ties']) * 100 / len(Game.query.all())
         else:
             factions[faction.name]['popularity'] = 0.0
         factions[faction.name]['missions'] = {k: v for k, v in sorted(factions[faction.name]['missions'].items(), key=operator.itemgetter(1), reverse=True)}
         factions[faction.name]['secondaries'] = {k: v for k, v in sorted(factions[faction.name]['secondaries'].items(), key=operator.itemgetter(1), reverse=True)}
-        factions[faction.name]['topMission'] = next(iter(factions[faction.name]['missions'].keys()))
-        factions[faction.name]['topSecondary'] = next(iter(factions[faction.name]['secondaries'].keys()))
+        factions[faction.name]['topMission'] = Mission.query.filter_by(name=next(iter(factions[faction.name]['missions'].keys()))).first()
+        factions[faction.name]['topSecondary'] = Secondary.query.filter_by(name=next(iter(factions[faction.name]['secondaries'].keys()))).first()
     return [faction for faction in factions.values()]
 
 
 def getFaction(fact):
     faction = {
-        'sql': Faction.query.filter_by(shortName=fact).first(),
+        'sql': Faction.query.filter_by(id=fact).first(),
         'bestCounter': {},
         'worstCounter': {},
         'tieCounter': {}
@@ -385,7 +386,7 @@ def getMissions():
                 if game.losFaction[0] == faction:
                     missions[mission.name]['factions'][faction.name] += game.losTotal
         missions[mission.name]['factions'] = {k: v for k, v in sorted(missions[mission.name]['factions'].items(), key=operator.itemgetter(1), reverse=True)}
-        missions[mission.name]['topFaction'] = next(iter(missions[mission.name]['factions'].keys()))
+        missions[mission.name]['topFaction'] = Faction.query.filter_by(name=next(iter(missions[mission.name]['factions'].keys()))).first()
 
         for secondary in Secondary.query.all():
             missions[mission.name]['secondaries'][secondary.name] = 0
@@ -403,7 +404,7 @@ def getMissions():
                 if game.losSecondaryThird[0] == secondary:
                     missions[mission.name]['secondaries'][secondary.name] = game.losSecondaryThirdScore
         missions[mission.name]['secondaries'] = {k: v for k, v in sorted(missions[mission.name]['secondaries'].items(), key=operator.itemgetter(1), reverse=True)}
-        missions[mission.name]['topSecondary'] = next(iter(missions[mission.name]['secondaries'].keys()))
+        missions[mission.name]['topSecondary'] = Secondary.query.filter_by(name=next(iter(missions[mission.name]['secondaries'].keys()))).first()
         missions[mission.name]['games'] = len(missions[mission.name]['games'])
     return [mission for mission in missions.values()]
 
@@ -558,7 +559,7 @@ def randomize_data(db):
         'III Liga Meercenaria'
     ]
     players = [names.get_full_name() for i in range(0, 10)]
-    for i in range(0, 1000):
+    for i in range(0, 10):
         random.seed(i)
         d = random.randint(1, int(time.time()))
         datetime.fromtimestamp(d)

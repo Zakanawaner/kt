@@ -6,14 +6,15 @@
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/styles.css') }}">
 </head>
 <body>
-    <nav>
-      <a href="/">General</a>
-      <a href="/games">Games</a>
-      <a href="/factions">Factions</a>
-      <a href="/players">Players</a>
-      <a href="/missions">Missions</a>
-    </nav>
+    <div class="menu">
+      <a class="nav-link" href="/">General</a>
+      <a class="nav-link" href="/games">Games</a>
+      <a class="nav-link" href="/factions">Factions</a>
+      <a class="nav-link" href="/players">Players</a>
+      <a class="nav-link" href="/missions">Missions</a>
+    </div>
     {% block content %}
     {% endblock %}
 </body>
+<script src="{{ url_for('static', filename='js/table.js') }}"></script>
 </html>

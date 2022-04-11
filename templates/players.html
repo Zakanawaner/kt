@@ -1,37 +1,39 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="game">
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Rank</th>
-                <th>Win Rate</th>
-                <th>Games</th>
-                <th>Score</th>
-                <th>Wins</th>
-                <th>Loses</th>
-                <th>Ties</th>
-                <th>Avg Score</th>
-                <th>Top faction</th>
-                <th>Top Mission</th>
-                <th>Top Secondary</th>
-            </tr>
-            {% for player in players %}
-                <tr>
-                    <td>{{ player['sql'].username }}</td>
-                    <td>{{ player['sql'].rank[0].name }}</td>
-                    <td>{{ player['winRate'] }} %</td>
-                    <td>{{ player['sql'].wins + player['sql'].loses + player['sql'].ties }}</td>
-                    <td>{{ player['sql'].score }}</td>
-                    <td>{{ player['sql'].wins }}</td>
-                    <td>{{ player['sql'].loses }}</td>
-                    <td>{{ player['sql'].ties }}</td>
-                    <td>{{ player['avgScore'] }}</td>
-                    <td>{{ player['topFaction'] }}</td>
-                    <td>{{ player['topMission'] }}</td>
-                    <td>{{ player['topSecondary'] }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+    <div class="table-container">
+        <div class="table">
+            <div class="table-header">
+                <div class="header__item">Name</div>
+                <div class="header__item">Rank</div>
+                <div class="header__item">Win Rate</div>
+                <div class="header__item">Games</div>
+                <div class="header__item">Score</div>
+                <div class="header__item">Wins</div>
+                <div class="header__item">Loses</div>
+                <div class="header__item">Ties</div>
+                <div class="header__item">Avg Score</div>
+                <div class="header__item">Top faction</div>
+                <div class="header__item">Top Mission</div>
+                <div class="header__item">Top Sec</div>
+            </div>
+            <div class="table-content">
+                {% for player in players %}
+                    <div class="table-row">
+                        <div onclick="location.href='/player/{{ player['sql'].id }}';" class="table-data table-link">{{ player['sql'].username }}</div>
+                        <div onclick="location.href='/rank/{{ player['sql'].rank[0].id }}';" class="table-data table-link">{{ player['sql'].rank[0].name }}</div>
+                        <div class="table-data">{{ player['winRate'] }}</div>
+                        <div class="table-data">{{ player['sql'].wins + player['sql'].loses + player['sql'].ties }}</div>
+                        <div class="table-data">{{ player['sql'].score }}</div>
+                        <div class="table-data">{{ player['sql'].wins }}</div>
+                        <div class="table-data">{{ player['sql'].loses }}</div>
+                        <div class="table-data">{{ player['sql'].ties }}</div>
+                        <div class="table-data">{{ player['avgScore'] }}</div>
+                        <div onclick="location.href='/faction/{{ player['topFaction'].id }}';" class="table-data table-link">{{ player['topFaction'].name }}</div>
+                        <div onclick="location.href='/mission/{{ player['topMission'].id }}';" class="table-data table-link">{{ player['topMission'].name }}</div>
+                        <div onclick="location.href='/secondary/{{ player['topSecondary'].id }}';" class="table-data table-link">{{ player['topSecondary'].name }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}

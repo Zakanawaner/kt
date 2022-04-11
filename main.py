@@ -36,7 +36,7 @@ def factions():
     return render_template('factions.html', title="Factions", factions=fct)
 
 
-@app.route("/factions/<fact>", methods={"GET", "POST"})
+@app.route("/faction/<fact>", methods={"GET", "POST"})
 def faction(fact):
     fct = getFaction(fact)
     return render_template('faction.html', title=fact, faction=fct)
@@ -58,6 +58,7 @@ def randomize():
 
 @app.route("/", methods={"GET", "POST"})
 def general():
+    createDatabase(db)
     gen = getGeneral()
     return render_template('general.html', title="General", gen=gen)
 

@@ -1,23 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="game">
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Games</th>
-                <th>Avg Score</th>
-                <th>Top Faction</th>
-                <th>Top Secondaries</th>
-            </tr>
-            {% for mission in missions %}
-                <tr>
-                    <td>{{ mission['name'] }}</td>
-                    <td>{{ mission['games'] }}</td>
-                    <td>{{ mission['avgScore'] }}</td>
-                    <td>{{ mission['topFaction'] }}</td>
-                    <td>{{ mission['topSecondary'] }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+    <div class="table-container">
+        <div class="table">
+            <div class="table-header">
+                <div class="header__item">Name</div>
+                <div class="header__item">Games</div>
+                <div class="header__item">Avg Score</div>
+                <div class="header__item">Top Faction</div>
+                <div class="header__item">Top Secondaries</div>
+            </div>
+            <div class="table-content">
+                {% for mission in missions %}
+                    <div class="table-row">
+                        <div class="table-data">{{ mission['name'] }}</div>
+                        <div class="table-data">{{ mission['games'] }}</div>
+                        <div class="table-data">{{ mission['avgScore'] }}</div>
+                        <div onclick="location.href='/faction/{{ mission['topFaction'].id }}';" class="table-data table-link">{{ mission['topFaction'].name }}</div>
+                        <div onclick="location.href='/secondary/{{ mission['topSecondary'].id }}';" class="table-data table-link">{{ mission['topSecondary'].name }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}

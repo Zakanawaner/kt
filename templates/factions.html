@@ -1,27 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="game">
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Winrate</th>
-                <th>Best Counter</th>
-                <th>Worst Counter</th>
-                <th>Popularity</th>
-                <th>Top Mission</th>
-                <th>Top Secondaries</th>
-            </tr>
-            {% for faction in factions %}
-                <tr>
-                    <td><a href="factions/{{ faction['shortName'] }}">{{ faction['name'] }}</a></td>
-                    <td>{{ faction['winRate'] }}</td>
-                    <td>{{ faction['bestCounter'] }}</td>
-                    <td>{{ faction['worstCounter'] }}</td>
-                    <td>{{ faction['popularity'] }}</td>
-                    <td>{{ faction['topMission'] }}</td>
-                    <td>{{ faction['topSecondary'] }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+    <div class="table-container">
+        <div class="table">
+            <div class="table-header">
+                <div class="header__item">Name</div>
+                <div class="header__item">Winrate</div>
+                <div class="header__item">Best Counter</div>
+                <div class="header__item">Worst Counter</div>
+                <div class="header__item">Popularity</div>
+                <div class="header__item">Top Mission</div>
+                <div class="header__item">Top Secondaries</div>
+            </div>
+            <div class="table-content">
+                {% for faction in factions %}
+                    <div class="table-row">
+                        <div onclick="location.href='/faction/{{ faction['sql'].id }}';" class="table-data table-link">{{ faction['name'] }}</div>
+                        <div class="table-data">{{ faction['winRate'] }}</div>
+                        <div onclick="location.href='/faction/{{ faction['bestCounter'].id }}';" class="table-data table-link">{{ faction['bestCounter'].name }}</div>
+                        <div onclick="location.href='/faction/{{ faction['worstCounter'].id }}';" class="table-data table-link">{{ faction['worstCounter'].name }}</div>
+                        <div class="table-data">{{ faction['popularity'] }}%</div>
+                        <div onclick="location.href='/mission/{{ faction['topMission'].id }}';" class="table-data table-link">{{ faction['topMission'].name }}</div>
+                        <div onclick="location.href='/secondary/{{ faction['topSecondary'].id }}';" class="table-data table-link">{{ faction['topSecondary'].name }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}
