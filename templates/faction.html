@@ -1,27 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="game">
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Winrate</th>
-                <th>Best Counter</th>
-                <th>Worst Counter</th>
-                <th>Popularity</th>
-                <th>Top Mission</th>
-                <th>Top Secondaries</th>
-            </tr>
-            {% for faction in factions %}
-                <tr>
-                    <td><a href="faction/{{ faction['shortName'] }}">{{ faction['name'] }}</a></td>
-                    <td>{{ faction['winRate'] }}</td>
-                    <td>{{ faction['bestCounter'] }}</td>
-                    <td>{{ faction['worstCounter'] }}</td>
-                    <td>{{ faction['popularity'] }}</td>
-                    <td>{{ faction['topMission'] }}</td>
-                    <td>{{ faction['topSecondary'] }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+    <div class="graph">
+        <h1>{{ faction['sql'].name }}</h1>
+        <img class="circular_image" src="{{ url_for('static', filename='images/' + faction['sql'].shortName + '.png') }}"/>
+        <div class="graph-container">
+            <div class="year-stats">
+                {% for month in faction['games'].keys() %}
+                    <div class="month-group">
+                        <div class="bar" style="height: {{ faction['games'][month] * 100 / faction['maxGames'] }}%;"></div>
+                        <p class="month">{{ month }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="pie-container">
+            <div class="pie animate no-round" style="--p:60;--c:rgba(255,101,0,1);--b:15px"> 60%</div>
+            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 80%</div>
+            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 45%</div>
+            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 80%</div>
+            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 45%</div>
+        </div>
+        <div class="pie-container">
+            <div class="pie animate no-round" style="--p:60;--c:rgba(255,101,0,1);--b:15px"> 60%</div>
+            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 80%</div>
+            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 45%</div>
+            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 80%</div>
+            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 45%</div>
+        </div>
     </div>
 {% endblock %}

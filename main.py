@@ -39,7 +39,7 @@ def factions():
 @app.route("/faction/<fact>", methods={"GET", "POST"})
 def faction(fact):
     fct = getFaction(fact)
-    return render_template('faction.html', title=fact, faction=fct)
+    return render_template('faction.html', title=fct['sql'].name, faction=fct)
 
 
 @app.route("/missions", methods={"GET", "POST"})

@@ -1,5 +1,7 @@
 from source.db.db import Game, Player, Mission, Rank, Secondary, Faction, Tournament
-from datetime import datetime
+from sqlalchemy import extract
+from datetime import datetime, timedelta
+from collections import OrderedDict
 import random
 import time
 import names
@@ -355,9 +357,24 @@ def getFaction(fact):
         faction['winRate'] = float("{:.2f}".format(len(faction['bestCounter']) * 100 / (len(faction['bestCounter']) + len(faction['worstCounter']) + len(faction['tieCounter']))))
     else:
         faction['winRate'] = 0.0
-    faction['bestFactions'] = sorted(faction['bestCounter'], key=lambda k: len(faction['bestCounter'][k]), reverse=True)
-    faction['worstFactions'] = sorted(faction['worstCounter'], key=lambda k: len(faction['worstCounter'][k]), reverse=True)
-    faction['tieFactions'] = sorted(faction['tieCounter'], key=lambda k: len(faction['tieCounter'][k]), reverse=True)
+    faction['bestFactions'] = [Faction.query.filter_by(name=fct).first() for fct in sorted(faction['bestCounter'], key=lambda k: len(faction['bestCounter'][k]), reverse=True)]
+    faction['worstFactions'] = [Faction.query.filter_by(name=fct).first() for fct in sorted(faction['worstCounter'], key=lambda k: len(faction['worstCounter'][k]), reverse=True)]
+    faction['tieFactions'] = [Faction.query.filter_by(name=fct).first() for fct in sorted(faction['tieCounter'], key=lambda k: len(faction['tieCounter'][k]), reverse=True)]
+    faction['games'] = {}
+    faction['maxGames'] = 0
+    for i in range(0, 12):
+        if datetime.now().month - i < 1:
+            month = datetime.now().month - i + 12
+            year = datetime.now().year - 1
+        else:
+            month = datetime.now().month - i
+            year = datetime.now().year
+        faction['games'][str(month) + '-' + str(year)] = 0
+        for game in Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).all():
+            if game.losFaction[0] == faction['sql'] or game.winFaction[0] == faction['sql']:
+                faction['games'][str(month) + '-' + str(year)] += 1
+        faction['maxGames'] = faction['games'][str(month) + '-' + str(year)] if faction['maxGames'] < faction['games'][str(month) + '-' + str(year)] else faction['maxGames']
+    faction['games'] = dict(OrderedDict(reversed(list(faction['games'].items()))))
     return faction
 
 
