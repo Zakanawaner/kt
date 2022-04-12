@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
 from utils import *
-from source.database.db import db
+from source.database import db
 import json
 import os
 
