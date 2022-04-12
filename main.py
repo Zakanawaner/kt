@@ -63,4 +63,5 @@ def general():
     return render_template('general.html', title="General", gen=gen)
 
 
-app.run(port=3000)
+if __name__ == '__main__':
+    app.run()
