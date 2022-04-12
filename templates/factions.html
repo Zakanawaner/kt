@@ -14,13 +14,13 @@
             <div class="table-content">
                 {% for faction in factions %}
                     <div class="table-row">
-                        <div onclick="location.href='/faction/{{ faction['sql'].id }}';" class="table-data table-link">{{ faction['name'] }}</div>
+                        <div onclick="location.href='/faction/{{ faction['sql'].id }}';" class="table-data table-link">{{ faction['sql'].name }}</div>
                         <div class="table-data">{{ faction['winRate'] }}</div>
-                        <div onclick="location.href='/faction/{{ faction['bestCounter'].id }}';" class="table-data table-link">{{ faction['bestCounter'].name }}</div>
-                        <div onclick="location.href='/faction/{{ faction['worstCounter'].id }}';" class="table-data table-link">{{ faction['worstCounter'].name }}</div>
+                        <div onclick="location.href='/faction/{{ faction['bestFactions'][0].id }}';" class="table-data table-link">{{ faction['bestFactions'][0].name }}</div>
+                        <div onclick="location.href='/faction/{{ faction['worstFactions'][0].id }}';" class="table-data table-link">{{ faction['worstFactions'][0].name }}</div>
                         <div class="table-data">{{ faction['popularity'] }}%</div>
-                        <div onclick="location.href='/mission/{{ faction['topMission'].id }}';" class="table-data table-link">{{ faction['topMission'].name }}</div>
-                        <div onclick="location.href='/secondary/{{ faction['topSecondary'].id }}';" class="table-data table-link">{{ faction['topSecondary'].name }}</div>
+                        <div onclick="location.href='/mission/{{ faction['bestMissions'][0].id }}';" class="table-data table-link">{{ faction['bestMissions'][0].name }}</div>
+                        <div onclick="location.href='/secondary/{{ faction['bestSecondaries'][0].id }}';" class="table-data table-link">{{ faction['bestSecondaries'][0].name }}</div>
                     </div>
                 {% endfor %}
             </div>

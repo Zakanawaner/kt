@@ -21,6 +21,7 @@ def handlePlayers(db, response, opt):
     if not Player.query.filter_by(username=response[opt]).first():
         player = Player(
             username=response[opt],
+            shortName=response[opt].lower().replace(' ', ''),
             score=response[response[opt]]['total'],
             rank=[Rank.query.filter(Rank.score < response[response[opt]]['total']).first()],
             wins=1 if not response['tie'] and opt == "winner" else 0,
@@ -62,6 +63,7 @@ def handleMission(db, response):
     if 'mission' in response.keys():
         if not Mission.query.filter_by(name=response['mission']['name']).first():
             mission = Mission(name=response['mission']['name'],
+                              shortName=response['mission']['name'].lower().replace(' ', ''),
                               code=response['mission']['code'])
         else:
             mission = Mission.query.filter_by(name=response['mission']['name']).first()
@@ -78,7 +80,8 @@ def handleSecondaries(db, response, opt):
         for sec in response[response[opt]]['secondaries']:
             if type(response[response[opt]]['secondaries'][sec]) is dict:
                 response[response[opt]]['secondaries'][sec]['name'] = Secondary(
-                    name=response[response[opt]]['secondaries'][sec]['name']) if not Secondary.query.filter_by(
+                    name=response[response[opt]]['secondaries'][sec]['name'],
+                    shortName=response[response[opt]]['secondaries'][sec]['name'].lower().replace(' ', ''),) if not Secondary.query.filter_by(
                     name=response[response[opt]]['secondaries'][sec]['name']).first() else Secondary.query.filter_by(
                     name=response[response[opt]]['secondaries'][sec]['name']).first()
                 db.session.add(response[response[opt]]['secondaries'][sec]['name'])
@@ -89,7 +92,8 @@ def handleSecondaries(db, response, opt):
 def handleTournament(db, response):
     if 'tournament' in response.keys():
         if not Tournament.query.filter_by(name=response['tournament']).first():
-            response['tournament'] = Tournament(name=response['tournament'])
+            response['tournament'] = Tournament(name=response['tournament'],
+                                                shortName=response['tournament'].lower().replace(' ', ''),)
             db.session.add(response['tournament'])
         else:
             response['tournament'] = Tournament.query.filter_by(name=response['tournament']).first()
@@ -159,15 +163,15 @@ def handleGameData(response, db):
 def createDatabase(db):
     db.create_all()
 
-    db.session.add(Rank(name="a", score=0))
-    db.session.add(Rank(name="b", score=50))
-    db.session.add(Rank(name="c", score=100))
-    db.session.add(Rank(name="d", score=200))
-    db.session.add(Rank(name="e", score=400))
-    db.session.add(Rank(name="f", score=800))
-    db.session.add(Rank(name="g", score=1600))
+    db.session.add(Rank(name="a", shortName="a", score=0))
+    db.session.add(Rank(name="b", shortName="a", score=50))
+    db.session.add(Rank(name="c", shortName="a", score=100))
+    db.session.add(Rank(name="d", shortName="a", score=200))
+    db.session.add(Rank(name="e", shortName="a", score=400))
+    db.session.add(Rank(name="f", shortName="a", score=800))
+    db.session.add(Rank(name="g", shortName="a", score=1600))
 
-    db.session.add(Tournament(name="III Liga Mercenaria"))
+    db.session.add(Tournament(name="III Liga Mercenaria", shortName="iiiligamercenaria"))
 
     db.session.commit()
 
@@ -246,121 +250,122 @@ def getPlayers():
 def getFactions():
     factions = {}
     for faction in Faction.query.all():
-        factions[faction.name] = {
-            'name': faction.name,
-            'shortName': faction.shortName,
-            'sql': faction,
-            'wins': [],
-            'loses': [],
-            'ties': [],
-            'counter': {},
-            'missions': {},
-            'secondaries': {}
-        }
-        for game in Game.query.filter(Game.winFaction.contains(faction)).all():
-            factions[faction.name]['wins'].append(game) if not game.tie else factions[faction.name]['ties'].append(game)
-        for game in Game.query.filter(Game.loser.contains(faction)).all():
-            factions[faction.name]['loses'].append(game) if not game.tie else factions[faction.name]['ties'].append(game)
-        if len(factions[faction.name]['wins']) + len(factions[faction.name]['loses']) + len(factions[faction.name]['ties']) > 0:
-            if len(factions[faction.name]['wins']) + len(factions[faction.name]['loses']) + len(factions[faction.name]['ties']) > 0:
-                factions[faction.name]['winRate'] = float("{:.2f}".format(len(factions[faction.name]['wins']) * 100 / (len(factions[faction.name]['wins']) + len(factions[faction.name]['loses']) + len(factions[faction.name]['ties']))))
-            else:
-                factions[faction.name]['winRate'] = 0.0
-        else:
-            factions[faction.name]['winRate'] = 0.0
-
-        for counter in Faction.query.all():
-            factions[faction.name]['counter'][counter.name] = 0
-            for game in factions[faction.name]['wins']:
-                if game.losFaction[0] == counter:
-                    factions[faction.name]['counter'][counter.name] += 1
-            for game in factions[faction.name]['loses']:
-                if game.winFaction[0] == counter:
-                    factions[faction.name]['counter'][counter.name] -= 1
-
-        for mission in Mission.query.all():
-            factions[faction.name]['missions'][mission.name] = 0
-            for game in factions[faction.name]['wins']:
-                if game.mission[0] == mission:
-                    factions[faction.name]['missions'][mission.name] += 1
-            for game in factions[faction.name]['loses']:
-                if game.mission[0] == mission:
-                    factions[faction.name]['missions'][mission.name] -= 1
-
-        for secondary in Secondary.query.all():
-            factions[faction.name]['secondaries'][secondary.name] = 0
-            for game in factions[faction.name]['wins']:
-                if game.winSecondaryFirst[0] == secondary:
-                    factions[faction.name]['secondaries'][secondary.name] += 1
-                if game.winSecondarySecond[0] == secondary:
-                    factions[faction.name]['secondaries'][secondary.name] += 1
-                if game.winSecondaryThird[0] == secondary:
-                    factions[faction.name]['secondaries'][secondary.name] += 1
-            for game in factions[faction.name]['loses']:
-                if game.losSecondaryFirst[0] == secondary:
-                    factions[faction.name]['secondaries'][secondary.name] -= 1
-                if game.losSecondarySecond[0] == secondary:
-                    factions[faction.name]['secondaries'][secondary.name] -= 1
-                if game.losSecondaryThird[0] == secondary:
-                    factions[faction.name]['secondaries'][secondary.name] -= 1
-
-        factions[faction.name]['counter'] = {k: v for k, v in sorted(factions[faction.name]['counter'].items(), key=operator.itemgetter(1), reverse=True)}
-        factions[faction.name]['bestCounter'] = Faction.query.filter_by(name=next(iter(factions[faction.name]['counter'].keys()))).first()
-        factions[faction.name]['counter'] = {k: v for k, v in sorted(factions[faction.name]['counter'].items(), key=operator.itemgetter(1))}
-        factions[faction.name]['worstCounter'] = Faction.query.filter_by(name=next(iter(factions[faction.name]['counter'].keys()))).first()
-        if len(Game.query.all()) > 0:
-            factions[faction.name]['popularity'] = len(factions[faction.name]['wins'] + factions[faction.name]['loses'] + factions[faction.name]['ties']) * 100 / len(Game.query.all())
-        else:
-            factions[faction.name]['popularity'] = 0.0
-        factions[faction.name]['missions'] = {k: v for k, v in sorted(factions[faction.name]['missions'].items(), key=operator.itemgetter(1), reverse=True)}
-        factions[faction.name]['secondaries'] = {k: v for k, v in sorted(factions[faction.name]['secondaries'].items(), key=operator.itemgetter(1), reverse=True)}
-        factions[faction.name]['topMission'] = Mission.query.filter_by(name=next(iter(factions[faction.name]['missions'].keys()))).first()
-        factions[faction.name]['topSecondary'] = Secondary.query.filter_by(name=next(iter(factions[faction.name]['secondaries'].keys()))).first()
+        factionInd = getFaction(faction.id)
+        factions[factionInd['sql'].shortName] = factionInd
     return [faction for faction in factions.values()]
 
 
 def getFaction(fact):
     faction = {
         'sql': Faction.query.filter_by(id=fact).first(),
+        'gamesWon': 0,
+        'gamesLost': 0,
+        'gamesTie': 0,
+        'totalGames': 0,
         'bestCounter': {},
         'worstCounter': {},
+        'counterRates': {},
+        'winnerRates': {},
+        'bestMission': {},
+        'worstMission': {},
+        'bestSecondary': {},
+        'worstSecondary': {},
         'tieCounter': {}
     }
     for counter in Faction.query.all():
-        if Game.query.filter(Game.winFaction.contains(faction['sql'])).filter(Game.losFaction.contains(counter)).all():
-            faction['bestCounter'][counter.name] = Game.query.filter(Game.winFaction.contains(faction['sql'])).filter(Game.losFaction.contains(counter)).all()
+        if counter.name not in faction['counterRates']:
+            faction['counterRates'][counter.name] = {
+                'won': 0,
+                'lost': 0,
+                'tie': 0
+            }
+        if Game.query.filter(Game.winFaction.contains(faction['sql'])).filter(Game.losFaction.contains(counter)).filter_by(tie=False).all():
+            faction['bestCounter'][counter.name] = Game.query.filter(Game.winFaction.contains(faction['sql'])).filter(Game.losFaction.contains(counter)).filter_by(tie=False).all()
+            faction['counterRates'][counter.name]['won'] += len(faction['bestCounter'][counter.name])
+            faction['totalGames'] += len(faction['bestCounter'][counter.name])
+            faction['gamesWon'] += len(faction['bestCounter'][counter.name])
+        if Game.query.filter(Game.winFaction.contains(faction['sql'])).filter(Game.losFaction.contains(counter)).filter_by(tie=True).all():
+            faction['tieCounter'][counter.name] = Game.query.filter(Game.winFaction.contains(faction['sql'])).filter(Game.losFaction.contains(counter)).filter_by(tie=True).all()
+            faction['counterRates'][counter.name]['tie'] += len(faction['tieCounter'][counter.name])
+            faction['totalGames'] += len(faction['tieCounter'][counter.name])
+            faction['gamesTie'] += len(faction['tieCounter'][counter.name])
     for counter in Faction.query.all():
-        if Game.query.filter(Game.losFaction.contains(faction['sql'])).filter(Game.winFaction.contains(counter)).all():
-            faction['worstCounter'][counter.name] = Game.query.filter(Game.losFaction.contains(faction['sql'])).filter(Game.winFaction.contains(counter)).all()
+        if counter.name not in faction['counterRates']:
+            faction['counterRates'][counter.name] = {
+                'won': 0,
+                'lost': 0,
+                'tie': 0
+            }
+        if Game.query.filter(Game.losFaction.contains(faction['sql'])).filter(Game.winFaction.contains(counter)).filter_by(tie=False).all():
+            faction['worstCounter'][counter.name] = Game.query.filter(Game.losFaction.contains(faction['sql'])).filter(Game.winFaction.contains(counter)).filter_by(tie=False).all()
+            faction['counterRates'][counter.name]['lost'] += len(faction['worstCounter'][counter.name])
+            faction['totalGames'] += len(faction['worstCounter'][counter.name])
+            faction['gamesLost'] += len(faction['worstCounter'][counter.name])
+        if Game.query.filter(Game.losFaction.contains(faction['sql'])).filter(Game.winFaction.contains(counter)).filter_by(tie=True).all():
+            if counter.name not in faction['tieCounter'].keys():
+                faction['tieCounter'][counter.name] = []
+            auxTied = [game for game in Game.query.filter(Game.losFaction.contains(faction['sql'])).filter(Game.winFaction.contains(counter)).filter_by(tie=True).all() if game not in faction['tieCounter'][counter.name]]
+            faction['tieCounter'][counter.name].extend(auxTied)
+            faction['counterRates'][counter.name]['tie'] += len(auxTied)
+            faction['totalGames'] += len(auxTied)
+            faction['gamesTie'] += len(auxTied)
     for counter in faction['bestCounter'].keys():
         for i, game in enumerate(faction['bestCounter'][counter]):
-            if game.tie:
-                faction['bestCounter'][counter].pop(i)
-                if counter in faction['tieCounter'].keys():
-                    faction['tieCounter'][counter].append(game)
+            if not game.tie:
+                if game.mission[0].shortName in faction['bestMission'].keys():
+                    faction['bestMission'][game.mission[0].shortName].append(game)
                 else:
-                    faction['tieCounter'][counter] = [game]
-        if not faction['bestCounter'][counter]:
-            faction['bestCounter'].pop(counter, None)
+                    faction['bestMission'][game.mission[0].shortName] = [game]
+                if game.winSecondaryFirst[0].shortName in faction['bestSecondary'].keys():
+                    faction['bestSecondary'][game.winSecondaryFirst[0].shortName].append(game)
+                else:
+                    faction['bestSecondary'][game.winSecondaryFirst[0].shortName] = [game]
+                if game.winSecondarySecond[0].shortName in faction['bestSecondary'].keys():
+                    faction['bestSecondary'][game.winSecondarySecond[0].shortName].append(game)
+                else:
+                    faction['bestSecondary'][game.winSecondarySecond[0].shortName] = [game]
+                if game.winSecondaryThird[0].shortName in faction['bestSecondary'].keys():
+                    faction['bestSecondary'][game.winSecondaryThird[0].shortName].append(game)
+                else:
+                    faction['bestSecondary'][game.winSecondaryThird[0].shortName] = [game]
     for counter in faction['worstCounter'].keys():
         for i, game in enumerate(faction['worstCounter'][counter]):
-            if game.tie:
-                faction['worstCounter'][counter].pop(i)
-                if counter in faction['tieCounter'].keys():
-                    faction['tieCounter'][counter].append(game)
+            if not game.tie:
+                if game.mission[0].shortName in faction['worstMission'].keys():
+                    faction['worstMission'][game.mission[0].shortName].append(game)
                 else:
-                    faction['tieCounter'][counter] = [game]
-        if not faction['worstCounter'][counter]:
-            faction['worstCounter'].pop(counter, None)
-
-    if len(faction['bestCounter']) + len(faction['worstCounter']) + len(faction['tieCounter']) > 0:
-        faction['winRate'] = float("{:.2f}".format(len(faction['bestCounter']) * 100 / (len(faction['bestCounter']) + len(faction['worstCounter']) + len(faction['tieCounter']))))
+                    faction['worstMission'][game.mission[0].shortName] = [game]
+                if game.losSecondaryFirst[0].shortName in faction['worstSecondary'].keys():
+                    faction['worstSecondary'][game.losSecondaryFirst[0].shortName].append(game)
+                else:
+                    faction['worstSecondary'][game.losSecondaryFirst[0].shortName] = [game]
+                if game.losSecondarySecond[0].shortName in faction['worstSecondary'].keys():
+                    faction['worstSecondary'][game.losSecondarySecond[0].shortName].append(game)
+                else:
+                    faction['worstSecondary'][game.losSecondarySecond[0].shortName] = [game]
+                if game.losSecondaryThird[0].shortName in faction['worstSecondary'].keys():
+                    faction['worstSecondary'][game.losSecondaryThird[0].shortName].append(game)
+                else:
+                    faction['worstSecondary'][game.losSecondaryThird[0].shortName] = [game]
+    if faction['totalGames'] > 0:
+        faction['winRate'] = float("{:.2f}".format(faction['gamesWon'] * 100 / faction['totalGames']))
     else:
         faction['winRate'] = 0.0
+    for fct in faction['counterRates'].keys():
+        faction['counterRates'][fct]["winRate"] = float("{:.2f}".format(faction['counterRates'][fct]['won'] * 100 / (faction['counterRates'][fct]['won'] + faction['counterRates'][fct]['lost'] + faction['counterRates'][fct]['tie']))) if faction['counterRates'][fct]['won'] + faction['counterRates'][fct]['lost'] + faction['counterRates'][fct]['tie'] > 0 else 0
+        faction['counterRates'][fct]["loseRate"] = float("{:.2f}".format(faction['counterRates'][fct]['lost'] * 100 / (faction['counterRates'][fct]['won'] + faction['counterRates'][fct]['lost'] + faction['counterRates'][fct]['tie']))) if faction['counterRates'][fct]['won'] + faction['counterRates'][fct]['lost'] + faction['counterRates'][fct]['tie'] > 0 else 0
+        faction['counterRates'][fct]["tieRate"] = float("{:.2f}".format(faction['counterRates'][fct]['tie'] * 100 / (faction['counterRates'][fct]['won'] + faction['counterRates'][fct]['lost'] + faction['counterRates'][fct]['tie']))) if faction['counterRates'][fct]['won'] + faction['counterRates'][fct]['lost'] + faction['counterRates'][fct]['tie'] > 0 else 0
+        faction['winnerRates'][fct] = faction['counterRates'][fct]["winRate"]
     faction['bestFactions'] = [Faction.query.filter_by(name=fct).first() for fct in sorted(faction['bestCounter'], key=lambda k: len(faction['bestCounter'][k]), reverse=True)]
+    faction['winnerRates'] = [Faction.query.filter_by(name=fct).first() for fct in sorted(faction['winnerRates'], key=lambda k: faction['winnerRates'][k], reverse=True)]
     faction['worstFactions'] = [Faction.query.filter_by(name=fct).first() for fct in sorted(faction['worstCounter'], key=lambda k: len(faction['worstCounter'][k]), reverse=True)]
     faction['tieFactions'] = [Faction.query.filter_by(name=fct).first() for fct in sorted(faction['tieCounter'], key=lambda k: len(faction['tieCounter'][k]), reverse=True)]
+    faction['bestMissions'] = [Mission.query.filter_by(shortName=fct).first() for fct in sorted(faction['bestMission'], key=lambda k: len(faction['bestMission'][k]), reverse=True)]
+    faction['worstMissions'] = [Mission.query.filter_by(shortName=fct).first() for fct in sorted(faction['worstMission'], key=lambda k: len(faction['worstMission'][k]), reverse=True)]
+    faction['bestSecondaries'] = [Secondary.query.filter_by(shortName=fct).first() for fct in sorted(faction['bestSecondary'], key=lambda k: len(faction['bestSecondary'][k]), reverse=True)]
+    faction['worstSecondaries'] = [Secondary.query.filter_by(shortName=fct).first() for fct in sorted(faction['worstSecondary'], key=lambda k: len(faction['worstSecondary'][k]), reverse=True)]
     faction['games'] = {}
+    faction['popularity'] = faction['totalGames'] * 100 / (len(Game.query.all()) * 2)
     faction['maxGames'] = 0
     for i in range(0, 12):
         if datetime.now().month - i < 1:
@@ -539,11 +544,13 @@ def randomize_data(db):
         "Brood Coven",
     ]
     factions = [
-        "Space Marines",
-        "Grey Knights",
-        "Imperial Guard",
-        "Veteran Guardsmen",
+        "Tomb Worlds",
+        "Hunter Cadre",
+        "Cadre Mercenary",
+        "Hive Fleets",
+        "Brood Coven",
     ]
+
     secondaries = [
         "headhunter",
         "challenge",
@@ -576,9 +583,9 @@ def randomize_data(db):
         'III Liga Meercenaria'
     ]
     players = [names.get_full_name() for i in range(0, 10)]
-    for i in range(0, 10):
+    for i in range(0, 500):
         random.seed(i)
-        d = random.randint(1, int(time.time()))
+        d = random.randint(int(time.time()) - 31556926, int(time.time()))
         datetime.fromtimestamp(d)
         ok = False
         while not ok:

@@ -171,6 +171,7 @@ class Mission(db.Model):
     __tablename__ = 'mission'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    shortName = db.Column(db.String(50))
     code = db.Column(db.Float)
 
 
@@ -178,6 +179,7 @@ class Secondary(db.Model):
     __tablename__ = 'secondary'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+    shortName = db.Column(db.String(100))
 
 
 class Faction(db.Model):
@@ -191,6 +193,7 @@ class Rank(db.Model):
     __tablename__ = 'rank'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+    shortName = db.Column(db.String(100))
     score = db.Column(db.Integer)
 
 
@@ -198,6 +201,7 @@ class Tournament(db.Model):
     __tablename__ = 'tournament'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+    shortName = db.Column(db.String(100))
     dateInit = db.Column(db.DateTime)
     dateEnd = db.Column(db.DateTime)
     games = db.relationship("Game", secondary=game_tournament)
@@ -207,6 +211,7 @@ class Player(db.Model):
     __tablename__ = 'player'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), nullable=False)
+    shortName = db.Column(db.String(30))
     rank = db.relationship("Rank", secondary=player_rank)
     score = db.Column(db.Integer)
     wins = db.Column(db.Integer)

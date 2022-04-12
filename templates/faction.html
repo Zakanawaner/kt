@@ -3,29 +3,66 @@
     <div class="graph">
         <h1>{{ faction['sql'].name }}</h1>
         <img class="circular_image" src="{{ url_for('static', filename='images/' + faction['sql'].shortName + '.png') }}"/>
+        <div class="pie-container at-0-8">
+            <div class="pie animate no-round" style="--p:{{ faction['winRate'] }};--c:rgba(255,101,0,1);--b:15px">
+                <p>Win Rate</p>
+                <p>{{ faction['winRate'] }}%</p>
+            </div>
+            <div class="pie animate no-round" style="--p:{{ faction['popularity'] }};--c:rgba(255,101,0,1);--b:15px">
+                <p>Pick Rate</p>
+                <p>{{ faction['popularity'] }}%</p>
+            </div>
+        </div>
         <div class="graph-container">
             <div class="year-stats">
                 {% for month in faction['games'].keys() %}
-                    <div class="month-group">
-                        <div class="bar" style="height: {{ faction['games'][month] * 100 / faction['maxGames'] }}%;"></div>
+                    <div class="month-group hoverme">
+                        <div class="pop">
+                            <p class="text">{{ faction['games'][month] }} games</p>
+                        </div>
+                        {% if faction['maxGames'] > 0 %}
+                            <div class="bar" style="height: {{ faction['games'][month] * 100 / faction['maxGames'] }}%;"></div>
+                            <div class="back-bar" style="height: {{ 100 }}%;"></div>
+                        {% else %}
+                            <div class="bar" style="height: {{ 0 }}%;"></div>
+                            <div class="back-bar" style="height: {{ 100 }}%;"></div>
+                        {% endif %}
                         <p class="month">{{ month }}</p>
                     </div>
                 {% endfor %}
             </div>
         </div>
-        <div class="pie-container">
-            <div class="pie animate no-round" style="--p:60;--c:rgba(255,101,0,1);--b:15px"> 60%</div>
-            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 80%</div>
-            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 45%</div>
-            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 80%</div>
-            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 45%</div>
+        <div class="pie-super-container">
+            <h2>Best Pairings</h2>
+            <div class="pie-container">
+                {% for i in range(0, faction['winnerRates']|length) %}
+                    {% if i < 3 %}
+                        <div class="pie-inner">
+                            <div onclick="location.href='/faction/{{ faction['winnerRates'][i].id }}';" class="pie animate no-round" style="--p:{{ faction['counterRates'][faction['winnerRates'][i].name]['winRate'] }};--c:rgba(255,101,0,1);--b:15px">
+                                <img class="pie_image" src="{{ url_for('static', filename='images/' + faction['winnerRates'][i].shortName + '.png') }}"/>
+                            </div>
+                            <p>{{ faction['winnerRates'][i].name }}</p>
+                            <p>{{ faction['counterRates'][faction['winnerRates'][i].name]['winRate'] }}%</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
-        <div class="pie-container">
-            <div class="pie animate no-round" style="--p:60;--c:rgba(255,101,0,1);--b:15px"> 60%</div>
-            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 80%</div>
-            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 45%</div>
-            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 80%</div>
-            <div class="pie animate no-round" style="--p:80;--c:rgba(255,101,0,1);--b:15px"> 45%</div>
+        <div class="pie-super-container">
+            <h2>Worst Against</h2>
+            <div class="pie-container">
+                {% for i in range(0, faction['winnerRates']|length) %}
+                    {% if i < 3 %}
+                        <div class="pie-inner">
+                            <div onclick="location.href='/faction/{{ faction['winnerRates'][-1-i].id }}';" class="pie animate no-round" style="--p:{{ faction['counterRates'][faction['winnerRates'][-1-i].name]['winRate'] }};--c:rgba(255,101,0,1);--b:15px">
+                                <img class="pie_image" src="{{ url_for('static', filename='images/' + faction['winnerRates'][-1-i].shortName + '.png') }}"/>
+                            </div>
+                            <p>{{ faction['winnerRates'][-1-i].name }}</p>
+                            <p>{{ faction['counterRates'][faction['winnerRates'][-1-i].name]['winRate'] }}%</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}

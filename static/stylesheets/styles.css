@@ -3,10 +3,10 @@
 	padding: 0;
 	list-style-type: none;
 }
-html, body{
-	background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(114,53,0,1) 100%);
+html{
+	background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(114,53,0,1) 70%);
 	background-repeat: no-repeat;
-	height: 100%;
+	min-height: 100%;
 	font-family: "Libre Baskerville", serif;
     font-weight: 400;
     font-size: 16px;
@@ -199,7 +199,7 @@ html, body{
 	background: rgba(0,0,0,.2);
 	color: rgba(255,101,0, 1);
 	border-radius: 20px;
-	padding: 20px;
+	padding: 0px 10px 20px 10px;
 }
 
 .year-stats {
@@ -214,18 +214,30 @@ html, body{
 
 .month-group {
 	cursor: pointer;
+	position: relative;
 	max-width: 400px;
 	height: 110px;
-	margin: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
 	display: inline-block;
 }
 
 .bar {
+    position: absolute;
+    bottom: -30px;
 	background-color: rgba(255,101,0,.2);
 	width: 20px;
 	border-radius: 5px;
 	margin-left: 30%;
+	z-index: 1;
+}
+.back-bar {
+	background-color: rgba(0,0,0,.2);
+	width: 20px;
+	border-radius: 5px;
+	margin-left: 30%;
 	margin-bottom: 10px;
+	z-index: -1;
 }
 
 .month-group:hover .bar,
@@ -234,7 +246,7 @@ html, body{
 }
 
 .month-group:hover p,
-.selected p {
+.selected .month {
 	color: rgba(255,101,0,.2);
 }
 
@@ -245,10 +257,29 @@ html, body{
   initial-value: 0;
 }
 
+.pie-super-container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pie-super-container h2{
+	color: rgba(255,101,0,1);
+	text-transform: uppercase;
+	font-weight: bold;
+	text-align:center;
+    font-size: 20px;
+}
+
 .pie-container {
-    margin-top: 30px;
+    margin-top: 15px;
     display: flex;
     justify-content: space-between;
+}
+
+.pie-inner{
+	display: flex;
+    flex-direction: column;
 }
 
 .pie {
@@ -267,6 +298,28 @@ html, body{
   font-weight:bold;
   font-family:sans-serif;
 }
+
+.pie:hover {
+     cursor:pointer;
+  transform: scale(1.1);
+}
+
+.pie_image {
+max-width: 80%;
+    max-height: 80%;
+    -webkit-border-radius: 60px;
+    -webkit-background-clip: padding-box;
+    -moz-border-radius: 60px;
+    -moz-background-clip: padding;
+    border-radius: 60px;
+    margin-bottom: 30px;
+    object-fit: contain;
+}
+
+.at-0-8{
+  transform: scale(0.8);
+}
+
 .pie:before,
 .pie:after {
   content:"";
@@ -286,6 +339,12 @@ html, body{
   background:var(--c);
   transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
 }
+.pie-container p{
+    text-align:center;
+    max-width: 100%;
+    font-size: 12px;
+    color: rgba(255,101,0,1);
+}
 .animate {
   animation:p 1s .5s both;
 }
@@ -297,4 +356,15 @@ html, body{
 }
 @keyframes p {
   from{--p:0}
+}
+
+.hoverme:hover .pop{
+    visibility: visible;
+}
+
+.hoverme:hover .text{
+    color: rgba(255,101,0,1);
+}
+.pop {
+    visibility: hidden;
 }
