@@ -1,11 +1,11 @@
 from flask import Flask, request, render_template
 from utils import *
-from source.db.db import db
+from source.database.db import db
 import json
 import os
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.abspath('source/db/db.sqlite')
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.abspath('source/database/db.sqlite')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
@@ -51,7 +51,7 @@ def missions():
 @app.route("/randomize", methods={"GET", "POST"})
 def randomize():
     createDatabase(db)
-    os.remove(os.path.abspath('source/db/db.sqlite'))
+    os.remove(os.path.abspath('source/database/db.sqlite'))
     randomize_data(db)
     return {'status': 'ok'}, 200
 

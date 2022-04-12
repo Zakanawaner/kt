@@ -1,4 +1,4 @@
-from source.db.db import Game, Player, Mission, Rank, Secondary, Faction, Tournament
+from source.database.db import Game, Player, Mission, Rank, Secondary, Faction, Tournament
 from sqlalchemy import extract
 from datetime import datetime, timedelta
 from collections import OrderedDict
