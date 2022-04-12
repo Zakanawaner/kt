@@ -9,11 +9,11 @@ import operator
 
 # TODO tts
 #  gestionar el tipo de torneo
-#  añadir instrucciones en el tablero
+#  anadir instrucciones en el tablero
 #  mirar si podemos sacar el nombre de la mision
 
 # TODO py
-#  descartar lo que venga y no esté bien
+#  descartar lo que venga y no este bien
 #  securizar el envio intempestivo de botonazos
 
 
