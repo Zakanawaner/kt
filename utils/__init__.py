@@ -10,7 +10,6 @@ import operator
 # TODO tts
 #  gestionar el tipo de torneo
 #  anadir instrucciones en el tablero
-#  mirar si podemos sacar el nombre de la mision
 
 # TODO py
 #  descartar lo que venga y no este bien
