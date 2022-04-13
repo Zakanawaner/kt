@@ -162,13 +162,20 @@ def handleGameData(response, db):
 def createDatabase(db):
     db.create_all()
 
-    db.session.add(Rank(name="a", shortName="a", score=0))
-    db.session.add(Rank(name="b", shortName="a", score=50))
-    db.session.add(Rank(name="c", shortName="a", score=100))
-    db.session.add(Rank(name="d", shortName="a", score=200))
-    db.session.add(Rank(name="e", shortName="a", score=400))
-    db.session.add(Rank(name="f", shortName="a", score=800))
-    db.session.add(Rank(name="g", shortName="a", score=1600))
+    db.session.add(Rank(name="Guardsman", shortName="a", score=0))
+    db.session.add(Rank(name="Sergeant", shortName="a", score=50))
+    db.session.add(Rank(name="Lieutenant", shortName="a", score=100))
+    db.session.add(Rank(name="Captain", shortName="a", score=200))
+    db.session.add(Rank(name="Major", shortName="a", score=400))
+    db.session.add(Rank(name="Colonel", shortName="a", score=800))
+    db.session.add(Rank(name="Major General", shortName="a", score=1600))
+    db.session.add(Rank(name="Lieutenant General", shortName="a", score=3200))
+    db.session.add(Rank(name="Marshall", shortName="a", score=6400))
+    db.session.add(Rank(name="General", shortName="a", score=12800))
+    db.session.add(Rank(name="Lord General", shortName="a", score=25600))
+    db.session.add(Rank(name="Lord General Militant", shortName="a", score=51200))
+    db.session.add(Rank(name="Warmaster", shortName="a", score=102400))
+    db.session.add(Rank(name="Lord Commander", shortName="a", score=204800))
 
     db.session.add(Tournament(name="III Liga Mercenaria", shortName="iiiligamercenaria"))
 
