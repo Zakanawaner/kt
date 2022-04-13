@@ -1,4 +1,4 @@
-from source.database import Game, Player, Mission, Rank, Secondary, Faction, Tournament
+from database import Game, Player, Mission, Rank, Secondary, Faction, Tournament
 from sqlalchemy import extract
 from datetime import datetime, timedelta
 from collections import OrderedDict
@@ -582,7 +582,7 @@ def randomize_data(db):
         'III Liga Meercenaria'
     ]
     players = [names.get_full_name() for i in range(0, 10)]
-    for i in range(0, 500):
+    for i in range(0, 50):
         random.seed(i)
         d = random.randint(int(time.time()) - 31556926, int(time.time()))
         datetime.fromtimestamp(d)
