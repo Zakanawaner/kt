@@ -16,10 +16,10 @@
                 <h2>Players</h2>
             </div>
             <div class="card_content">
+                <p>Total players: {{ gen['totalPlayers'] }}</p>
                 <p>Top 1: {{ gen['top1Player'] }}</p>
                 <p>Top 2: {{ gen['top2Player'] }}</p>
                 <p>Top 3: {{ gen['top3Player'] }}</p>
-                <p>Total players: {{ gen['totalPlayers'] }}</p>
             </div>
         </div>
         <div onclick="location.href='/factions';" class="card">
@@ -27,9 +27,9 @@
                 <h2>Factions</h2>
             </div>
             <div class="card_content">
+                <p>Top: {{ gen['factionMostWinRate'] }}</p>
                 <p>Most played: {{ gen['factionMostPlayed'] }}</p>
                 <p>Less played: {{ gen['factionLessPlayed'] }}</p>
-                <p>Top: {{ gen['factionMostWinRate'] }}</p>
             </div>
         </div>
         <div onclick="location.href='/missions';" class="card">
@@ -48,6 +48,28 @@
             <div class="card_content">
                 <p>Most played: {{ gen['secondaryMostPlayed'] }}</p>
                 <p>Less played: {{ gen['secondaryLessPlayed'] }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="graph">
+        <h2>Games played last year</h2>
+        <div class="graph-container">
+            <div class="year-stats">
+                {% for month in gen['played'].keys() %}
+                    <div class="month-group hoverme">
+                        <div class="pop">
+                            <p class="text">{{ gen['played'][month] }} games</p>
+                        </div>
+                        {% if gen['maxPlayed'] > 0 %}
+                            <div class="bar" style="height: {{ gen['played'][month] * 100 / gen['maxPlayed'] }}%;"></div>
+                            <div class="back-bar" style="height: {{ 100 }}%;"></div>
+                        {% else %}
+                            <div class="bar" style="height: {{ 0 }}%;"></div>
+                            <div class="back-bar" style="height: {{ 100 }}%;"></div>
+                        {% endif %}
+                        <p class="month">{{ month }}</p>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
