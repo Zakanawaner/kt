@@ -51,8 +51,8 @@ def missions():
 @app.route("/randomize", methods={"GET", "POST"})
 def randomize():
     createDatabase(db)
-    if os.path.exists('database/db.sqlite'):
-        os.remove('database/db.sqlite')
+    if os.path.exists('database.sqlite'):
+        os.remove('database.sqlite')
     randomize_data(db)
     return {'status': 'ok'}, 200
 
