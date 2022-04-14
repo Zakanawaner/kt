@@ -259,6 +259,36 @@ class Faction(db.Model):
     tieCounter = {}
 
 
+class WinRates(db.Model):
+    __tablename__ = 'winrates'
+    id = db.Column(db.Integer, primary_key=True)
+    faction1 = db.Column(db.Integer, db.ForeignKey('faction.id'))
+    faction2 = db.Column(db.Integer, db.ForeignKey('faction.id'))
+    rate1 = db.Column(db.Float)
+    rate2 = db.Column(db.Float)
+    rate3 = db.Column(db.Float)
+
+
+class MissionRates(db.Model):
+    __tablename__ = 'missionrates'
+    id = db.Column(db.Integer, primary_key=True)
+    faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
+    mission = db.Column(db.Integer, db.ForeignKey('mission.id'))
+    rate1 = db.Column(db.Float)
+    rate2 = db.Column(db.Float)
+    rate3 = db.Column(db.Float)
+
+
+class SecondaryRates(db.Model):
+    __tablename__ = 'cesondaryrates'
+    id = db.Column(db.Integer, primary_key=True)
+    faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
+    secondary = db.Column(db.Integer, db.ForeignKey('secondary.id'))
+    rate1 = db.Column(db.Float)
+    rate2 = db.Column(db.Float)
+    rate3 = db.Column(db.Float)
+
+
 class Rank(db.Model):
     __tablename__ = 'rank'
     id = db.Column(db.Integer, primary_key=True)

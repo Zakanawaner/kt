@@ -264,8 +264,16 @@ html{
   initial-value: 0;
 }
 
+.pie-ultra-container {
+    display: flex;
+    flex-direction: row;
+	border-radius: 20px;
+}
+
 .pie-super-container {
-    margin-top: 15px;
+    margin: 15px 15px 0px 15px;
+    background-color: rgba(0,0,0,.2);
+    paddig: 20px;
     display: flex;
     flex-direction: column;
 }

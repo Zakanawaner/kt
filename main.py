@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, url_for, redirect
 from utils import *
 from database import db
 import json
@@ -36,6 +36,12 @@ def factions():
     return render_template('factions.html', title="Factions", factions=fct)
 
 
+@app.route("/update", methods={"GET", "POST"})
+def update():
+    updateFactions(db)
+    return redirect(url_for('general'))
+
+
 @app.route("/faction/<fact>", methods={"GET", "POST"})
 def faction(fact):
     fct = getFaction(fact)
@@ -48,13 +54,19 @@ def missions():
     return render_template('missions.html', title="Missions", missions=mss)
 
 
+@app.route("/mission/<ms>", methods={"GET", "POST"})
+def mission(ms):
+    mss = getMission(ms)
+    return render_template('mission.html', title=mss['sql'].name, mission=mss)
+
+
 @app.route("/randomize", methods={"GET", "POST"})
 def randomize():
     createDatabase(db)
     if os.path.exists('database.sqlite'):
         os.remove('database.sqlite')
     randomize_data(db)
-    return {'status': 'ok'}, 200
+    return redirect(url_for('general'))
 
 
 @app.route("/", methods={"GET", "POST"})
