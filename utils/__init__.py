@@ -271,7 +271,7 @@ def getPlayers():
 def getFactions():
     factions = {}
     for faction in Faction.query.all():
-        factionInd = getFaction(faction.id)
+        factionInd = getFaction(faction.id, glo=True)
         factions[factionInd['sql'].shortName] = factionInd
     return [faction for faction in factions.values()]
 
@@ -281,7 +281,6 @@ def updateFactions(db):
         updateFaction(db, faction.id)
 
 
-# TODO working on this to optimize the computing time
 def updateFaction(db, fact):
     faction = {
         'sql': Faction.query.filter_by(id=fact).first(),
@@ -516,7 +515,7 @@ def updateFaction(db, fact):
     return faction
 
 
-def getFaction(fact):
+def getFaction(fact, glo=False):
     faction = {
         'sql': Faction.query.filter_by(id=fact).first(),
         'counterRates': {},
@@ -531,76 +530,124 @@ def getFaction(fact):
         'bestSecondaries': [],
         'worstSecondaries': [],
         'tieSecondaries': [],
-
     }
     faction['gamesWon'] = len(faction['sql'].gamesWon)
     faction['gamesLost'] = len(faction['sql'].gamesLost)
     faction['gamesTie'] = len(faction['sql'].gamesTied)
     faction['totalGames'] = faction['gamesWon'] + faction['gamesLost'] + faction['gamesTie']
 
-    for rate in WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate1)).all():
-        faction['counterRates'][Faction.query.filter_by(id=rate.faction2).first().name] = {
-            'winRate': rate.rate1,
-            'loseRate': rate.rate2,
-            'tieRate': rate.rate3
-        }
-        faction['winnerRates'].append(Faction.query.filter_by(id=rate.faction2).first())
-    for rate in WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate2)).all():
-        faction['loserRates'].append(Faction.query.filter_by(id=rate.faction2).first())
-    for rate in WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate3)).all():
-        faction['tieRates'].append(Faction.query.filter_by(id=rate.faction2).first())
-    for rate in MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate1)).all():
-        faction['missionRates'][Mission.query.filter_by(id=rate.mission).first().name] = {
-            'winRate': rate.rate1,
-            'loseRate': rate.rate2,
-            'tieRate': rate.rate3
-        }
-        faction['bestMissions'].append(Mission.query.filter_by(id=rate.mission).first())
-    for rate in MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate2)).all():
-        faction['worstMissions'].append(Mission.query.filter_by(id=rate.mission).first())
-    for rate in MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate3)).all():
-        faction['tieMissions'].append(Mission.query.filter_by(id=rate.mission).first())
-    for rate in SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate1)).all():
-        faction['secondaryRates'][Secondary.query.filter_by(id=rate.secondary).first().name] = {
-            'winRate': rate.rate1,
-            'loseRate': rate.rate2,
-            'tieRate': rate.rate3
-        }
-        faction['bestSecondaries'].append(Secondary.query.filter_by(id=rate.secondary).first())
-    for rate in SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate2)).all():
-        faction['worstSecondaries'].append(Secondary.query.filter_by(id=rate.secondary).first())
-    for rate in SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate3)).all():
-        faction['tieSecondaries'].append(Secondary.query.filter_by(id=rate.secondary).first())
     if faction['totalGames'] > 0:
         faction['winRate'] = float("{:.2f}".format(faction['gamesWon'] * 100 / faction['totalGames']))
     else:
         faction['winRate'] = 0.0
-
-    faction['games'] = {}
     faction['popularity'] = faction['totalGames'] * 100 / (len(Game.query.all()) * 2)
-    faction['maxGames'] = 0
-    for i in range(0, 12):
-        if datetime.now().month - i < 1:
-            month = datetime.now().month - i + 12
-            year = datetime.now().year - 1
-        else:
-            month = datetime.now().month - i
-            year = datetime.now().year
-        faction['games'][str(month) + '-' + str(year)] = 0
-        for game in Game.query.filter(extract('month', Game.date) == month).filter(
-                extract('year', Game.date) == year).all():
-            if game.losFaction[0] == faction['sql'] or game.winFaction[0] == faction['sql']:
-                faction['games'][str(month) + '-' + str(year)] += 1
-        faction['maxGames'] = faction['games'][str(month) + '-' + str(year)] if faction['maxGames'] < faction['games'][
-            str(month) + '-' + str(year)] else faction['maxGames']
-    faction['games'] = dict(OrderedDict(reversed(list(faction['games'].items()))))
+
+    if not glo:
+        for rate in WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate1)).all():
+            faction['counterRates'][Faction.query.filter_by(id=rate.faction2).first().name] = {
+                'winRate': rate.rate1,
+                'loseRate': rate.rate2,
+                'tieRate': rate.rate3
+            }
+            faction['winnerRates'].append(Faction.query.filter_by(id=rate.faction2).first())
+        for rate in WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate2)).all():
+            faction['loserRates'].append(Faction.query.filter_by(id=rate.faction2).first())
+        for rate in WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate3)).all():
+            faction['tieRates'].append(Faction.query.filter_by(id=rate.faction2).first())
+        for rate in MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate1)).all():
+            faction['missionRates'][Mission.query.filter_by(id=rate.mission).first().name] = {
+                'winRate': rate.rate1,
+                'loseRate': rate.rate2,
+                'tieRate': rate.rate3
+            }
+            faction['bestMissions'].append(Mission.query.filter_by(id=rate.mission).first())
+        for rate in MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate2)).all():
+            faction['worstMissions'].append(Mission.query.filter_by(id=rate.mission).first())
+        for rate in MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate3)).all():
+            faction['tieMissions'].append(Mission.query.filter_by(id=rate.mission).first())
+        for rate in SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate1)).all():
+            faction['secondaryRates'][Secondary.query.filter_by(id=rate.secondary).first().name] = {
+                'winRate': rate.rate1,
+                'loseRate': rate.rate2,
+                'tieRate': rate.rate3
+            }
+            faction['bestSecondaries'].append(Secondary.query.filter_by(id=rate.secondary).first())
+        for rate in SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate2)).all():
+            faction['worstSecondaries'].append(Secondary.query.filter_by(id=rate.secondary).first())
+        for rate in SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate3)).all():
+            faction['tieSecondaries'].append(Secondary.query.filter_by(id=rate.secondary).first())
+
+        faction['games'] = {}
+        faction['maxGames'] = 0
+        for i in range(0, 12):
+            if datetime.now().month - i < 1:
+                month = datetime.now().month - i + 12
+                year = datetime.now().year - 1
+            else:
+                month = datetime.now().month - i
+                year = datetime.now().year
+            faction['games'][str(month) + '-' + str(year)] = 0
+            for game in Game.query.filter(extract('month', Game.date) == month).filter(
+                    extract('year', Game.date) == year).all():
+                if game.losFaction[0] == faction['sql'] or game.winFaction[0] == faction['sql']:
+                    faction['games'][str(month) + '-' + str(year)] += 1
+            faction['maxGames'] = faction['games'][str(month) + '-' + str(year)] if faction['maxGames'] < faction['games'][
+                str(month) + '-' + str(year)] else faction['maxGames']
+        faction['games'] = dict(OrderedDict(reversed(list(faction['games'].items()))))
+    else:
+        if WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate1)).first():
+            faction['winnerRates'].append(Faction.query.filter_by(id=WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate1)).first().faction2).first())
+        if WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate2)).first():
+            faction['loserRates'].append(Faction.query.filter_by(id=WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate2)).first().faction2).first())
+        if MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate1)).first():
+            faction['bestMissions'].append(Mission.query.filter_by(id=MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate1)).first().mission).first())
+        if SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate1)).first():
+            faction['bestSecondaries'].append(Secondary.query.filter_by(id=SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate1)).first().secondary).first())
     return faction
+
+
+def updateMissions(db):
+    for mission in Mission.query.all():
+        updateMission(db, mission.id)
+
+
+def updateMission(db, fact):
+    mission = {
+        'sql': Mission.query.filter_by(id=fact).first(),
+        'avgScore': 0,
+        'avgScoreFirst': 0,
+        'avgScoreSecond': 0,
+        'avgScoreThird': 0,
+        'avgScoreFourth': 0,
+        'totalScore': 0,
+        'totalScoreFirst': 0,
+        'totalScoreSecond': 0,
+        'totalScoreThird': 0,
+        'totalScoreFourth': 0,
+        'totalGames': 0
+    }
+    for game in Game.query.filter(Game.mission.contains(mission['sql'])).all():
+        mission['totalGames'] += 2
+        mission['totalScore'] += game.winPrimary + game.losPrimary
+        mission['totalScoreFirst'] += game.winPrimaryFirst + game.losPrimaryFirst
+        mission['totalScoreSecond'] += game.winPrimarySecond + game.losPrimarySecond
+        mission['totalScoreThird'] += game.winPrimaryThird + game.losPrimaryThird
+        mission['totalScoreFourth'] += game.winPrimaryFourth + game.losPrimaryFourth
+    mission['sql'].avgScore = float("{:.2f}".format(mission['totalScore'] / mission['totalGames']))
+    mission['sql'].avgScoreFirst = float("{:.2f}".format(mission['totalScoreFirst'] / mission['totalGames']))
+    mission['sql'].avgScoreSecond = float("{:.2f}".format(mission['totalScoreSecond'] / mission['totalGames']))
+    mission['sql'].avgScoreThird = float("{:.2f}".format(mission['totalScoreThird'] / mission['totalGames']))
+    mission['sql'].avgScoreFourth = float("{:.2f}".format(mission['totalScoreFourth'] / mission['totalGames']))
+    db.session.add(mission['sql'])
+    db.session.commit()
+
+    return mission
 
 
 def getMissions():
     missions = {}
     for mission in Mission.query.all():
-        missionInd = getFaction(mission.id)
+        missionInd = getMission(mission.id)
         missions[missionInd['sql'].shortName] = missionInd
     return [mission for mission in missions.values()]
 
@@ -631,6 +678,8 @@ def getMission(ms):
             'shortName': Faction.query.filter_by(id=rate.faction).first().shortName
         }
     mission['popularity'] = float("{:.2f}".format(len(Game.query.filter(Game.mission.contains(mission['sql'])).all()) * 100 / len(Game.query.all())))
+    mission['topFaction'] = Faction.query.filter_by(name=list(mission['bestFactions'].keys())[0]).first() if mission['bestFactions'] else None
+    mission['worstFaction'] = Faction.query.filter_by(name=list(mission['worstFactions'].keys())[0]).first() if mission['worstFactions'] else None
     for i in range(0, 12):
         if datetime.now().month - i < 1:
             month = datetime.now().month - i + 12
@@ -720,14 +769,14 @@ def getGeneral():
         'missionLessPlayed': list(primaries)[-1],
         'secondaryMostPlayed': list(secondaries)[0],
         'secondaryLessPlayed': list(secondaries)[-1],
-        'factionMostPlayed': mostUsedFaction.name,
-        'factionLessPlayed': lessUsedFaction.name,
-        'factionMostWinRate': topFaction.name,
-        'factionLessWinRate': botFaction.name,
+        'factionMostPlayed': mostUsedFaction.name if mostUsedFaction else None,
+        'factionLessPlayed': lessUsedFaction.name if lessUsedFaction else None,
+        'factionMostWinRate': topFaction.name if topFaction else None,
+        'factionLessWinRate': botFaction.name if botFaction else None,
         'totalPlayers': len(players),
-        'top1Player': topPlayers[0].username,
-        'top2Player': topPlayers[1].username,
-        'top3Player': topPlayers[2].username,
+        'top1Player': topPlayers[0].username if topPlayers else None,
+        'top2Player': topPlayers[1].username if len(topPlayers) > 1 else None,
+        'top3Player': topPlayers[2].username if len(topPlayers) > 2 else None,
         'played': {},
         'maxPlayed': 0
     }
@@ -802,7 +851,7 @@ def randomize_data(db):
         'III Liga Meercenaria'
     ]
     players = [names.get_full_name() for i in range(0, 10)]
-    for i in range(0, 500):
+    for i in range(0, 100):
         random.seed(i)
         d = random.randint(int(time.time()) - 31556926, int(time.time()))
         datetime.fromtimestamp(d)

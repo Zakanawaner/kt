@@ -30,7 +30,7 @@
         <div class="pie-ultra-container">
             <div class="pie-super-container">
                 <h2>Best Factions</h2>
-                <div class="pie-container">
+                <div class="pie-container at-0-8">
                     {% for key, value in mission['bestFactions'].items() %}
                         <div class="pie-inner">
                             <div onclick="location.href='/faction/{{ value['id'] }}';" class="pie animate no-round" style="--p:{{ value['winRate'] }};--c:rgba(255,101,0,1);--b:15px">
@@ -44,7 +44,7 @@
             </div>
             <div class="pie-super-container">
                 <h2>Worst Factions</h2>
-                <div class="pie-container">
+                <div class="pie-container at-0-8">
                     {% for key, value in mission['worstFactions'].items() %}
                         <div class="pie-inner">
                             <div onclick="location.href='/faction/{{ value['id'] }}';" class="pie animate no-round" style="--p:{{ value['winRate'] }};--c:rgba(255,101,0,1);--b:15px">

@@ -4,19 +4,27 @@
         <div class="table">
             <div class="table-header">
                 <div class="header__item">Name</div>
-                <div class="header__item">Games</div>
+                <div class="header__item">Popularity</div>
                 <div class="header__item">Avg Score</div>
                 <div class="header__item">Top Faction</div>
-                <div class="header__item">Top Secondaries</div>
+                <div class="header__item">Worst Faction</div>
             </div>
             <div class="table-content">
                 {% for mission in missions %}
                     <div class="table-row">
-                        <div class="table-data">{{ mission['name'] }}</div>
-                        <div class="table-data">{{ mission['games'] }}</div>
-                        <div class="table-data">{{ mission['avgScore'] }}</div>
-                        <div onclick="location.href='/faction/{{ mission['topFaction'].id }}';" class="table-data table-link">{{ mission['topFaction'].name }}</div>
-                        <div onclick="location.href='/secondary/{{ mission['topSecondary'].id }}';" class="table-data table-link">{{ mission['topSecondary'].name }}</div>
+                        <div onclick="location.href='/mission/{{ mission['sql'].id }}';" class="table-data table-link">{{ mission['sql'].name }}</div>
+                        <div class="table-data">{{ mission['popularity'] }}%</div>
+                        <div class="table-data">{{ mission['sql'].avgScore }}</div>
+                        {% if mission['topFaction'] %}
+                            <div onclick="location.href='/faction/{{ mission['topFaction'].id }}';" class="table-data table-link">{{ mission['topFaction'].name }}</div>
+                        {% else %}
+                            <div class="table-data table-link">-</div>
+                        {% endif %}
+                        {% if mission['worstFaction'] %}
+                            <div onclick="location.href='/secondary/{{ mission['worstFaction'].id }}';" class="table-data table-link">{{ mission['worstFaction'].name }}</div>
+                        {% else %}
+                            <div class="table-data table-link">-</div>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>

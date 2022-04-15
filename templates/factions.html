@@ -21,8 +21,8 @@
                         {% else %}
                             <div class="table-data table-link">-</div>
                         {% endif %}
-                        {% if faction['winnerRates']|length >1 %}
-                            <div onclick="location.href='/faction/{{ faction['winnerRates'][-1].id }}';" class="table-data table-link">{{ faction['winnerRates'][-1].name }}</div>
+                        {% if faction['loserRates']|length >0 %}
+                            <div onclick="location.href='/faction/{{ faction['loserRates'][0].id }}';" class="table-data table-link">{{ faction['loserRates'][0].name }}</div>
                         {% else %}
                             <div class="table-data table-link">-</div>
                         {% endif %}

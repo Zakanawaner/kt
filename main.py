@@ -39,6 +39,7 @@ def factions():
 @app.route("/update", methods={"GET", "POST"})
 def update():
     updateFactions(db)
+    updateMissions(db)
     return redirect(url_for('general'))
 
 
@@ -66,7 +67,7 @@ def randomize():
     if os.path.exists('database.sqlite'):
         os.remove('database.sqlite')
     randomize_data(db)
-    return redirect(url_for('general'))
+    return redirect(url_for('update'))
 
 
 @app.route("/", methods={"GET", "POST"})
