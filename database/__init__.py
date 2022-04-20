@@ -234,6 +234,11 @@ class Secondary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     shortName = db.Column(db.String(100))
+    avgScore = db.Column(db.Float)
+    avgScoreFirst = db.Column(db.Float)
+    avgScoreSecond = db.Column(db.Float)
+    avgScoreThird = db.Column(db.Float)
+    avgScoreFourth = db.Column(db.Float)
 
 
 class Faction(db.Model):
