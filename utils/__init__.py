@@ -7,11 +7,6 @@ import time
 import names
 import operator
 
-# TODO
-#  Hacer que en tts se guarden los colores una vez terminado el juego para no enviar el nombre de los jugadores
-#  securizar el envio intempestivo de botonazos -> En tts meter un timestamp unico y guardar eso en la bd para
-#  comprobar que ese juego ya se ha enviado o no
-
 
 def handlePlayers(db, response, opt):
     if not Player.query.filter_by(username=response[opt]).first():
@@ -99,90 +94,95 @@ def handleTournament(db, response):
 
 def handleGameData(response, db):
     if checkData(response):
-        winnerSql = handlePlayers(db, response, 'winner')
-        loserSql = handlePlayers(db, response, 'loser')
-        response = handleFactions(db, response, 'winner')
-        response = handleFactions(db, response, 'loser')
-        response = handleSecondaries(db, response, 'winner')
-        response = handleSecondaries(db, response, 'loser')
-        response = handleMission(db, response)
-        response = handleTournament(db, response)
+        if not Game.query.filter_by(timestamp=response['timestamp']).first():
+            winnerSql = handlePlayers(db, response, 'winner')
+            loserSql = handlePlayers(db, response, 'loser')
+            response = handleFactions(db, response, 'winner')
+            response = handleFactions(db, response, 'loser')
+            response = handleSecondaries(db, response, 'winner')
+            response = handleSecondaries(db, response, 'loser')
+            response = handleMission(db, response)
+            response = handleTournament(db, response)
 
-        game = Game(
-            date=datetime.now(),
-            mission=[response['mission']] if response['mission'] else [],
-            initFirst=[winnerSql] if response[response['winner']]['initiative'][0] else [loserSql],
-            initSecond=[winnerSql] if response[response['winner']]['initiative'][1] else [loserSql],
-            initThird=[winnerSql] if response[response['winner']]['initiative'][2] else [loserSql],
-            initFourth=[winnerSql] if response[response['winner']]['initiative'][3] else [loserSql],
-            winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
-            winTotal=response[response['winner']]['total'],
-            winPrimary=response[response['winner']]['primaries']['total'],
-            winPrimaryFirst=response[response['winner']]['primaries']['first'],
-            winPrimarySecond=response[response['winner']]['primaries']['second'],
-            winPrimaryThird=response[response['winner']]['primaries']['third'],
-            winPrimaryFourth=response[response['winner']]['primaries']['fourth'],
-            winSecondary=response[response['winner']]['secondaries']['total'],
-            winSecondaryFirst=[response[response['winner']]['secondaries']['first']['name']],
-            winSecondaryFirstScore=response[response['winner']]['secondaries']['first']['score'],
-            winSecondarySecond=[response[response['winner']]['secondaries']['second']['name']],
-            winSecondarySecondScore=response[response['winner']]['secondaries']['second']['score'],
-            winSecondaryThird=[response[response['winner']]['secondaries']['third']['name']],
-            winSecondaryThirdScore=response[response['winner']]['secondaries']['third']['score'],
-            losFaction=[response[response['loser']]['faction']]if response[response['loser']]['faction'] else [],
-            losTotal=response[response['loser']]['total'],
-            losPrimary=response[response['loser']]['primaries']['total'],
-            losPrimaryFirst=response[response['loser']]['primaries']['first'],
-            losPrimarySecond=response[response['loser']]['primaries']['second'],
-            losPrimaryThird=response[response['loser']]['primaries']['third'],
-            losPrimaryFourth=response[response['loser']]['primaries']['fourth'],
-            losSecondary=response[response['loser']]['secondaries']['total'],
-            losSecondaryFirst=[response[response['loser']]['secondaries']['first']['name']],
-            losSecondaryFirstScore=response[response['loser']]['secondaries']['first']['score'],
-            losSecondarySecond=[response[response['loser']]['secondaries']['second']['name']],
-            losSecondarySecondScore=response[response['loser']]['secondaries']['second']['score'],
-            losSecondaryThird=[response[response['loser']]['secondaries']['third']['name']],
-            losSecondaryThirdScore=response[response['loser']]['secondaries']['third']['score'],
-            rollOffWinner=[Player.query.filter_by(username=response['rollOffWinner']).first()] if 'rollOffWinner' in response.keys() else [],
-            rollOffSelection=response['rollOffWinnerSelection'] if 'rollOffWinnerSelection' in response.keys() else '',
-            tie=response['tie']
-        )
-        response['tournament'].games.append(game)
-        if response['tie']:
-            winnerSql.gamesTied.append(game)
-            response[response['winner']]['faction'].gamesTied.append(game)
-            loserSql.gamesTied.append(game)
-            response[response['loser']]['faction'].gamesTied.append(game)
-        else:
-            winnerSql.gamesWon.append(game)
-            response[response['winner']]['faction'].gamesWon.append(game)
-            loserSql.gamesLost.append(game)
-            response[response['loser']]['faction'].gamesLost.append(game)
-        game.winner.append(winnerSql)
-        game.loser.append(loserSql)
+            game = Game(
+                date=datetime.now(),
+                timestamp=response['timestamp'],
+                mission=[response['mission']] if response['mission'] else [],
+                initFirst=[winnerSql] if response[response['winner']]['initiative'][0] else [loserSql],
+                initSecond=[winnerSql] if response[response['winner']]['initiative'][1] else [loserSql],
+                initThird=[winnerSql] if response[response['winner']]['initiative'][2] else [loserSql],
+                initFourth=[winnerSql] if response[response['winner']]['initiative'][3] else [loserSql],
+                winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
+                winScouting=response[response['winner']]['scouting'],
+                winTotal=response[response['winner']]['total'],
+                winPrimary=response[response['winner']]['primaries']['total'],
+                winPrimaryFirst=response[response['winner']]['primaries']['first'],
+                winPrimarySecond=response[response['winner']]['primaries']['second'],
+                winPrimaryThird=response[response['winner']]['primaries']['third'],
+                winPrimaryFourth=response[response['winner']]['primaries']['fourth'],
+                winSecondary=response[response['winner']]['secondaries']['total'],
+                winSecondaryFirst=[response[response['winner']]['secondaries']['first']['name']],
+                winSecondaryFirstScore=response[response['winner']]['secondaries']['first']['score'],
+                winSecondarySecond=[response[response['winner']]['secondaries']['second']['name']],
+                winSecondarySecondScore=response[response['winner']]['secondaries']['second']['score'],
+                winSecondaryThird=[response[response['winner']]['secondaries']['third']['name']],
+                winSecondaryThirdScore=response[response['winner']]['secondaries']['third']['score'],
+                losFaction=[response[response['loser']]['faction']]if response[response['loser']]['faction'] else [],
+                losScouting=response[response['loser']]['scouting'],
+                losTotal=response[response['loser']]['total'],
+                losPrimary=response[response['loser']]['primaries']['total'],
+                losPrimaryFirst=response[response['loser']]['primaries']['first'],
+                losPrimarySecond=response[response['loser']]['primaries']['second'],
+                losPrimaryThird=response[response['loser']]['primaries']['third'],
+                losPrimaryFourth=response[response['loser']]['primaries']['fourth'],
+                losSecondary=response[response['loser']]['secondaries']['total'],
+                losSecondaryFirst=[response[response['loser']]['secondaries']['first']['name']],
+                losSecondaryFirstScore=response[response['loser']]['secondaries']['first']['score'],
+                losSecondarySecond=[response[response['loser']]['secondaries']['second']['name']],
+                losSecondarySecondScore=response[response['loser']]['secondaries']['second']['score'],
+                losSecondaryThird=[response[response['loser']]['secondaries']['third']['name']],
+                losSecondaryThirdScore=response[response['loser']]['secondaries']['third']['score'],
+                rollOffWinner=[Player.query.filter_by(username=response['rollOffWinner']).first()] if 'rollOffWinner' in response.keys() else [],
+                rollOffSelection=response['rollOffWinnerSelection'] if 'rollOffWinnerSelection' in response.keys() else '',
+                tie=response['tie']
+            )
 
-        db.session.add(winnerSql)
-        db.session.add(loserSql)
-        db.session.add(response[response['winner']]['faction'])
-        db.session.add(response[response['loser']]['faction'])
-        if 'tournament' in response.keys():
-            response['tournament'].games.append(game)
-            db.session.add(response['tournament'])
-        db.session.add(game)
-        db.session.commit()
+            if response['tie']:
+                winnerSql.gamesTied.append(game)
+                response[response['winner']]['faction'].gamesTied.append(game)
+                loserSql.gamesTied.append(game)
+                response[response['loser']]['faction'].gamesTied.append(game)
+            else:
+                winnerSql.gamesWon.append(game)
+                response[response['winner']]['faction'].gamesWon.append(game)
+                loserSql.gamesLost.append(game)
+                response[response['loser']]['faction'].gamesLost.append(game)
+            game.winner.append(winnerSql)
+            game.loser.append(loserSql)
+
+            db.session.add(winnerSql)
+            db.session.add(loserSql)
+            db.session.add(response[response['winner']]['faction'])
+            db.session.add(response[response['loser']]['faction'])
+            if 'tournament' in response.keys():
+                response['tournament'].games.append(game)
+                db.session.add(response['tournament'])
+            db.session.add(game)
+            db.session.commit()
 
 
 def checkData(response):
     template = {
-        'tournament': "",
         'mission': {
             "code": 1.1,
             "name": "Loot and Salvage",
+            'objGuid': ""
         },
         'rollOffWinner': "",
         'rollOffWinnerSelection': "",
         'red': {
             'initiative': [],
+            'scouting': "",
             'faction': "",
             'primaries': {
                 'first': 0,
@@ -207,6 +207,7 @@ def checkData(response):
         },
         'blue': {
             'initiative': [],
+            'scouting': "",
             'faction': "",
             'primaries': {
                 'first': 0,
@@ -928,10 +929,10 @@ def getGeneral():
         'totalGames': len(games),
         'avgWinner': sum([game.winTotal for game in games]) / len(games) if len(games) > 0 else 0.0,
         'avgLoser': sum([game.losTotal for game in games]) / len(games) if len(games) > 0 else 0.0,
-        'missionMostPlayed': list(primaries)[0],
-        'missionLessPlayed': list(primaries)[-1],
-        'secondaryMostPlayed': list(secondaries)[0],
-        'secondaryLessPlayed': list(secondaries)[-1],
+        'missionMostPlayed': list(primaries)[0] if list(primaries) else None,
+        'missionLessPlayed': list(primaries)[-1] if list(primaries) else None,
+        'secondaryMostPlayed': list(secondaries)[0] if list(secondaries) else None,
+        'secondaryLessPlayed': list(secondaries)[-1] if list(secondaries) else None,
         'factionMostPlayed': mostUsedFaction.name if mostUsedFaction else None,
         'factionLessPlayed': lessUsedFaction.name if lessUsedFaction else None,
         'factionMostWinRate': topFaction.name if topFaction else None,
@@ -1008,13 +1009,11 @@ def randomize_data(db):
         "overrun"
     ]
     tournaments = [
-        'Open Game',
-        'I Liga Meercenaria',
-        'II Liga Meercenaria',
-        'III Liga Meercenaria'
+        'Open game',
+        'Matched game'
     ]
     players = [names.get_full_name() for i in range(0, 10)]
-    for i in range(0, 100):
+    for i in range(0, 2):
         random.seed(i)
         d = random.randint(int(time.time()) - 31556926, int(time.time()))
         datetime.fromtimestamp(d)
@@ -1025,6 +1024,7 @@ def randomize_data(db):
                 ok = True
         response = {
             'tournament': random.choice(tournaments),
+            'timestamp': int(time.time()) - 31556926 + i,
             'mission': random.choice([
                 {
                     "code": 1.1,
@@ -1063,13 +1063,14 @@ def randomize_data(db):
                     "name": "Master the terminals",
                 },
             ]),
-            'rollOffWinner': random.choice(playersName),
+            'rollOffWinner': random.choice(['red', 'blue']),
             'rollOffWinnerSelection': random.choice(["attacker", "defender"]),
-            playersName[0]: {
+            'red': {
                 'initiative': [random.choice([True, False]),
                                random.choice([True, False]),
                                random.choice([True, False]),
                                random.choice([True, False])],
+                'scouting': random.choice(["Fortify", "Infiltrate", "Recon"]),
                 'faction': random.choice(factions),
                 'primaries': {
                     'first': random.randint(0, 4),
@@ -1092,11 +1093,12 @@ def randomize_data(db):
                     },
                 }
             },
-            playersName[1]: {
+            'blue': {
                 'initiative': [random.choice([True, False]),
                                random.choice([True, False]),
                                random.choice([True, False]),
                                random.choice([True, False])],
+                'scouting': random.choice(["Fortify", "Infiltrate", "Recon"]),
                 'faction': random.choice(factions),
                 'primaries': {
                     'first': random.randint(0, 4),
@@ -1120,23 +1122,23 @@ def randomize_data(db):
                 }
             }
         }
-        response[playersName[0]]['primaries']['total'] = response[playersName[0]]['primaries']['first'] + response[playersName[0]]['primaries']['second'] + response[playersName[0]]['primaries']['third'] + response[playersName[0]]['primaries']['fourth']
-        response[playersName[1]]['primaries']['total'] = response[playersName[0]]['primaries']['first'] + response[playersName[1]]['primaries']['second'] + response[playersName[1]]['primaries']['third'] + response[playersName[1]]['primaries']['fourth']
-        response[playersName[0]]['secondaries']['total'] = response[playersName[0]]['secondaries']['first']['score'] + response[playersName[0]]['secondaries']['second']['score'] + response[playersName[0]]['secondaries']['third']['score']
-        response[playersName[1]]['secondaries']['total'] = response[playersName[1]]['secondaries']['first']['score'] + response[playersName[1]]['secondaries']['second']['score'] + response[playersName[1]]['secondaries']['third']['score']
-        response[playersName[0]]['total'] = response[playersName[0]]['primaries']['total'] + response[playersName[0]]['secondaries']['total']
-        response[playersName[1]]['total'] = response[playersName[1]]['primaries']['total'] + response[playersName[1]]['secondaries']['total']
-        if response[playersName[1]]['total'] > response[playersName[0]]['total']:
-            response['winner'] = playersName[1]
-            response['loser'] = playersName[0]
+        response['red']['primaries']['total'] = response['red']['primaries']['first'] + response['red']['primaries']['second'] + response['red']['primaries']['third'] + response['red']['primaries']['fourth']
+        response['blue']['primaries']['total'] = response['red']['primaries']['first'] + response['blue']['primaries']['second'] + response['blue']['primaries']['third'] + response['blue']['primaries']['fourth']
+        response['red']['secondaries']['total'] = response['red']['secondaries']['first']['score'] + response['red']['secondaries']['second']['score'] + response['red']['secondaries']['third']['score']
+        response['blue']['secondaries']['total'] = response['blue']['secondaries']['first']['score'] + response['blue']['secondaries']['second']['score'] + response['blue']['secondaries']['third']['score']
+        response['red']['total'] = response['red']['primaries']['total'] + response['red']['secondaries']['total']
+        response['blue']['total'] = response['blue']['primaries']['total'] + response['blue']['secondaries']['total']
+        if response['blue']['total'] > response['red']['total']:
+            response['winner'] = 'blue'
+            response['loser'] = 'red'
             response['tie'] = False
-        elif response[playersName[1]]['total'] < response[playersName[0]]['total']:
-            response['winner'] = playersName[0]
-            response['loser'] = playersName[1]
+        elif response['blue']['total'] < response['red']['total']:
+            response['winner'] = 'red'
+            response['loser'] = 'blue'
             response['tie'] = False
         else:
-            response['winner'] = playersName[0]
-            response['loser'] = playersName[1]
+            response['winner'] = 'red'
+            response['loser'] = 'blue'
             response['tie'] = True
 
         winnerSql = handlePlayers(db, response, 'winner')
@@ -1150,12 +1152,14 @@ def randomize_data(db):
 
         game = Game(
             date=datetime.fromtimestamp(d),
+            timestamp=response['timestamp'],
             mission=[response['mission']] if response['mission'] else [],
             initFirst=[winnerSql] if response[response['winner']]['initiative'][0] else [loserSql],
             initSecond=[winnerSql] if response[response['winner']]['initiative'][1] else [loserSql],
             initThird=[winnerSql] if response[response['winner']]['initiative'][2] else [loserSql],
             initFourth=[winnerSql] if response[response['winner']]['initiative'][3] else [loserSql],
             winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
+            winScouting=response[response['winner']]['scouting'],
             winTotal=response[response['winner']]['total'],
             winPrimary=response[response['winner']]['primaries']['total'],
             winPrimaryFirst=response[response['winner']]['primaries']['first'],
@@ -1170,6 +1174,7 @@ def randomize_data(db):
             winSecondaryThird=[response[response['winner']]['secondaries']['third']['name']],
             winSecondaryThirdScore=response[response['winner']]['secondaries']['third']['score'],
             losFaction=[response[response['loser']]['faction']] if response[response['loser']]['faction'] else [],
+            losScouting=response[response['loser']]['scouting'],
             losTotal=response[response['loser']]['total'],
             losPrimary=response[response['loser']]['primaries']['total'],
             losPrimaryFirst=response[response['loser']]['primaries']['first'],

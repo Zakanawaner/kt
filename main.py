@@ -10,6 +10,9 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
 
+# TODO adaptar nombre de facciones aquí quiándome del tts
+# TODO añadir imágenes correspondientes
+
 
 @app.route("/", methods={"GET", "POST"})
 def general():
@@ -102,4 +105,4 @@ def secondary(sc):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5000)

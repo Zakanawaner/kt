@@ -169,6 +169,7 @@ class Game(db.Model):
     __tablename__ = 'game'
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime)
+    timestamp = db.Column(db.Integer)
     mission = db.relationship("Mission", secondary=game_mission)
     initFirst = db.relationship("Player", secondary=player_game_init_1)
     initSecond = db.relationship("Player", secondary=player_game_init_2)
@@ -176,6 +177,7 @@ class Game(db.Model):
     initFourth = db.relationship("Player", secondary=player_game_init_4)
     initFifth = db.relationship("Player", secondary=player_game_init_5)
     winner = db.relationship("Player", secondary=player_game_winner)
+    winScouting = db.Column(db.String(20))
     winFaction = db.relationship("Faction", secondary=game_faction_winner)
     winTotal = db.Column(db.Integer)
     winPrimary = db.Column(db.Integer)
@@ -194,6 +196,7 @@ class Game(db.Model):
     winSecondaryFourth = db.relationship("Secondary", secondary=game_secondary_4)
     winSecondaryFourthScore = db.Column(db.Integer)
     loser = db.relationship("Player", secondary=player_game_loser)
+    losScouting = db.Column(db.String(20))
     losFaction = db.relationship("Faction", secondary=game_faction_loser)
     losTotal = db.Column(db.Integer)
     losPrimary = db.Column(db.Integer)
