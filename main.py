@@ -12,6 +12,7 @@ db.init_app(app)
 
 # TODO adaptar nombre de facciones aquí quiándome del tts
 # TODO añadir imágenes correspondientes
+# TODO hacer subrutina de update
 
 
 @app.route("/", methods={"GET", "POST"})
@@ -25,7 +26,8 @@ def general():
 def randomize():
     createDatabase(db)
     if os.path.exists('database.sqlite'):
-        os.remove('database.sqlite')
+        # os.remove('database.sqlite')
+        pass
     randomize_data(db)
     return redirect(url_for('update'))
 
@@ -41,6 +43,7 @@ def data():
 def update():
     updateFactions(db)
     updateMissions(db)
+    updateSecondaries(db)
     return redirect(url_for('general'))
 
 
@@ -53,7 +56,7 @@ def games():
 @app.route("/game/<gm>", methods={"GET", "POST"})
 def game(gm):
     gm = getGame(gm)
-    return render_template('game.html', title=gm['sql'].date, game=gm)
+    return render_template('game.html', title="Game", game=gm)
 
 
 @app.route("/players", methods={"GET", "POST"})

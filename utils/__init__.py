@@ -1,5 +1,5 @@
 from database import Game, Player, Mission, Rank, Secondary, Faction, Tournament, WinRates, MissionRates, SecondaryRates
-from sqlalchemy import extract, desc, asc
+from sqlalchemy import extract, desc, asc, or_
 from datetime import datetime
 from collections import OrderedDict
 import random
@@ -108,10 +108,10 @@ def handleGameData(response, db):
                 date=datetime.now(),
                 timestamp=response['timestamp'],
                 mission=[response['mission']] if response['mission'] else [],
-                initFirst=[winnerSql] if response[response['winner']]['initiative'][0] else [loserSql],
-                initSecond=[winnerSql] if response[response['winner']]['initiative'][1] else [loserSql],
-                initThird=[winnerSql] if response[response['winner']]['initiative'][2] else [loserSql],
-                initFourth=[winnerSql] if response[response['winner']]['initiative'][3] else [loserSql],
+                initFirst=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][0] else [response[response['loser']]['faction']],
+                initSecond=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][1] else [response[response['loser']]['faction']],
+                initThird=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][2] else [response[response['loser']]['faction']],
+                initFourth=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][3] else [response[response['loser']]['faction']],
                 winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
                 winScouting=response[response['winner']]['scouting'],
                 winTotal=response[response['winner']]['total'],
@@ -142,7 +142,7 @@ def handleGameData(response, db):
                 losSecondarySecondScore=response[response['loser']]['secondaries']['second']['score'],
                 losSecondaryThird=[response[response['loser']]['secondaries']['third']['name']],
                 losSecondaryThirdScore=response[response['loser']]['secondaries']['third']['score'],
-                rollOffWinner=[Player.query.filter_by(username=response['rollOffWinner']).first()] if 'rollOffWinner' in response.keys() else [],
+                rollOffWinner=[response[response['rollOffWinner']]['faction']] if 'rollOffWinner' in response.keys() else [],
                 rollOffSelection=response['rollOffWinnerSelection'] if 'rollOffWinnerSelection' in response.keys() else '',
                 tie=response['tie']
             )
@@ -268,7 +268,10 @@ def getGames():
 
 
 def getGame(gm):
-    pass
+    game = {
+        'sql': Game.query.filter_by(id=gm).first(),
+    }
+    return game
 
 
 def getPlayers():
@@ -613,7 +616,7 @@ def getFaction(fact, glo=False):
         faction['winRate'] = float("{:.2f}".format(faction['gamesWon'] * 100 / faction['totalGames']))
     else:
         faction['winRate'] = 0.0
-    faction['popularity'] = faction['totalGames'] * 100 / (len(Game.query.all()) * 2)
+    faction['popularity'] = float("{:.2f}".format(faction['totalGames'] * 100 / (len(Game.query.all()) * 2)))
 
     if not glo:
         for rate in WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate1)).all():
@@ -742,7 +745,7 @@ def getMission(ms):
             'id': rate.faction,
             'shortName': Faction.query.filter_by(id=rate.faction).first().shortName
         }
-    for rate in MissionRates.query.filter_by(mission=ms).order_by(asc(MissionRates.rate1)).limit(3).all():
+    for rate in MissionRates.query.filter_by(mission=ms).order_by(desc(MissionRates.rate2)).limit(3).all():
         mission['worstFactions'][Faction.query.filter_by(id=rate.faction).first().name] = {
             'winRate': rate.rate1,
             'loseRate': rate.rate2,
@@ -774,8 +777,7 @@ def updateSecondaries(db):
 
 
 def updateSecondary(db, sc):
-    # TODO
-    mission = {
+    secondary = {
         'sql': Secondary.query.filter_by(id=sc).first(),
         'avgScore': 0,
         'avgScoreFirst': 0,
@@ -789,61 +791,67 @@ def updateSecondary(db, sc):
         'totalScoreFourth': 0,
         'totalGames': 0
     }
-    for game in Game.query.filter(Game.mission.contains(mission['sql'])).all():
-        mission['totalGames'] += 2
-        mission['totalScore'] += game.winPrimary + game.losPrimary
-        mission['totalScoreFirst'] += game.winPrimaryFirst + game.losPrimaryFirst
-        mission['totalScoreSecond'] += game.winPrimarySecond + game.losPrimarySecond
-        mission['totalScoreThird'] += game.winPrimaryThird + game.losPrimaryThird
-        mission['totalScoreFourth'] += game.winPrimaryFourth + game.losPrimaryFourth
-    mission['sql'].avgScore = float("{:.2f}".format(mission['totalScore'] / mission['totalGames']))
-    mission['sql'].avgScoreFirst = float("{:.2f}".format(mission['totalScoreFirst'] / mission['totalGames']))
-    mission['sql'].avgScoreSecond = float("{:.2f}".format(mission['totalScoreSecond'] / mission['totalGames']))
-    mission['sql'].avgScoreThird = float("{:.2f}".format(mission['totalScoreThird'] / mission['totalGames']))
-    mission['sql'].avgScoreFourth = float("{:.2f}".format(mission['totalScoreFourth'] / mission['totalGames']))
-    db.session.add(mission['sql'])
-    db.session.commit()
-
-    return mission
+    for game in Game.query.filter(Game.winSecondaryFirst.contains(secondary['sql'])).all():
+        secondary['totalGames'] += 1
+        secondary['totalScore'] += game.winSecondaryFirstScore
+        secondary['totalScoreFirst'] += game.winSecondaryFirstScoreTurn1 if game.winSecondaryFirstScoreTurn1 else 0
+        secondary['totalScoreSecond'] += game.winSecondaryFirstScoreTurn2 if game.winSecondaryFirstScoreTurn2 else 0
+        secondary['totalScoreThird'] += game.winSecondaryFirstScoreTurn3 if game.winSecondaryFirstScoreTurn3 else 0
+        secondary['totalScoreFourth'] += game.winSecondaryFirstScoreTurn4 if game.winSecondaryFirstScoreTurn4 else 0
+    if secondary['totalGames'] > 0:
+        secondary['sql'].avgScore = float("{:.2f}".format(secondary['totalScore'] / secondary['totalGames']))
+        secondary['sql'].avgScoreFirst = float("{:.2f}".format(secondary['totalScoreFirst'] / secondary['totalGames']))
+        secondary['sql'].avgScoreSecond = float("{:.2f}".format(secondary['totalScoreSecond'] / secondary['totalGames']))
+        secondary['sql'].avgScoreThird = float("{:.2f}".format(secondary['totalScoreThird'] / secondary['totalGames']))
+        secondary['sql'].avgScoreFourth = float("{:.2f}".format(secondary['totalScoreFourth'] / secondary['totalGames']))
+        db.session.add(secondary['sql'])
+        db.session.commit()
+    return secondary
 
 
 def getSecondaries():
     secondaries = {}
     for secondary in Secondary.query.all():
-        secondaryInd = getMission(secondary.id)
+        secondaryInd = getSecondary(secondary.id)
         secondaries[secondaryInd['sql'].shortName] = secondaryInd
     return [secondary for secondary in secondaries.values()]
 
 
 def getSecondary(sc):
-    # TODO
-    mission = {
-        'sql': Mission.query.filter_by(id=sc).first(),
+    secondary = {
+        'sql': Secondary.query.filter_by(id=sc).first(),
         'popularity': [],
         'bestFactions': {},
         'worstFactions': {},
         'games': {},
         'maxGames': 0
     }
-    for rate in MissionRates.query.filter_by(mission=sc).order_by(desc(MissionRates.rate1)).limit(3).all():
-        mission['bestFactions'][Faction.query.filter_by(id=rate.faction).first().name] = {
+    for rate in SecondaryRates.query.filter_by(secondary=sc).order_by(desc(SecondaryRates.rate1)).limit(3).all():
+        secondary['bestFactions'][Faction.query.filter_by(id=rate.faction).first().name] = {
             'winRate': rate.rate1,
             'loseRate': rate.rate2,
             'tieRate': rate.rate3,
             'id': rate.faction,
             'shortName': Faction.query.filter_by(id=rate.faction).first().shortName
         }
-    for rate in MissionRates.query.filter_by(mission=sc).order_by(asc(MissionRates.rate1)).limit(3).all():
-        mission['worstFactions'][Faction.query.filter_by(id=rate.faction).first().name] = {
+    for rate in SecondaryRates.query.filter_by(secondary=sc).order_by(desc(SecondaryRates.rate2)).limit(3).all():
+        secondary['worstFactions'][Faction.query.filter_by(id=rate.faction).first().name] = {
             'winRate': rate.rate1,
             'loseRate': rate.rate2,
             'tieRate': rate.rate3,
             'id': rate.faction,
             'shortName': Faction.query.filter_by(id=rate.faction).first().shortName
         }
-    mission['popularity'] = float("{:.2f}".format(len(Game.query.filter(Game.mission.contains(mission['sql'])).all()) * 100 / len(Game.query.all())))
-    mission['topFaction'] = Faction.query.filter_by(name=list(mission['bestFactions'].keys())[0]).first() if mission['bestFactions'] else None
-    mission['worstFaction'] = Faction.query.filter_by(name=list(mission['worstFactions'].keys())[0]).first() if mission['worstFactions'] else None
+    popularity = len(Game.query.filter(Game.winSecondaryFirst.contains(secondary['sql'])).all())
+    popularity += len(Game.query.filter(Game.winSecondarySecond.contains(secondary['sql'])).all())
+    popularity += len(Game.query.filter(Game.winSecondaryThird.contains(secondary['sql'])).all())
+    popularity += len(Game.query.filter(Game.losSecondaryFirst.contains(secondary['sql'])).all())
+    popularity += len(Game.query.filter(Game.losSecondarySecond.contains(secondary['sql'])).all())
+    popularity += len(Game.query.filter(Game.losSecondaryThird.contains(secondary['sql'])).all())
+
+    secondary['popularity'] = float("{:.2f}".format(popularity * 100 / len(Game.query.all())))
+    secondary['topFaction'] = Faction.query.filter_by(name=list(secondary['bestFactions'].keys())[0]).first() if secondary['bestFactions'] else None
+    secondary['worstFaction'] = Faction.query.filter_by(name=list(secondary['worstFactions'].keys())[0]).first() if secondary['worstFactions'] else None
     for i in range(0, 12):
         if datetime.now().month - i < 1:
             month = datetime.now().month - i + 12
@@ -851,12 +859,15 @@ def getSecondary(sc):
         else:
             month = datetime.now().month - i
             year = datetime.now().year
-        mission['games'][str(month) + '-' + str(year)] = 0
-        for j in range(0, len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.mission.contains(mission['sql'])).all())):
-            mission['games'][str(month) + '-' + str(year)] += 1
-        mission['maxGames'] = mission['games'][str(month) + '-' + str(year)] if mission['maxGames'] < mission['games'][str(month) + '-' + str(year)] else mission['maxGames']
-    mission['games'] = dict(OrderedDict(reversed(list(mission['games'].items()))))
-    return mission
+        secondary['games'][str(month) + '-' + str(year)] = len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.winSecondaryFirst.contains(secondary['sql'])).all())
+        secondary['games'][str(month) + '-' + str(year)] += len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.winSecondarySecond.contains(secondary['sql'])).all())
+        secondary['games'][str(month) + '-' + str(year)] += len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.winSecondaryThird.contains(secondary['sql'])).all())
+        secondary['games'][str(month) + '-' + str(year)] += len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.losSecondaryFirst.contains(secondary['sql'])).all())
+        secondary['games'][str(month) + '-' + str(year)] += len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.losSecondarySecond.contains(secondary['sql'])).all())
+        secondary['games'][str(month) + '-' + str(year)] += len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.losSecondaryThird.contains(secondary['sql'])).all())
+        secondary['maxGames'] = secondary['games'][str(month) + '-' + str(year)] if secondary['maxGames'] < secondary['games'][str(month) + '-' + str(year)] else secondary['maxGames']
+    secondary['games'] = dict(OrderedDict(reversed(list(secondary['games'].items()))))
+    return secondary
 
 
 def getGeneral():
@@ -927,8 +938,8 @@ def getGeneral():
     secondaries = {k: v for k, v in sorted(secondaries.items(), key=operator.itemgetter(1), reverse=True)}
     general = {
         'totalGames': len(games),
-        'avgWinner': sum([game.winTotal for game in games]) / len(games) if len(games) > 0 else 0.0,
-        'avgLoser': sum([game.losTotal for game in games]) / len(games) if len(games) > 0 else 0.0,
+        'avgWinner': float("{:.2f}".format(sum([game.winTotal for game in games]) / len(games) if len(games) > 0 else 0.0)),
+        'avgLoser': float("{:.2f}".format(sum([game.losTotal for game in games]) / len(games) if len(games) > 0 else 0.0)),
         'missionMostPlayed': list(primaries)[0] if list(primaries) else None,
         'missionLessPlayed': list(primaries)[-1] if list(primaries) else None,
         'secondaryMostPlayed': list(secondaries)[0] if list(secondaries) else None,
@@ -1013,7 +1024,7 @@ def randomize_data(db):
         'Matched game'
     ]
     players = [names.get_full_name() for i in range(0, 10)]
-    for i in range(0, 2):
+    for i in range(0, 40):
         random.seed(i)
         d = random.randint(int(time.time()) - 31556926, int(time.time()))
         datetime.fromtimestamp(d)
@@ -1154,10 +1165,10 @@ def randomize_data(db):
             date=datetime.fromtimestamp(d),
             timestamp=response['timestamp'],
             mission=[response['mission']] if response['mission'] else [],
-            initFirst=[winnerSql] if response[response['winner']]['initiative'][0] else [loserSql],
-            initSecond=[winnerSql] if response[response['winner']]['initiative'][1] else [loserSql],
-            initThird=[winnerSql] if response[response['winner']]['initiative'][2] else [loserSql],
-            initFourth=[winnerSql] if response[response['winner']]['initiative'][3] else [loserSql],
+            initFirst=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][0] else [response[response['loser']]['faction']],
+            initSecond=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][1] else [response[response['loser']]['faction']],
+            initThird=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][2] else [response[response['loser']]['faction']],
+            initFourth=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][3] else [response[response['loser']]['faction']],
             winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
             winScouting=response[response['winner']]['scouting'],
             winTotal=response[response['winner']]['total'],
@@ -1188,8 +1199,7 @@ def randomize_data(db):
             losSecondarySecondScore=response[response['loser']]['secondaries']['second']['score'],
             losSecondaryThird=[response[response['loser']]['secondaries']['third']['name']],
             losSecondaryThirdScore=response[response['loser']]['secondaries']['third']['score'],
-            rollOffWinner=[Player.query.filter_by(
-                username=response['rollOffWinner']).first()] if 'rollOffWinner' in response.keys() else [],
+            rollOffWinner=[response[response['rollOffWinner']]['faction']] if 'rollOffWinner' in response.keys() else [],
             rollOffSelection=response['rollOffWinnerSelection'] if 'rollOffWinnerSelection' in response.keys() else '',
             tie=response['tie']
         )

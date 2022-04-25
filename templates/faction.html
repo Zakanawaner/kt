@@ -40,7 +40,7 @@
                         {% for i in range(0, faction['winnerRates']|length) %}
                             {% if i < 3 %}
                                 <div class="pie-inner">
-                                    <div onclick="location.href='/faction/{{ faction['winnerRates'][i].id }}';" class="pie animate no-round" style="--p:{{ faction['counterRates'][faction['winnerRates'][i].name]['winRate'] }};--c:rgba(255,101,0,1);--b:15px">
+                                    <div onclick="location.href='/faction/{{ faction['winnerRates'][i].id }}';" class="pie animate no-round" style="--p:{{ faction['counterRates'][faction['winnerRates'][i].name]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                         <img class="pie_image" src="{{ url_for('static', filename='images/' + faction['winnerRates'][i].shortName + '.png') }}"/>
                                     </div>
                                     <p>{{ faction['winnerRates'][i].name }}</p>
@@ -53,14 +53,14 @@
                 <div class="pie-super-container">
                     <h2>Worst Against</h2>
                     <div class="pie-container at-0-8">
-                        {% for i in range(0, faction['winnerRates']|length) %}
+                        {% for i in range(0, faction['loserRates']|length) %}
                             {% if i < 3 %}
                                 <div class="pie-inner">
-                                    <div onclick="location.href='/faction/{{ faction['winnerRates'][-1-i].id }}';" class="pie animate no-round" style="--p:{{ faction['counterRates'][faction['winnerRates'][-1-i].name]['winRate'] }};--c:rgba(255,101,0,1);--b:15px">
-                                        <img class="pie_image" src="{{ url_for('static', filename='images/' + faction['winnerRates'][-1-i].shortName + '.png') }}"/>
+                                    <div onclick="location.href='/faction/{{ faction['loserRates'][i].id }}';" class="pie animate no-round" style="--p:{{ faction['counterRates'][faction['loserRates'][i].name]['loseRate'] }};--c:rgba(255,0,0,1);--b:5px">
+                                        <img class="pie_image" src="{{ url_for('static', filename='images/' + faction['loserRates'][i].shortName + '.png') }}"/>
                                     </div>
-                                    <p>{{ faction['winnerRates'][-1-i].name }}</p>
-                                    <p>{{ faction['counterRates'][faction['winnerRates'][-1-i].name]['winRate'] }}%</p>
+                                    <p>{{ faction['loserRates'][i].name }}</p>
+                                    <p>{{ faction['counterRates'][faction['loserRates'][i].name]['loseRate'] }}%</p>
                                 </div>
                             {% endif %}
                         {% endfor %}
@@ -76,7 +76,7 @@
                         {% for i in range(0, faction['bestMissions']|length) %}
                             {% if i < 3 %}
                                 <div class="pie-inner">
-                                    <div onclick="location.href='/mission/{{ faction['bestMissions'][i].id }}';" class="pie animate no-round" style="--p:{{ faction['missionRates'][faction['bestMissions'][i].name]['winRate'] }};--c:rgba(255,101,0,1);--b:15px">
+                                    <div onclick="location.href='/mission/{{ faction['bestMissions'][i].id }}';" class="pie animate no-round" style="--p:{{ faction['missionRates'][faction['bestMissions'][i].name]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                         <p>{{ faction['missionRates'][faction['bestMissions'][i].name]['winRate'] }}%</p>
                                     </div>
                                     <p>{{ faction['bestMissions'][i].name }}</p>
@@ -93,7 +93,7 @@
                         {% for i in range(0, faction['bestSecondaries']|length) %}
                             {% if i < 3 %}
                                 <div class="pie-inner">
-                                    <div onclick="location.href='/secondary/{{ faction['bestSecondaries'][i].id }}';" class="pie animate no-round" style="--p:{{ faction['secondaryRates'][faction['bestSecondaries'][i].name]['winRate'] }};--c:rgba(255,101,0,1);--b:15px">
+                                    <div onclick="location.href='/secondary/{{ faction['bestSecondaries'][i].id }}';" class="pie animate no-round" style="--p:{{ faction['secondaryRates'][faction['bestSecondaries'][i].name]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                         <p>{{ faction['secondaryRates'][faction['bestSecondaries'][i].name]['winRate'] }}%</p>
                                     </div>
                                     <p>{{ faction['bestSecondaries'][i].name }}</p>

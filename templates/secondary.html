@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="graph">
-        <h1>{{ mission['sql'].name }}</h1>
+        <h1>{{ secondary['sql'].name }}</h1>
         <div class="pie-container at-0-8">
-            <div class="pie animate no-round" style="--p:{{ mission['popularity'] }};--c:rgba(255,101,0,1);--b:15px">
+            <div class="pie animate no-round" style="--p:{{ secondary['popularity'] }};--c:rgba(255,101,0,1);--b:15px">
                 <p>Popularity</p>
-                <p>{{ mission['popularity'] }}%</p>
+                <p>{{ secondary['popularity'] }}%</p>
             </div>
         </div>
         <div class="graph-container">
             <div class="year-stats">
-                {% for month in mission['games'].keys() %}
+                {% for month in secondary['games'].keys() %}
                     <div class="month-group hoverme">
                         <div class="pop">
-                            <p class="text">{{ mission['games'][month] }} games</p>
+                            <p class="text">{{ secondary['games'][month] }} games</p>
                         </div>
-                        {% if mission['maxGames'] > 0 %}
-                            <div class="bar" style="height: {{ mission['games'][month] * 100 / mission['maxGames'] }}%;"></div>
+                        {% if secondary['maxGames'] > 0 %}
+                            <div class="bar" style="height: {{ secondary['games'][month] * 100 / secondary['maxGames'] }}%;"></div>
                             <div class="back-bar" style="height: {{ 100 }}%;"></div>
                         {% else %}
                             <div class="bar" style="height: {{ 0 }}%;"></div>
@@ -31,7 +31,7 @@
             <div class="pie-super-container">
                 <h2>Best Factions</h2>
                 <div class="pie-container at-0-8">
-                    {% for key, value in mission['bestFactions'].items() %}
+                    {% for key, value in secondary['bestFactions'].items() %}
                         <div class="pie-inner">
                             <div onclick="location.href='/faction/{{ value['id'] }}';" class="pie animate no-round" style="--p:{{ value['winRate'] }};--c:rgba(255,101,0,1);--b:15px">
                                 <img class="pie_image" src="{{ url_for('static', filename='images/' + value['shortName'] + '.png') }}"/>
@@ -45,7 +45,7 @@
             <div class="pie-super-container">
                 <h2>Worst Factions</h2>
                 <div class="pie-container at-0-8">
-                    {% for key, value in mission['worstFactions'].items() %}
+                    {% for key, value in secondary['worstFactions'].items() %}
                         <div class="pie-inner">
                             <div onclick="location.href='/faction/{{ value['id'] }}';" class="pie animate no-round" style="--p:{{ value['loseRate'] }};--c:rgba(255,0,0,1);--b:15px">
                                 <img class="pie_image" src="{{ url_for('static', filename='images/' + value['shortName'] + '.png') }}"/>
