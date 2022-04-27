@@ -3,25 +3,25 @@
     <div class="graph">
         <h1>{{ game['sql'].date.strftime("%Y-%m-%d") }}</h1>
         <h1>{{ game['sql'].mission[0].name }}</h1>
-        <div class="pie-ultra-container">
+        <div class="game-ultra-container">
             <div class="graph">
                 <img class="circular_image" src="{{ url_for('static', filename='images/' + game['sql'].winFaction[0].shortName + '.png') }}"/>
                 <h2>{{ game['sql'].winFaction[0].name }}</h2>
-                <p>{{ game['sql'].winTotal }}</p>
-                <p>{{ game['sql'].winSecondaryFirst[0].name }}</p>
-                <p>{{ game['sql'].winSecondarySecond[0].name }}</p>
-                <p>{{ game['sql'].winSecondaryThird[0].name }}</p>
-                <p>Scouting: {{ game['sql'].winScouting }}</p>
+                <h3>{{ game['sql'].winTotal }}</h3>
+                <h3>{{ game['sql'].winSecondaryFirst[0].name }}</h3>
+                <h3>{{ game['sql'].winSecondarySecond[0].name }}</h3>
+                <h3>{{ game['sql'].winSecondaryThird[0].name }}</h3>
+                <h3>Scouting: {{ game['sql'].winScouting }}</h3>
             </div>
             <h3>VS</h3>
             <div class="graph">
                 <img class="circular_image" src="{{ url_for('static', filename='images/' + game['sql'].losFaction[0].shortName + '.png') }}"/>
                 <h2>{{ game['sql'].losFaction[0].name }}</h2>
-                <p>{{ game['sql'].losTotal }}</p>
-                <p>{{ game['sql'].losSecondaryFirst[0].name }}</p>
-                <p>{{ game['sql'].losSecondarySecond[0].name }}</p>
-                <p>{{ game['sql'].losSecondaryThird[0].name }}</p>
-                <p>Scouting: {{ game['sql'].losScouting }}</p>
+                <h3>{{ game['sql'].losTotal }}</h3>
+                <h3>{{ game['sql'].losSecondaryFirst[0].name }}</h3>
+                <h3>{{ game['sql'].losSecondarySecond[0].name }}</h3>
+                <h3>{{ game['sql'].losSecondaryThird[0].name }}</h3>
+                <h3>Scouting: {{ game['sql'].losScouting }}</h3>
             </div>
         </div>
         <div class="table">
