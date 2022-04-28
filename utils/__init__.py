@@ -2,10 +2,65 @@ from database import Game, Player, Mission, Rank, Secondary, Faction, Tournament
 from sqlalchemy import extract, desc, asc, or_
 from datetime import datetime
 from collections import OrderedDict
+from password_strength import PasswordPolicy
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import current_user
+from functools import wraps
 import random
 import time
-import names
 import operator
+import uuid
+import os
+
+
+##############
+# Decorators #
+def only_admin(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        c = current_user
+        if current_user.permissions >= 8:
+            return func(*args, **kwargs)
+    return decorated_view
+
+
+def userSignup(db, form):
+    if form['password'] == form['password1']:
+        policy = PasswordPolicy.from_names(
+            length=8,
+            uppercase=1,
+            numbers=1
+        )
+        if policy.test(form['password']):
+            return 401, None
+        hashed_password = generate_password_hash(form['password'], method='sha256')
+        if Player.query.filter_by(username=form['username']).first():
+            return 402, None
+        new_user = Player(publicId=str(uuid.uuid4()),
+                          username=form['username'],
+                          password=hashed_password,
+                          shortName=form['username'].lower().replace(" ", ""),
+                          permissions=8 if form['username'] == 'Zakanawaner' else 1,
+                          steamLink=False,
+                          allowSharing=True,
+                          rank=[Rank.query.filter(Rank.score <= 0).first()],
+                          score=0,
+                          wins=0,
+                          ties=0,
+                          loses=0)
+        db.session.add(new_user)
+        db.session.commit()
+        return 200, new_user
+    else:
+        return 403, None
+
+
+def userLogin(form):
+    user = Player.query.filter_by(username=form['username']).first()
+    if user:
+        if check_password_hash(user.password, form['password']):
+            return 200, user
+    return 401, None
 
 
 def handlePlayers(db, response, opt):
@@ -95,8 +150,6 @@ def handleTournament(db, response):
 def handleGameData(response, db):
     if checkData(response):
         if not Game.query.filter_by(timestamp=response['timestamp']).first():
-            winnerSql = handlePlayers(db, response, 'winner')
-            loserSql = handlePlayers(db, response, 'loser')
             response = handleFactions(db, response, 'winner')
             response = handleFactions(db, response, 'loser')
             response = handleSecondaries(db, response, 'winner')
@@ -112,6 +165,7 @@ def handleGameData(response, db):
                 initSecond=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][1] else [response[response['loser']]['faction']],
                 initThird=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][2] else [response[response['loser']]['faction']],
                 initFourth=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][3] else [response[response['loser']]['faction']],
+                winner=response['winner'],
                 winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
                 winScouting=response[response['winner']]['scouting'],
                 winTotal=response[response['winner']]['total'],
@@ -122,11 +176,24 @@ def handleGameData(response, db):
                 winPrimaryFourth=response[response['winner']]['primaries']['fourth'],
                 winSecondary=response[response['winner']]['secondaries']['total'],
                 winSecondaryFirst=[response[response['winner']]['secondaries']['first']['name']],
+                winSecondaryFirstScoreTurn1=response[response['winner']]['secondaries']['first']['first'],
+                winSecondaryFirstScoreTurn2=response[response['winner']]['secondaries']['first']['second'],
+                winSecondaryFirstScoreTurn3=response[response['winner']]['secondaries']['first']['third'],
+                winSecondaryFirstScoreTurn4=response[response['winner']]['secondaries']['first']['fourth'],
                 winSecondaryFirstScore=response[response['winner']]['secondaries']['first']['score'],
                 winSecondarySecond=[response[response['winner']]['secondaries']['second']['name']],
+                winSecondarySecondScoreTurn1=response[response['winner']]['secondaries']['second']['first'],
+                winSecondarySecondScoreTurn2=response[response['winner']]['secondaries']['second']['second'],
+                winSecondarySecondScoreTurn3=response[response['winner']]['secondaries']['second']['third'],
+                winSecondarySecondScoreTurn4=response[response['winner']]['secondaries']['second']['fourth'],
                 winSecondarySecondScore=response[response['winner']]['secondaries']['second']['score'],
                 winSecondaryThird=[response[response['winner']]['secondaries']['third']['name']],
+                winSecondaryThirdScoreTurn1=response[response['winner']]['secondaries']['third']['first'],
+                winSecondaryThirdScoreTurn2=response[response['winner']]['secondaries']['third']['second'],
+                winSecondaryThirdScoreTurn3=response[response['winner']]['secondaries']['third']['third'],
+                winSecondaryThirdScoreTurn4=response[response['winner']]['secondaries']['third']['fourth'],
                 winSecondaryThirdScore=response[response['winner']]['secondaries']['third']['score'],
+                loser=response['loser'],
                 losFaction=[response[response['loser']]['faction']]if response[response['loser']]['faction'] else [],
                 losScouting=response[response['loser']]['scouting'],
                 losTotal=response[response['loser']]['total'],
@@ -137,10 +204,22 @@ def handleGameData(response, db):
                 losPrimaryFourth=response[response['loser']]['primaries']['fourth'],
                 losSecondary=response[response['loser']]['secondaries']['total'],
                 losSecondaryFirst=[response[response['loser']]['secondaries']['first']['name']],
+                losSecondaryFirstScoreTurn1=response[response['loser']]['secondaries']['first']['first'],
+                losSecondaryFirstScoreTurn2=response[response['loser']]['secondaries']['first']['second'],
+                losSecondaryFirstScoreTurn3=response[response['loser']]['secondaries']['first']['third'],
+                losSecondaryFirstScoreTurn4=response[response['loser']]['secondaries']['first']['fourth'],
                 losSecondaryFirstScore=response[response['loser']]['secondaries']['first']['score'],
                 losSecondarySecond=[response[response['loser']]['secondaries']['second']['name']],
+                losSecondarySecondScoreTurn1=response[response['loser']]['secondaries']['second']['first'],
+                losSecondarySecondScoreTurn2=response[response['loser']]['secondaries']['second']['second'],
+                losSecondarySecondScoreTurn3=response[response['loser']]['secondaries']['second']['third'],
+                losSecondarySecondScoreTurn4=response[response['loser']]['secondaries']['second']['fourth'],
                 losSecondarySecondScore=response[response['loser']]['secondaries']['second']['score'],
                 losSecondaryThird=[response[response['loser']]['secondaries']['third']['name']],
+                losSecondaryThirdScoreTurn1=response[response['loser']]['secondaries']['third']['first'],
+                losSecondaryThirdScoreTurn2=response[response['loser']]['secondaries']['third']['second'],
+                losSecondaryThirdScoreTurn3=response[response['loser']]['secondaries']['third']['third'],
+                losSecondaryThirdScoreTurn4=response[response['loser']]['secondaries']['third']['fourth'],
                 losSecondaryThirdScore=response[response['loser']]['secondaries']['third']['score'],
                 rollOffWinner=[response[response['rollOffWinner']]['faction']] if 'rollOffWinner' in response.keys() else [],
                 rollOffSelection=response['rollOffWinnerSelection'] if 'rollOffWinnerSelection' in response.keys() else '',
@@ -148,20 +227,13 @@ def handleGameData(response, db):
             )
 
             if response['tie']:
-                winnerSql.gamesTied.append(game)
                 response[response['winner']]['faction'].gamesTied.append(game)
-                loserSql.gamesTied.append(game)
-                response[response['loser']]['faction'].gamesTied.append(game)
+                if response[response['winner']]['faction'] != response[response['loser']]['faction']:
+                    response[response['loser']]['faction'].gamesTied.append(game)
             else:
-                winnerSql.gamesWon.append(game)
                 response[response['winner']]['faction'].gamesWon.append(game)
-                loserSql.gamesLost.append(game)
                 response[response['loser']]['faction'].gamesLost.append(game)
-            game.winner.append(winnerSql)
-            game.loser.append(loserSql)
 
-            db.session.add(winnerSql)
-            db.session.add(loserSql)
             db.session.add(response[response['winner']]['faction'])
             db.session.add(response[response['loser']]['faction'])
             if 'tournament' in response.keys():
@@ -264,26 +336,30 @@ def checkData(response):
 
 
 def createDatabase(db):
-    db.create_all()
+    if os.path.exists('database.sqlite'):
+        # os.remove('database.sqlite')
+        pass
+    else:
+        db.create_all()
 
-    db.session.add(Rank(name="Guardsman", shortName="guardsman", score=0))
-    db.session.add(Rank(name="Sergeant", shortName="sergeant", score=50))
-    db.session.add(Rank(name="Lieutenant", shortName="lieutenant", score=100))
-    db.session.add(Rank(name="Captain", shortName="captain", score=200))
-    db.session.add(Rank(name="Major", shortName="major", score=400))
-    db.session.add(Rank(name="Colonel", shortName="colonel", score=800))
-    db.session.add(Rank(name="Major General", shortName="majorgeneral", score=1600))
-    db.session.add(Rank(name="Lieutenant General", shortName="lieutenantgeneral", score=3200))
-    db.session.add(Rank(name="Marshall", shortName="marshall", score=6400))
-    db.session.add(Rank(name="General", shortName="general", score=12800))
-    db.session.add(Rank(name="Lord General", shortName="lordgeneral", score=25600))
-    db.session.add(Rank(name="Lord General Militant", shortName="lordgeneralmilitant", score=51200))
-    db.session.add(Rank(name="Warmaster", shortName="warmaster", score=102400))
-    db.session.add(Rank(name="Lord Commander", shortName="lordcommander", score=204800))
+        db.session.add(Rank(name="Guardsman", shortName="guardsman", score=0))
+        db.session.add(Rank(name="Sergeant", shortName="sergeant", score=50))
+        db.session.add(Rank(name="Lieutenant", shortName="lieutenant", score=100))
+        db.session.add(Rank(name="Captain", shortName="captain", score=200))
+        db.session.add(Rank(name="Major", shortName="major", score=400))
+        db.session.add(Rank(name="Colonel", shortName="colonel", score=800))
+        db.session.add(Rank(name="Major General", shortName="majorgeneral", score=1600))
+        db.session.add(Rank(name="Lieutenant General", shortName="lieutenantgeneral", score=3200))
+        db.session.add(Rank(name="Marshall", shortName="marshall", score=6400))
+        db.session.add(Rank(name="General", shortName="general", score=12800))
+        db.session.add(Rank(name="Lord General", shortName="lordgeneral", score=25600))
+        db.session.add(Rank(name="Lord General Militant", shortName="lordgeneralmilitant", score=51200))
+        db.session.add(Rank(name="Warmaster", shortName="warmaster", score=102400))
+        db.session.add(Rank(name="Lord Commander", shortName="lordcommander", score=204800))
 
-    db.session.add(Tournament(name="III Liga Mercenaria", shortName="iiiligamercenaria"))
+        db.session.add(Tournament(name="III Liga Mercenaria", shortName="iiiligamercenaria"))
 
-    db.session.commit()
+        db.session.commit()
 
 
 def getGames():
@@ -301,71 +377,33 @@ def getGame(gm):
 def getPlayers():
     players = {}
     for player in Player.query.all():
-        players[player.username] = {
-            'sql': player,
-            'wins': [],
-            'loses': [],
-            'ties': [],
-            'factions': {},
-            'missions': {},
-            'secondaries': {}
-        }
-        for game in Game.query.filter(Game.winner.contains(player)).all():
-            players[player.username]['wins'].append(game) if not game.tie else players[player.username]['ties'].append(game)
-        for game in Game.query.filter(Game.loser.contains(player)).all():
-            players[player.username]['loses'].append(game) if not game.tie else players[player.username]['ties'].append(game)
-
-        for faction in Faction.query.all():
-            players[player.username]['factions'][faction.name] = 0
-            for game in players[player.username]['wins']:
-                if game.winFaction[0] == faction:
-                    players[player.username]['factions'][faction.name] += 1
-            for game in players[player.username]['loses']:
-                if game.losFaction[0] == faction:
-                    players[player.username]['factions'][faction.name] -= 1
-        for mission in Mission.query.all():
-            players[player.username]['missions'][mission.name] = 0
-            for game in players[player.username]['wins']:
-                if game.mission[0] == mission:
-                    players[player.username]['missions'][mission.name] += 1
-            for game in players[player.username]['loses']:
-                if game.mission[0] == mission:
-                    players[player.username]['missions'][mission.name] -= 1
-        for secondary in Secondary.query.all():
-            players[player.username]['secondaries'][secondary.name] = 0
-            for game in players[player.username]['wins']:
-                if game.winSecondaryFirst[0] == secondary:
-                    players[player.username]['secondaries'][secondary.name] += 1
-                if game.winSecondarySecond[0] == secondary:
-                    players[player.username]['secondaries'][secondary.name] += 1
-                if game.winSecondaryThird[0] == secondary:
-                    players[player.username]['secondaries'][secondary.name] += 1
-            for game in players[player.username]['loses']:
-                if game.losSecondaryFirst[0] == secondary:
-                    players[player.username]['secondaries'][secondary.name] -= 1
-                if game.losSecondarySecond[0] == secondary:
-                    players[player.username]['secondaries'][secondary.name] -= 1
-                if game.losSecondaryThird[0] == secondary:
-                    players[player.username]['secondaries'][secondary.name] -= 1
-        if player.wins + player.loses + player.ties > 0:
-            players[player.username]['winRate'] = float("{:.2f}".format(player.wins * 100 / (player.wins + player.loses + player.ties)))
-        else:
-            players[player.username]['winRate'] = 0.0
-        players[player.username]['factions'] = {k: v for k, v in sorted(players[player.username]['factions'].items(), key=operator.itemgetter(1), reverse=True)}
-        players[player.username]['missions'] = {k: v for k, v in sorted(players[player.username]['missions'].items(), key=operator.itemgetter(1), reverse=True)}
-        players[player.username]['secondaries'] = {k: v for k, v in sorted(players[player.username]['secondaries'].items(), key=operator.itemgetter(1), reverse=True)}
-        players[player.username]['topFaction'] = Faction.query.filter_by(name=next(iter(players[player.username]['factions'].keys()))).first()
-        players[player.username]['topMission'] = Mission.query.filter_by(name=next(iter(players[player.username]['missions'].keys()))).first()
-        players[player.username]['topSecondary'] = Secondary.query.filter_by(name=next(iter(players[player.username]['secondaries'].keys()))).first()
-        if len(players[player.username]['wins']) + len(players[player.username]['loses']) + len(players[player.username]['ties']):
-            players[player.username]['avgScore'] = round(player.score / (len(players[player.username]['wins']) + len(players[player.username]['loses']) + len(players[player.username]['ties'])))
-        else:
-            players[player.username]['avgScore'] = 0.0
+        playerInd = getPlayer(player.id)
+        if playerInd['sql'].steamLink:
+            players[playerInd['sql'].shortName] = playerInd
     return [player for player in players.values()]
 
 
 def getPlayer(pl):
-    pass
+    player = {
+        'sql': Player.query.filter_by(id=pl).first(),
+        'topFaction': Faction.query.first(),
+        'topMission': Mission.query.first(),
+        'topSecondary': Secondary.query.first()
+    }
+    if player['sql']:
+        if player['sql'].steamLink:
+            if player['sql'].allowSharing:
+                player['totalGames'] = player['sql'].wins + player['sql'].loses + player['sql'].ties
+                player['winRate'] = float("{:.2f}".format(player['sql'].wins * 100 / player['totalGames'] if player['totalGames'] > 0 else 0))
+                player['name'] = player['sql'].username
+                return player
+            else:
+                player['name'] = "Anonymous"
+    return player
+
+
+def getPlayerById(userId):
+    return Player.query.filter_by(id=userId).first()
 
 
 def updateFactions(db):
@@ -704,6 +742,44 @@ def getFaction(fact, glo=False):
         if SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate1)).first():
             faction['bestSecondaries'].append(Secondary.query.filter_by(id=SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate1)).first().secondary).first())
     return faction
+
+
+def updatePlayers(db):
+    for player in Player.query.all():
+        updatePlayer(db, player.id)
+
+
+def updatePlayer(db, pl):
+    player = {
+        'sql': Player.query.filter_by(id=pl).first(),
+        # TODO añadir rates
+    }
+    player['sql'].gamesWon = []
+    player['sql'].gamesLost = []
+    player['sql'].gamesTied = []
+    player['sql'].wins = 0
+    player['sql'].loses = 0
+    player['sql'].ties = 0
+    if player['sql'].steamLink:
+        for game in Game.query.filter_by(winner=player['sql'].steamId).all():
+            if game.tie:
+                player['sql'].gamesTied.append(game)
+                player['sql'].ties += 1
+            else:
+                player['sql'].gamesWon.append(game)
+                player['sql'].wins += 1
+            player['sql'].score += game.winTotal
+        for game in Game.query.filter_by(loser=player['sql'].steamId).all():
+            if game.tie:
+                player['sql'].gamesTied.append(game)
+                player['sql'].ties += 1
+            else:
+                player['sql'].gamesLost.append(game)
+                player['sql'].loses += 1
+            player['sql'].score += game.losTotal
+        db.session.add(player['sql'])
+        db.session.commit()
+    return player
 
 
 def updateMissions(db):
@@ -1047,7 +1123,7 @@ def randomize_data(db):
         'Open game',
         'Matched game'
     ]
-    players = [names.get_full_name() for i in range(0, 10)]
+    players = [str(random.randint(1000, 1010)) for i in range(0, 10)]
     for i in range(0, 40):
         random.seed(i)
         d = random.randint(int(time.time()) - 31556926, int(time.time()))
@@ -1098,9 +1174,9 @@ def randomize_data(db):
                     "name": "Master the terminals",
                 },
             ]),
-            'rollOffWinner': random.choice(['red', 'blue']),
+            'rollOffWinner': random.choice(playersName),
             'rollOffWinnerSelection': random.choice(["attacker", "defender"]),
-            'red': {
+            playersName[0]: {
                 'initiative': [random.choice([True, False]),
                                random.choice([True, False]),
                                random.choice([True, False]),
@@ -1116,19 +1192,31 @@ def randomize_data(db):
                 'secondaries': {
                     'first': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3)
+                        'score': random.randint(0, 3),
+                        'first': 0,
+                        'second': 0,
+                        'third': 0,
+                        'fourth': 0,
                     },
                     'second': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3)
+                        'score': random.randint(0, 3),
+                        'first': 0,
+                        'second': 0,
+                        'third': 0,
+                        'fourth': 0,
                     },
                     'third': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3)
+                        'score': random.randint(0, 3),
+                        'first': 0,
+                        'second': 0,
+                        'third': 0,
+                        'fourth': 0,
                     },
                 }
             },
-            'blue': {
+            playersName[1]: {
                 'initiative': [random.choice([True, False]),
                                random.choice([True, False]),
                                random.choice([True, False]),
@@ -1144,40 +1232,50 @@ def randomize_data(db):
                 'secondaries': {
                     'first': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3)
+                        'score': random.randint(0, 3),
+                        'first': 0,
+                        'second': 0,
+                        'third': 0,
+                        'fourth': 0,
                     },
                     'second': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3)
+                        'score': random.randint(0, 3),
+                        'first': 0,
+                        'second': 0,
+                        'third': 0,
+                        'fourth': 0,
                     },
                     'third': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3)
+                        'score': random.randint(0, 3),
+                        'first': 0,
+                        'second': 0,
+                        'third': 0,
+                        'fourth': 0,
                     },
                 }
             }
         }
-        response['red']['primaries']['total'] = response['red']['primaries']['first'] + response['red']['primaries']['second'] + response['red']['primaries']['third'] + response['red']['primaries']['fourth']
-        response['blue']['primaries']['total'] = response['red']['primaries']['first'] + response['blue']['primaries']['second'] + response['blue']['primaries']['third'] + response['blue']['primaries']['fourth']
-        response['red']['secondaries']['total'] = response['red']['secondaries']['first']['score'] + response['red']['secondaries']['second']['score'] + response['red']['secondaries']['third']['score']
-        response['blue']['secondaries']['total'] = response['blue']['secondaries']['first']['score'] + response['blue']['secondaries']['second']['score'] + response['blue']['secondaries']['third']['score']
-        response['red']['total'] = response['red']['primaries']['total'] + response['red']['secondaries']['total']
-        response['blue']['total'] = response['blue']['primaries']['total'] + response['blue']['secondaries']['total']
-        if response['blue']['total'] > response['red']['total']:
-            response['winner'] = 'blue'
-            response['loser'] = 'red'
+        response[playersName[0]]['primaries']['total'] = response[playersName[0]]['primaries']['first'] + response[playersName[0]]['primaries']['second'] + response[playersName[0]]['primaries']['third'] + response[playersName[0]]['primaries']['fourth']
+        response[playersName[1]]['primaries']['total'] = response[playersName[0]]['primaries']['first'] + response[playersName[1]]['primaries']['second'] + response[playersName[1]]['primaries']['third'] + response[playersName[1]]['primaries']['fourth']
+        response[playersName[0]]['secondaries']['total'] = response[playersName[0]]['secondaries']['first']['score'] + response[playersName[0]]['secondaries']['second']['score'] + response[playersName[0]]['secondaries']['third']['score']
+        response[playersName[1]]['secondaries']['total'] = response[playersName[1]]['secondaries']['first']['score'] + response[playersName[1]]['secondaries']['second']['score'] + response[playersName[1]]['secondaries']['third']['score']
+        response[playersName[0]]['total'] = response[playersName[0]]['primaries']['total'] + response[playersName[0]]['secondaries']['total']
+        response[playersName[1]]['total'] = response[playersName[1]]['primaries']['total'] + response[playersName[1]]['secondaries']['total']
+        if response[playersName[1]]['total'] > response[playersName[0]]['total']:
+            response['winner'] = playersName[1]
+            response['loser'] = playersName[0]
             response['tie'] = False
-        elif response['blue']['total'] < response['red']['total']:
-            response['winner'] = 'red'
-            response['loser'] = 'blue'
+        elif response[playersName[1]]['total'] < response[playersName[0]]['total']:
+            response['winner'] = playersName[0]
+            response['loser'] = playersName[1]
             response['tie'] = False
         else:
-            response['winner'] = 'red'
-            response['loser'] = 'blue'
+            response['winner'] = playersName[0]
+            response['loser'] = playersName[1]
             response['tie'] = True
 
-        winnerSql = handlePlayers(db, response, 'winner')
-        loserSql = handlePlayers(db, response, 'loser')
         response = handleFactions(db, response, 'winner')
         response = handleFactions(db, response, 'loser')
         response = handleSecondaries(db, response, 'winner')
@@ -1193,6 +1291,7 @@ def randomize_data(db):
             initSecond=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][1] else [response[response['loser']]['faction']],
             initThird=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][2] else [response[response['loser']]['faction']],
             initFourth=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][3] else [response[response['loser']]['faction']],
+            winner=response['winner'],
             winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
             winScouting=response[response['winner']]['scouting'],
             winTotal=response[response['winner']]['total'],
@@ -1203,11 +1302,24 @@ def randomize_data(db):
             winPrimaryFourth=response[response['winner']]['primaries']['fourth'],
             winSecondary=response[response['winner']]['secondaries']['total'],
             winSecondaryFirst=[response[response['winner']]['secondaries']['first']['name']],
+            winSecondaryFirstScoreTurn1=response[response['winner']]['secondaries']['first']['first'],
+            winSecondaryFirstScoreTurn2=response[response['winner']]['secondaries']['first']['second'],
+            winSecondaryFirstScoreTurn3=response[response['winner']]['secondaries']['first']['third'],
+            winSecondaryFirstScoreTurn4=response[response['winner']]['secondaries']['first']['fourth'],
             winSecondaryFirstScore=response[response['winner']]['secondaries']['first']['score'],
             winSecondarySecond=[response[response['winner']]['secondaries']['second']['name']],
+            winSecondarySecondScoreTurn1=response[response['winner']]['secondaries']['second']['first'],
+            winSecondarySecondScoreTurn2=response[response['winner']]['secondaries']['second']['second'],
+            winSecondarySecondScoreTurn3=response[response['winner']]['secondaries']['second']['third'],
+            winSecondarySecondScoreTurn4=response[response['winner']]['secondaries']['second']['fourth'],
             winSecondarySecondScore=response[response['winner']]['secondaries']['second']['score'],
             winSecondaryThird=[response[response['winner']]['secondaries']['third']['name']],
+            winSecondaryThirdScoreTurn1=response[response['winner']]['secondaries']['third']['first'],
+            winSecondaryThirdScoreTurn2=response[response['winner']]['secondaries']['third']['second'],
+            winSecondaryThirdScoreTurn3=response[response['winner']]['secondaries']['third']['third'],
+            winSecondaryThirdScoreTurn4=response[response['winner']]['secondaries']['third']['fourth'],
             winSecondaryThirdScore=response[response['winner']]['secondaries']['third']['score'],
+            loser=response['loser'],
             losFaction=[response[response['loser']]['faction']] if response[response['loser']]['faction'] else [],
             losScouting=response[response['loser']]['scouting'],
             losTotal=response[response['loser']]['total'],
@@ -1218,10 +1330,22 @@ def randomize_data(db):
             losPrimaryFourth=response[response['loser']]['primaries']['fourth'],
             losSecondary=response[response['loser']]['secondaries']['total'],
             losSecondaryFirst=[response[response['loser']]['secondaries']['first']['name']],
+            losSecondaryFirstScoreTurn1=response[response['loser']]['secondaries']['first']['first'],
+            losSecondaryFirstScoreTurn2=response[response['loser']]['secondaries']['first']['second'],
+            losSecondaryFirstScoreTurn3=response[response['loser']]['secondaries']['first']['third'],
+            losSecondaryFirstScoreTurn4=response[response['loser']]['secondaries']['first']['fourth'],
             losSecondaryFirstScore=response[response['loser']]['secondaries']['first']['score'],
             losSecondarySecond=[response[response['loser']]['secondaries']['second']['name']],
+            losSecondarySecondScoreTurn1=response[response['loser']]['secondaries']['second']['first'],
+            losSecondarySecondScoreTurn2=response[response['loser']]['secondaries']['second']['second'],
+            losSecondarySecondScoreTurn3=response[response['loser']]['secondaries']['second']['third'],
+            losSecondarySecondScoreTurn4=response[response['loser']]['secondaries']['second']['fourth'],
             losSecondarySecondScore=response[response['loser']]['secondaries']['second']['score'],
             losSecondaryThird=[response[response['loser']]['secondaries']['third']['name']],
+            losSecondaryThirdScoreTurn1=response[response['loser']]['secondaries']['third']['first'],
+            losSecondaryThirdScoreTurn2=response[response['loser']]['secondaries']['third']['second'],
+            losSecondaryThirdScoreTurn3=response[response['loser']]['secondaries']['third']['third'],
+            losSecondaryThirdScoreTurn4=response[response['loser']]['secondaries']['third']['fourth'],
             losSecondaryThirdScore=response[response['loser']]['secondaries']['third']['score'],
             rollOffWinner=[response[response['rollOffWinner']]['faction']] if 'rollOffWinner' in response.keys() else [],
             rollOffSelection=response['rollOffWinnerSelection'] if 'rollOffWinnerSelection' in response.keys() else '',
@@ -1229,23 +1353,17 @@ def randomize_data(db):
         )
         response['tournament'].games.append(game)
         if response['tie']:
-            winnerSql.gamesTied.append(game)
             response[response['winner']]['faction'].gamesTied.append(game)
-            loserSql.gamesTied.append(game)
-            response[response['loser']]['faction'].gamesTied.append(game)
+            if response[response['winner']]['faction'] != response[response['loser']]['faction']:
+                response[response['loser']]['faction'].gamesTied.append(game)
         else:
-            winnerSql.gamesWon.append(game)
             response[response['winner']]['faction'].gamesWon.append(game)
-            loserSql.gamesLost.append(game)
             response[response['loser']]['faction'].gamesLost.append(game)
-
-        game.winner.append(winnerSql)
-        game.loser.append(loserSql)
-
+        print("game {}".format(i))
+        print(response[response['winner']]['faction'].name)
+        print(response[response['loser']]['faction'].name)
         db.session.add(response[response['winner']]['faction'])
         db.session.add(response[response['loser']]['faction'])
-        db.session.add(winnerSql)
-        db.session.add(loserSql)
         db.session.add(response['tournament'])
         db.session.add(game)
         db.session.commit()

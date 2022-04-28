@@ -19,9 +19,9 @@
             <div class="table-content">
                 {% for player in players %}
                     <div class="table-row">
-                        <div onclick="location.href='/player/{{ player['sql'].id }}';" class="table-data table-link">{{ player['sql'].username }}</div>
+                        <div onclick="location.href='/player/{{ player['sql'].id }}';" class="table-data table-link">{{ player['name'] }}</div>
                         <div onclick="location.href='/rank/{{ player['sql'].rank[0].id }}';" class="table-data table-link">{{ player['sql'].rank[0].name }}</div>
-                        <div class="table-data">{{ player['winRate'] }}</div>
+                        <div class="table-data">{{ player['winRate'] }}%</div>
                         <div class="table-data">{{ player['sql'].wins + player['sql'].loses + player['sql'].ties }}</div>
                         <div class="table-data">{{ player['sql'].score }}</div>
                         <div class="table-data">{{ player['sql'].wins }}</div>

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="graph">
+        <h1>{{ player['sql'].username }}</h1>
+        {% if player['sql'].allowSharing %}
+            <p>Player allows sharing</p>
+        {% endif %}
+    </div>
+{% endblock %}

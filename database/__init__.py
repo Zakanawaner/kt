@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 
 db = SQLAlchemy()
@@ -175,7 +176,7 @@ class Game(db.Model):
     initThird = db.relationship("Faction", secondary=faction_game_init_3)
     initFourth = db.relationship("Faction", secondary=faction_game_init_4)
     initFifth = db.relationship("Faction", secondary=faction_game_init_5)
-    winner = db.relationship("Player", secondary=player_game_winner)
+    winner = db.Column(db.String(100))
     winScouting = db.Column(db.String(20))
     winFaction = db.relationship("Faction", secondary=game_faction_winner)
     winTotal = db.Column(db.Integer)
@@ -210,7 +211,7 @@ class Game(db.Model):
     winSecondaryFourthScoreTurn2 = db.Column(db.Integer)
     winSecondaryFourthScoreTurn3 = db.Column(db.Integer)
     winSecondaryFourthScoreTurn4 = db.Column(db.Integer)
-    loser = db.relationship("Player", secondary=player_game_loser)
+    loser = db.Column(db.String(100))
     losScouting = db.Column(db.String(20))
     losFaction = db.relationship("Faction", secondary=game_faction_loser)
     losTotal = db.Column(db.Integer)
@@ -351,11 +352,17 @@ class Tournament(db.Model):
     games = db.relationship("Game", secondary=game_tournament)
 
 
-class Player(db.Model):
+class Player(db.Model, UserMixin):
     __tablename__ = 'player'
     id = db.Column(db.Integer, primary_key=True)
+    publicId = db.Column(db.Integer)
     username = db.Column(db.String(30), nullable=False)
+    password = db.Column(db.String(200))
     shortName = db.Column(db.String(30))
+    permissions = db.Column(db.Integer)
+    steamLink = db.Column(db.Boolean)
+    steamId = db.Column(db.String(30))
+    allowSharing = db.Column(db.Boolean)
     rank = db.relationship("Rank", secondary=player_rank)
     score = db.Column(db.Integer)
     gamesWon = db.relationship("Game", secondary=player_game_won)

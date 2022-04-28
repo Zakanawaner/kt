@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="graph">
+        <h1>{{ player['sql'].username }}</h1>
+        {% if player['sql'].allowSharing %}
+            <h2>Player allows sharing</h2>
+            <h2>Games won: {{ player['sql'].wins }}</h2>
+            <h2>Games lost: {{ player['sql'].loses }}</h2>
+            <h2>Games tied: {{ player['sql'].ties }}</h2>
+            <h2>Winrate: {{ player['winRate'] }}</h2>
+            <a href="/allowance/stop">Stop sharing my data</a>
+        {% else %}
+            <a href="/allowance/start">Allow data sharing</a>
+        {% endif %}
+        <a href="/link/stop">Unlink</a>
+        <a href="/delete">delete</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+{% endblock %}
