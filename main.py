@@ -13,6 +13,9 @@ db.init_app(app)
 # TODO adaptar nombre de facciones aquí quiándome del tts
 # TODO añadir imágenes correspondientes
 # TODO hacer subrutina de update
+# TODO añadir en database los snapshots
+# TODO Hacer membresía con link a steam y protecciónde datos
+# TODO pasarme a aws con mysql
 
 
 @app.route("/", methods={"GET", "POST"})
@@ -108,4 +111,4 @@ def secondary(sc):
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=3000)

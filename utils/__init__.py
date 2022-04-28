@@ -193,15 +193,27 @@ def checkData(response):
             'secondaries': {
                 'first': {
                     'name': "",
-                    'score': 0
+                    'score': 0,
+                    'first': 0,
+                    'second': 0,
+                    'third': 0,
+                    'fourth': 0,
                 },
                 'second': {
                     'name': "",
-                    'score': 0
+                    'score': 0,
+                    'first': 0,
+                    'second': 0,
+                    'third': 0,
+                    'fourth': 0,
                 },
                 'third': {
                     'name': "",
-                    'score': 0
+                    'score': 0,
+                    'first': 0,
+                    'second': 0,
+                    'third': 0,
+                    'fourth': 0,
                 },
             }
         },
@@ -218,18 +230,30 @@ def checkData(response):
             'secondaries': {
                 'first': {
                     'name': "",
-                    'score': 0
+                    'score': 0,
+                    'first': 0,
+                    'second': 0,
+                    'third': 0,
+                    'fourth': 0,
                 },
                 'second': {
                     'name': "",
-                    'score': 0
+                    'score': 0,
+                    'first': 0,
+                    'second': 0,
+                    'third': 0,
+                    'fourth': 0,
                 },
                 'third': {
                     'name': "",
-                    'score': 0
+                    'score': 0,
+                    'first': 0,
+                    'second': 0,
+                    'third': 0,
+                    'fourth': 0,
                 },
             }
-        },
+        }
     }
     if set(template.keys()) <= set(response.keys()):
         if set(template['mission'].keys()) <= set(response['mission'].keys()) and set(template['red'].keys()) <= set(response['red'].keys()) and set(template['blue'].keys()) <= set(response['blue'].keys()):
