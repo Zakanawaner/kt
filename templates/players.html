@@ -13,6 +13,7 @@
                 <div class="header__item">Ties</div>
                 <div class="header__item">Avg Score</div>
                 <div class="header__item">Top faction</div>
+                <div class="header__item">Top counter</div>
                 <div class="header__item">Top Mission</div>
                 <div class="header__item">Top Sec</div>
             </div>
@@ -22,15 +23,32 @@
                         <div onclick="location.href='/player/{{ player['sql'].id }}';" class="table-data table-link">{{ player['name'] }}</div>
                         <div onclick="location.href='/rank/{{ player['sql'].rank[0].id }}';" class="table-data table-link">{{ player['sql'].rank[0].name }}</div>
                         <div class="table-data">{{ player['winRate'] }}%</div>
-                        <div class="table-data">{{ player['sql'].wins + player['sql'].loses + player['sql'].ties }}</div>
+                        <div class="table-data">{{ player['totalGames'] }}</div>
                         <div class="table-data">{{ player['sql'].score }}</div>
                         <div class="table-data">{{ player['sql'].wins }}</div>
                         <div class="table-data">{{ player['sql'].loses }}</div>
                         <div class="table-data">{{ player['sql'].ties }}</div>
                         <div class="table-data">{{ player['avgScore'] }}</div>
-                        <div onclick="location.href='/faction/{{ player['topFaction'].id }}';" class="table-data table-link">{{ player['topFaction'].name }}</div>
-                        <div onclick="location.href='/mission/{{ player['topMission'].id }}';" class="table-data table-link">{{ player['topMission'].name }}</div>
-                        <div onclick="location.href='/secondary/{{ player['topSecondary'].id }}';" class="table-data table-link">{{ player['topSecondary'].name }}</div>
+                        {% if player['factionRates']|length > 0 %}
+                            <div onclick="location.href='/faction/{{ player['factionRates'][0].id }}';" class="table-data table-link">{{ player['factionRates'][0].name }}</div>
+                        {% else %}
+                            <div class="table-data">-</div>
+                        {% endif %}
+                        {% if player['factionRatesAgainst']|length > 0 %}
+                            <div onclick="location.href='/faction/{{ player['factionRatesAgainst'][0].id }}';" class="table-data table-link">{{ player['factionRatesAgainst'][0].name }}</div>
+                        {% else %}
+                            <div class="table-data">-</div>
+                        {% endif %}
+                        {% if player['missionRates']|length > 0 %}
+                            <div onclick="location.href='/mission/{{ player['missionRates'][0].id }}';" class="table-data table-link">{{ player['missionRates'][0].name }}</div>
+                        {% else %}
+                            <div class="table-data">-</div>
+                        {% endif %}
+                        {% if player['secondaryRates']|length > 0 %}
+                            <div onclick="location.href='/secondary/{{ player['secondaryRates'][0].id }}';" class="table-data table-link">{{ player['secondaryRates'][0].name }}</div>
+                        {% else %}
+                            <div class="table-data">-</div>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>

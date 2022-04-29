@@ -1,7 +1,8 @@
 from database import (
     Game, Player, Mission, Rank, Secondary, Faction, Tournament,
     WinRates, MissionRates, SecondaryRates, PlayerMissionRates,
-    PlayerWinRates, PlayerWinRatesPlayer, PlayerSecondaryRates)
+    PlayerWinRates, PlayerWinRatesPlayer, PlayerSecondaryRates,
+    PlayerWinRatesAgainst)
 from sqlalchemy import extract, desc, asc, or_
 from datetime import datetime
 from collections import OrderedDict
@@ -12,6 +13,7 @@ from functools import wraps
 import random
 import time
 import operator
+import names
 import uuid
 import os
 
@@ -360,7 +362,6 @@ def createDatabase(db):
         db.session.add(Rank(name="Warmaster", shortName="warmaster", score=102400))
         db.session.add(Rank(name="Lord Commander", shortName="lordcommander", score=204800))
 
-        db.session.add(Tournament(name="III Liga Mercenaria", shortName="iiiligamercenaria"))
 
         db.session.commit()
 
@@ -388,6 +389,9 @@ def updatePlayer(db, pl):
         'winnerFactions': {},
         'loserFactions': {},
         'tieFactions': {},
+        'winnerFactionsAgainst': {},
+        'loserFactionsAgainst': {},
+        'tieFactionsAgainst': {},
         'winnerMissions': {},
         'loserMissions': {},
         'tieMissions': {},
@@ -419,6 +423,10 @@ def updatePlayer(db, pl):
                     player['tieFactions'][game.winFaction[0].name] = 1
                 else:
                     player['tieFactions'][game.winFaction[0].name] += 1
+                if game.losFaction[0].name not in player['tieFactionsAgainst'].keys():
+                    player['tieFactionsAgainst'][game.losFaction[0].name] = 1
+                else:
+                    player['tieFactionsAgainst'][game.losFaction[0].name] += 1
                 if game.mission[0].name not in player['tieMissions'].keys():
                     player['tieMissions'][game.mission[0].name] = 1
                 else:
@@ -447,6 +455,10 @@ def updatePlayer(db, pl):
                     player['winnerFactions'][game.winFaction[0].name] = 1
                 else:
                     player['winnerFactions'][game.winFaction[0].name] += 1
+                if game.losFaction[0].name not in player['winnerFactionsAgainst'].keys():
+                    player['winnerFactionsAgainst'][game.losFaction[0].name] = 1
+                else:
+                    player['winnerFactionsAgainst'][game.losFaction[0].name] += 1
                 if game.mission[0].name not in player['winnerMissions'].keys():
                     player['winnerMissions'][game.mission[0].name] = 1
                 else:
@@ -478,6 +490,10 @@ def updatePlayer(db, pl):
                     player['tieFactions'][game.winFaction[0].name] = 1
                 else:
                     player['tieFactions'][game.winFaction[0].name] += 1
+                if game.winFaction[0].name not in player['tieFactionsAgainst'].keys():
+                    player['tieFactionsAgainst'][game.winFaction[0].name] = 1
+                else:
+                    player['tieFactionsAgainst'][game.winFaction[0].name] += 1
                 if game.mission[0].name not in player['tieMissions'].keys():
                     player['tieMissions'][game.mission[0].name] = 1
                 else:
@@ -506,6 +522,10 @@ def updatePlayer(db, pl):
                     player['loserFactions'][game.losFaction[0].name] = 1
                 else:
                     player['loserFactions'][game.losFaction[0].name] += 1
+                if game.winFaction[0].name not in player['loserFactionsAgainst'].keys():
+                    player['loserFactionsAgainst'][game.winFaction[0].name] = 1
+                else:
+                    player['loserFactionsAgainst'][game.winFaction[0].name] += 1
                 if game.mission[0].name not in player['loserMissions'].keys():
                     player['loserMissions'][game.mission[0].name] = 1
                 else:
@@ -563,7 +583,6 @@ def updatePlayer(db, pl):
             rate.rate3 = float("{:.2f}".format(player['tiePlayers'][otherPl] * 100 / tot)) if tot > 0 else 0
             db.session.add(rate)
             db.session.commit()
-
         for faction in player['winnerFactions'].keys():
             fct = Faction.query.filter_by(name=faction).first()
             tot = player['winnerFactions'][faction] + (player['loserFactions'][faction] if faction in player['loserFactions'].keys() else 0) + (player['tieFactions'][faction] if faction in player['tieFactions'].keys() else 0)
@@ -602,6 +621,123 @@ def updatePlayer(db, pl):
             rate.rate3 = float("{:.2f}".format(player['tieFactions'][faction] * 100 / tot)) if tot > 0 else 0
             db.session.add(rate)
             db.session.commit()
+
+
+        for faction in player['winnerFactionsAgainst'].keys():
+            fct = Faction.query.filter_by(name=faction).first()
+            tot = player['winnerFactionsAgainst'][faction] + (player['loserFactionsAgainst'][faction] if faction in player['loserFactionsAgainst'].keys() else 0) + (player['tieFactionsAgainst'][faction] if faction in player['tieFactionsAgainst'].keys() else 0)
+            rate = PlayerWinRatesAgainst.query.filter_by(player=player['sql'].id).filter_by(faction=fct.id).first()
+            if not rate:
+                rate = PlayerWinRatesAgainst(
+                    player=player['sql'].id,
+                    faction=fct.id
+                )
+            rate.rate1 = float("{:.2f}".format(player['winnerFactionsAgainst'][faction] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for faction in player['loserFactionsAgainst'].keys():
+            fct = Faction.query.filter_by(name=faction).first()
+            tot = player['loserFactionsAgainst'][faction] + (player['winnerFactionsAgainst'][faction] if faction in player['winnerFactionsAgainst'].keys() else 0) + (player['tieFactionsAgainst'][faction] if faction in player['tieFactionsAgainst'].keys() else 0)
+            rate = PlayerWinRatesAgainst.query.filter_by(player=player['sql'].id).filter_by(faction=fct.id).first()
+            if not rate:
+                rate = PlayerWinRatesAgainst(
+                    player=player['sql'].id,
+                    faction=fct.id
+                )
+            rate.rate2 = float("{:.2f}".format(player['loserFactionsAgainst'][faction] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for faction in player['tieFactionsAgainst'].keys():
+            fct = Faction.query.filter_by(name=faction).first()
+            tot = player['tieFactionsAgainst'][faction] + (
+                player['winnerFactionsAgainst'][faction] if faction in player['winnerFactionsAgainst'].keys() else 0) + (
+                      player['loserFactionsAgainst'][faction] if faction in player['loserFactionsAgainst'].keys() else 0)
+            rate = PlayerWinRatesAgainst.query.filter_by(player=player['sql'].id).filter_by(faction=fct.id).first()
+            if not rate:
+                rate = PlayerWinRatesAgainst(
+                    player=player['sql'].id,
+                    faction=fct.id
+                )
+            rate.rate3 = float("{:.2f}".format(player['tieFactionsAgainst'][faction] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+
+        for mission in player['winnerMissions'].keys():
+            fct = Mission.query.filter_by(name=mission).first()
+            tot = player['winnerMissions'][mission] + (player['loserMissions'][mission] if mission in player['loserMissions'].keys() else 0) + (player['tieMissions'][mission] if mission in player['tieMissions'].keys() else 0)
+            rate = PlayerMissionRates.query.filter_by(player=player['sql'].id).filter_by(mission=fct.id).first()
+            if not rate:
+                rate = PlayerMissionRates(
+                    player=player['sql'].id,
+                    mission=fct.id
+                )
+            rate.rate1 = float("{:.2f}".format(player['winnerMissions'][mission] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for mission in player['loserMissions'].keys():
+            fct = Mission.query.filter_by(name=mission).first()
+            tot = player['loserMissions'][mission] + (player['winnerMissions'][mission] if mission in player['winnerMissions'].keys() else 0) + (player['tieMissions'][mission] if mission in player['tieMissions'].keys() else 0)
+            rate = PlayerMissionRates.query.filter_by(player=player['sql'].id).filter_by(mission=fct.id).first()
+            if not rate:
+                rate = PlayerMissionRates(
+                    player=player['sql'].id,
+                    mission=fct.id
+                )
+            rate.rate2 = float("{:.2f}".format(player['loserMissions'][mission] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for mission in player['tieMissions'].keys():
+            fct = Mission.query.filter_by(name=mission).first()
+            tot = player['tieMissions'][mission] + (
+                player['winnerMissions'][mission] if mission in player['winnerMissions'].keys() else 0) + (
+                      player['loserMissions'][mission] if mission in player['loserMissions'].keys() else 0)
+            rate = PlayerMissionRates.query.filter_by(player=player['sql'].id).filter_by(mission=fct.id).first()
+            if not rate:
+                rate = PlayerMissionRates(
+                    player=player['sql'].id,
+                    mission=fct.id
+                )
+            rate.rate3 = float("{:.2f}".format(player['tieMissions'][mission] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for secondary in player['winnerSecondaries'].keys():
+            fct = Secondary.query.filter_by(name=secondary).first()
+            tot = player['winnerSecondaries'][secondary] + (player['loserSecondaries'][secondary] if secondary in player['loserSecondaries'].keys() else 0) + (player['tieSecondaries'][secondary] if secondary in player['tieSecondaries'].keys() else 0)
+            rate = PlayerSecondaryRates.query.filter_by(player=player['sql'].id).filter_by(secondary=fct.id).first()
+            if not rate:
+                rate = PlayerSecondaryRates(
+                    player=player['sql'].id,
+                    secondary=fct.id
+                )
+            rate.rate1 = float("{:.2f}".format(player['winnerSecondaries'][secondary] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for secondary in player['loserSecondaries'].keys():
+            fct = Secondary.query.filter_by(name=secondary).first()
+            tot = player['loserSecondaries'][secondary] + (player['winnerSecondaries'][secondary] if secondary in player['winnerSecondaries'].keys() else 0) + (player['tieSecondaries'][secondary] if secondary in player['tieSecondaries'].keys() else 0)
+            rate = PlayerSecondaryRates.query.filter_by(player=player['sql'].id).filter_by(secondary=fct.id).first()
+            if not rate:
+                rate = PlayerSecondaryRates(
+                    player=player['sql'].id,
+                    secondary=fct.id
+                )
+            rate.rate2 = float("{:.2f}".format(player['loserSecondaries'][secondary] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for secondary in player['tieSecondaries'].keys():
+            fct = Secondary.query.filter_by(name=secondary).first()
+            tot = player['tieSecondaries'][secondary] + (
+                player['winnerSecondaries'][secondary] if secondary in player['winnerSecondaries'].keys() else 0) + (
+                      player['loserSecondaries'][secondary] if secondary in player['loserSecondaries'].keys() else 0)
+            rate = PlayerSecondaryRates.query.filter_by(player=player['sql'].id).filter_by(secondary=fct.id).first()
+            if not rate:
+                rate = PlayerSecondaryRates(
+                    player=player['sql'].id,
+                    secondary=fct.id
+                )
+            rate.rate3 = float("{:.2f}".format(player['tieSecondaries'][secondary] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
         db.session.add(player['sql'])
         db.session.commit()
     return player
@@ -619,9 +755,11 @@ def getPlayers():
 def getPlayer(pl):
     player = {
         'sql': Player.query.filter_by(id=pl).first(),
-        'bestFactionRates': {},
-        'topMission': Mission.query.first(),
-        'topSecondary': Secondary.query.first()
+        'factionRates': [],
+        'factionRatesAgainst': [],
+        'missionRates': [],
+        'secondaryRates': [],
+        'playerRates': []
     }
     if player['sql']:
         if player['sql'].steamLink:
@@ -629,11 +767,56 @@ def getPlayer(pl):
                 player['totalGames'] = player['sql'].wins + player['sql'].loses + player['sql'].ties
                 player['winRate'] = float("{:.2f}".format(player['sql'].wins * 100 / player['totalGames'] if player['totalGames'] > 0 else 0))
                 for rate in PlayerWinRates.query.filter_by(player=player['sql'].id).order_by(desc(PlayerWinRates.rate1)).all():
-                    player['bestFactionRates'][Faction.query.filter_by(id=rate.faction).first().name] = {
-                        'winRate': rate.rate1
-                    }
+                    fct = Faction.query.filter_by(id=rate.faction).first()
+                    player['factionRates'].append({
+                        'id': fct.id,
+                        'name': fct.name,
+                        'shortName': fct.shortName,
+                        'winRate': rate.rate1 if rate.rate1 else 0,
+                        'loseRate': rate.rate2 if rate.rate2 else 0,
+                        'tieRate': rate.rate3 if rate.rate3 else 0
+                    })
+                for rate in PlayerWinRatesAgainst.query.filter_by(player=player['sql'].id).order_by(desc(PlayerWinRatesAgainst.rate1)).all():
+                    fct = Faction.query.filter_by(id=rate.faction).first()
+                    player['factionRatesAgainst'].append({
+                        'id': fct.id,
+                        'name': fct.name,
+                        'shortName': fct.shortName,
+                        'winRate': rate.rate1 if rate.rate1 else 0,
+                        'loseRate': rate.rate2 if rate.rate2 else 0,
+                        'tieRate': rate.rate3 if rate.rate3 else 0
+                    })
+                for rate in PlayerMissionRates.query.filter_by(player=player['sql'].id).order_by(desc(PlayerMissionRates.rate1)).all():
+                    ms = Mission.query.filter_by(id=rate.mission).first()
+                    player['missionRates'].append({
+                        'id': ms.id,
+                        'name': ms.name,
+                        'shortName': ms.shortName,
+                        'winRate': rate.rate1 if rate.rate1 else 0,
+                        'loseRate': rate.rate2 if rate.rate2 else 0,
+                        'tieRate': rate.rate3 if rate.rate3 else 0
+                    })
+                for rate in PlayerSecondaryRates.query.filter_by(player=player['sql'].id).order_by(desc(PlayerSecondaryRates.rate1)).all():
+                    sec = Secondary.query.filter_by(id=rate.secondary).first()
+                    player['secondaryRates'].append({
+                        'id': sec.id,
+                        'name': sec.name,
+                        'shortName': sec.shortName,
+                        'winRate': rate.rate1 if rate.rate1 else 0,
+                        'loseRate': rate.rate2 if rate.rate2 else 0,
+                        'tieRate': rate.rate3 if rate.rate3 else 0
+                    })
+                for rate in PlayerWinRatesPlayer.query.filter_by(player1=player['sql'].id).order_by(desc(PlayerWinRatesPlayer.rate1)).all():
+                    oPl = Player.query.filter_by(id=rate.player2).first()
+                    if oPl.allowSharing:
+                        player['playerRates'].append({
+                            'id': oPl.id,
+                            'name': oPl.username,
+                            'winRate': rate.rate1 if rate.rate1 else 0,
+                            'loseRate': rate.rate2 if rate.rate2 else 0,
+                            'tieRate': rate.rate3 if rate.rate3 else 0
+                        })
                 player['name'] = player['sql'].username
-                return player
             else:
                 player['name'] = "Anonymous"
     return player
@@ -1322,7 +1505,9 @@ def randomize_data(db):
         'Open game',
         'Matched game'
     ]
-    players = [str(random.randint(1000, 1010)) for i in range(0, 10)]
+    players = [names.get_full_name() for i in range(0, 8)]
+    players.append('mariofelectronica')
+    players.append('MoonkeyMod')
     for i in range(0, 40):
         random.seed(i)
         d = random.randint(int(time.time()) - 31556926, int(time.time()))

@@ -346,6 +346,17 @@ class PlayerWinRates(db.Model):
     rate3 = db.Column(db.Float)
 
 
+class PlayerWinRatesAgainst(db.Model):
+    __tablename__ = 'playerwinratesagainst'
+    id = db.Column(db.Integer, primary_key=True)
+    fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    player = db.Column(db.Integer, db.ForeignKey('player.id'))
+    faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
+    rate1 = db.Column(db.Float)
+    rate2 = db.Column(db.Float)
+    rate3 = db.Column(db.Float)
+
+
 class PlayerMissionRates(db.Model):
     __tablename__ = 'playermissionrates'
     id = db.Column(db.Integer, primary_key=True)

@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for, redirect, make_response, flash
+from flask import Flask, request, render_template, url_for, redirect, make_response, flash, jsonify
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, set_access_cookies, unset_jwt_cookies
 from flask_login import LoginManager, login_user, login_required, logout_user
 from utils import *
@@ -21,7 +21,6 @@ db.init_app(app)
 # TODO añadir imágenes correspondientes
 # TODO hacer subrutina de update
 # TODO añadir en database los snapshots
-# TODO Hacer membresía con link a steam y protecciónde datos
 # TODO pasarme a aws con mysql
 
 
@@ -108,7 +107,6 @@ def randomize():
 
 @app.route("/gamedata", methods={"GET", "POST"})
 def data():
-    # TODO como asegurar que viene de TTS?
     createDatabase(db)
     handleGameData(json.loads(request.data.decode()), db)
     return {'status': 'ok'}, 200
@@ -191,20 +189,36 @@ def secondary(sc):
 
 
 @app.route("/link/<opt>", methods={"GET", "POST"})
-@jwt_required()
-@login_required
 def link(opt):
-    # TODO change to linking system
-    pl = Player.query.filter_by(username="Zakanawaner").first()
     if opt == "stop":
+        pl = Player.query.filter_by(id=current_user.id).first()
         pl.steamId = 0
         pl.steamLink = False
+        db.session.add(pl)
     elif opt == "start":
-        pl.steamId = 1003
-        pl.steamLink = True
-    db.session.add(pl)
+        if request.method == "POST":
+            form = json.loads(request.data.decode())
+            pl = Player.query.filter_by(publicId=form['code']).first()
+            if pl:
+                if not pl.steamLink:
+                    pl.steamId = form['name']
+                    pl.steamLink = True
+                    db.session.add(pl)
+                    db.session.commit()
+                    updatePlayer(db, pl.id)
+                    return make_response(jsonify({'result': "Everything good"}), 200)
+                else:
+                    return make_response(jsonify({'result': "Already linked"}), 200)
+            else:
+                return make_response(jsonify({'result': "Something went wrong"}), 200)
+        else:  # TODO to delete
+            pl = Player.query.filter_by(username='Zakanawaner').first()
+            pl.steamId = 1003
+            pl.steamLink = True
+            db.session.add(pl)
+            db.session.commit()
+            updatePlayer(db, pl.id)
     db.session.commit()
-    updatePlayer(db, pl.id)
     flash("Link successfully updated")
     return redirect(url_for('general'))
 
