@@ -5,16 +5,6 @@ from flask_login import UserMixin
 db = SQLAlchemy()
 
 
-player_game_winner = db.Table(
-    'player_game_winner',
-    db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True, unique=False),
-    db.Column('player_id', db.Integer, db.ForeignKey('player.id'), primary_key=True, unique=False)
-)
-player_game_loser = db.Table(
-    'player_game_loser',
-    db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True, unique=False),
-    db.Column('player_id', db.Integer, db.ForeignKey('player.id'), primary_key=True, unique=False)
-)
 player_game_tie = db.Table(
     'player_game_tie',
     db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True, unique=False),
@@ -163,6 +153,11 @@ game_secondary_8 = db.Table(
     db.Column('secondary_id', db.Integer, db.ForeignKey('secondary.id'), primary_key=True, unique=False),
     db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True, unique=False)
 )
+update_faction = db.Table(
+    'update_faction',
+    db.Column('update_id', db.Integer, db.ForeignKey('update.id'), primary_key=True, unique=False),
+    db.Column('faction_id', db.Integer, db.ForeignKey('faction.id'), primary_key=True, unique=False)
+)
 
 
 class Game(db.Model):
@@ -293,20 +288,13 @@ class Faction(db.Model):
     tieRates = db.relationship("Faction", secondary=faction_faction_tierate,
                                primaryjoin=id == faction_faction_tierate.c.faction_id,
                                secondaryjoin=id == faction_faction_tierate.c.tie_id)
-
-    bestCounter = {},
-    worstCounter = {},
-    counterRates = {},
-    bestMission = {},
-    worstMission = {},
-    bestSecondary = {},
-    worstSecondary = {},
-    tieCounter = {}
+    updates = db.relationship("Update", secondary=update_faction)
 
 
 class WinRates(db.Model):
     __tablename__ = 'winrates'
     id = db.Column(db.Integer, primary_key=True)
+    fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
     faction1 = db.Column(db.Integer, db.ForeignKey('faction.id'))
     faction2 = db.Column(db.Integer, db.ForeignKey('faction.id'))
     rate1 = db.Column(db.Float)
@@ -317,6 +305,7 @@ class WinRates(db.Model):
 class MissionRates(db.Model):
     __tablename__ = 'missionrates'
     id = db.Column(db.Integer, primary_key=True)
+    fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
     faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
     mission = db.Column(db.Integer, db.ForeignKey('mission.id'))
     rate1 = db.Column(db.Float)
@@ -325,9 +314,54 @@ class MissionRates(db.Model):
 
 
 class SecondaryRates(db.Model):
-    __tablename__ = 'cesondaryrates'
+    __tablename__ = 'secondaryrates'
     id = db.Column(db.Integer, primary_key=True)
+    fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
     faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
+    secondary = db.Column(db.Integer, db.ForeignKey('secondary.id'))
+    rate1 = db.Column(db.Float)
+    rate2 = db.Column(db.Float)
+    rate3 = db.Column(db.Float)
+
+
+class PlayerWinRatesPlayer(db.Model):
+    __tablename__ = 'playerwinratesplayer'
+    id = db.Column(db.Integer, primary_key=True)
+    fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    player1 = db.Column(db.Integer, db.ForeignKey('player.id'))
+    player2 = db.Column(db.Integer, db.ForeignKey('player.id'))
+    rate1 = db.Column(db.Float)
+    rate2 = db.Column(db.Float)
+    rate3 = db.Column(db.Float)
+
+
+class PlayerWinRates(db.Model):
+    __tablename__ = 'playerwinrates'
+    id = db.Column(db.Integer, primary_key=True)
+    fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    player = db.Column(db.Integer, db.ForeignKey('player.id'))
+    faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
+    rate1 = db.Column(db.Float)
+    rate2 = db.Column(db.Float)
+    rate3 = db.Column(db.Float)
+
+
+class PlayerMissionRates(db.Model):
+    __tablename__ = 'playermissionrates'
+    id = db.Column(db.Integer, primary_key=True)
+    fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    player = db.Column(db.Integer, db.ForeignKey('player.id'))
+    mission = db.Column(db.Integer, db.ForeignKey('mission.id'))
+    rate1 = db.Column(db.Float)
+    rate2 = db.Column(db.Float)
+    rate3 = db.Column(db.Float)
+
+
+class PlayerSecondaryRates(db.Model):
+    __tablename__ = 'playersecondaryrates'
+    id = db.Column(db.Integer, primary_key=True)
+    fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    player = db.Column(db.Integer, db.ForeignKey('player.id'))
     secondary = db.Column(db.Integer, db.ForeignKey('secondary.id'))
     rate1 = db.Column(db.Float)
     rate2 = db.Column(db.Float)
@@ -371,3 +405,10 @@ class Player(db.Model, UserMixin):
     wins = db.Column(db.Integer)
     ties = db.Column(db.Integer)
     loses = db.Column(db.Integer)
+
+
+class Update(db.Model):
+    __tablename__ = 'update'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime)
+    description = db.Column(db.String(200))

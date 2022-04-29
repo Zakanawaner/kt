@@ -12,7 +12,11 @@
         {% else %}
             <a href="/allowance/start">Allow data sharing</a>
         {% endif %}
-        <a href="/link/stop">Unlink</a>
+        {% if player['sql'].steamLink %}
+            <a href="/link/stop">Unlink</a>
+        {% else %}
+            <a href="/link/start">Link</a>
+        {% endif %}
         <a href="/delete">delete</a>
         <a href="/logout">Logout</a>
     </div>

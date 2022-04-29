@@ -1,4 +1,7 @@
-from database import Game, Player, Mission, Rank, Secondary, Faction, Tournament, WinRates, MissionRates, SecondaryRates
+from database import (
+    Game, Player, Mission, Rank, Secondary, Faction, Tournament,
+    WinRates, MissionRates, SecondaryRates, PlayerMissionRates,
+    PlayerWinRates, PlayerWinRatesPlayer, PlayerSecondaryRates)
 from sqlalchemy import extract, desc, asc, or_
 from datetime import datetime
 from collections import OrderedDict
@@ -374,6 +377,236 @@ def getGame(gm):
     return game
 
 
+def updatePlayers(db):
+    for player in Player.query.all():
+        updatePlayer(db, player.id)
+
+
+def updatePlayer(db, pl):
+    player = {
+        'sql': Player.query.filter_by(id=pl).first(),
+        'winnerFactions': {},
+        'loserFactions': {},
+        'tieFactions': {},
+        'winnerMissions': {},
+        'loserMissions': {},
+        'tieMissions': {},
+        'winnerSecondaries': {},
+        'loserSecondaries': {},
+        'tieSecondaries': {},
+        'winnerPlayers': {},
+        'loserPlayers': {},
+        'tiePlayers': {}
+    }
+    player['sql'].gamesWon = []
+    player['sql'].gamesLost = []
+    player['sql'].gamesTied = []
+    player['sql'].wins = 0
+    player['sql'].loses = 0
+    player['sql'].ties = 0
+    if player['sql'].steamLink:
+        for game in Game.query.filter_by(winner=player['sql'].steamId).all():
+            otherPl = Player.query.filter_by(steamId=game.loser).first()
+            if game.tie:
+                player['sql'].gamesTied.append(game)
+                player['sql'].ties += 1
+                if otherPl:
+                    if otherPl.username not in player['tiePlayers'].keys():
+                        player['tiePlayers'][otherPl.username] = 1
+                    else:
+                        player['tiePlayers'][otherPl.username] += 1
+                if game.winFaction[0].name not in player['tieFactions'].keys():
+                    player['tieFactions'][game.winFaction[0].name] = 1
+                else:
+                    player['tieFactions'][game.winFaction[0].name] += 1
+                if game.mission[0].name not in player['tieMissions'].keys():
+                    player['tieMissions'][game.mission[0].name] = 1
+                else:
+                    player['tieMissions'][game.mission[0].name] += 1
+                if game.winSecondaryFirst[0].name not in player['tieSecondaries'].keys():
+                    player['tieSecondaries'][game.winSecondaryFirst[0].name] = 1
+                else:
+                    player['tieSecondaries'][game.winSecondaryFirst[0].name] += 1
+                if game.winSecondarySecond[0].name not in player['tieSecondaries'].keys():
+                    player['tieSecondaries'][game.winSecondarySecond[0].name] = 1
+                else:
+                    player['tieSecondaries'][game.winSecondarySecond[0].name] += 1
+                if game.winSecondaryThird[0].name not in player['tieSecondaries'].keys():
+                    player['tieSecondaries'][game.winSecondaryThird[0].name] = 1
+                else:
+                    player['tieSecondaries'][game.winSecondaryThird[0].name] += 1
+            else:
+                player['sql'].gamesWon.append(game)
+                player['sql'].wins += 1
+                if otherPl:
+                    if otherPl.username not in player['winnerPlayers'].keys():
+                        player['winnerPlayers'][otherPl.username] = 1
+                    else:
+                        player['winnerPlayers'][otherPl.username] += 1
+                if game.winFaction[0].name not in player['winnerFactions'].keys():
+                    player['winnerFactions'][game.winFaction[0].name] = 1
+                else:
+                    player['winnerFactions'][game.winFaction[0].name] += 1
+                if game.mission[0].name not in player['winnerMissions'].keys():
+                    player['winnerMissions'][game.mission[0].name] = 1
+                else:
+                    player['winnerMissions'][game.mission[0].name] += 1
+                if game.winSecondaryFirst[0].name not in player['winnerSecondaries'].keys():
+                    player['winnerSecondaries'][game.winSecondaryFirst[0].name] = 1
+                else:
+                    player['winnerSecondaries'][game.winSecondaryFirst[0].name] += 1
+                if game.winSecondarySecond[0].name not in player['winnerSecondaries'].keys():
+                    player['winnerSecondaries'][game.winSecondarySecond[0].name] = 1
+                else:
+                    player['winnerSecondaries'][game.winSecondarySecond[0].name] += 1
+                if game.winSecondaryThird[0].name not in player['winnerSecondaries'].keys():
+                    player['winnerSecondaries'][game.winSecondaryThird[0].name] = 1
+                else:
+                    player['winnerSecondaries'][game.winSecondaryThird[0].name] += 1
+            player['sql'].score += game.winTotal
+        for game in Game.query.filter_by(loser=player['sql'].steamId).all():
+            otherPl = Player.query.filter_by(steamId=game.winner).first()
+            if game.tie:
+                player['sql'].gamesTied.append(game)
+                player['sql'].ties += 1
+                if otherPl:
+                    if otherPl.username not in player['tiePlayers'].keys():
+                        player['tiePlayers'][otherPl.username] = 1
+                    else:
+                        player['tiePlayers'][otherPl.username] += 1
+                if game.winFaction[0].name not in player['tieFactions'].keys():
+                    player['tieFactions'][game.winFaction[0].name] = 1
+                else:
+                    player['tieFactions'][game.winFaction[0].name] += 1
+                if game.mission[0].name not in player['tieMissions'].keys():
+                    player['tieMissions'][game.mission[0].name] = 1
+                else:
+                    player['tieMissions'][game.mission[0].name] += 1
+                if game.winSecondaryFirst[0].name not in player['tieSecondaries'].keys():
+                    player['tieSecondaries'][game.winSecondaryFirst[0].name] = 1
+                else:
+                    player['tieSecondaries'][game.losSecondaryFirst[0].name] += 1
+                if game.losSecondarySecond[0].name not in player['tieSecondaries'].keys():
+                    player['tieSecondaries'][game.losSecondarySecond[0].name] = 1
+                else:
+                    player['tieSecondaries'][game.losSecondarySecond[0].name] += 1
+                if game.losSecondaryThird[0].name not in player['tieSecondaries'].keys():
+                    player['tieSecondaries'][game.losSecondaryThird[0].name] = 1
+                else:
+                    player['tieSecondaries'][game.losSecondaryThird[0].name] += 1
+            else:
+                player['sql'].gamesLost.append(game)
+                player['sql'].loses += 1
+                if otherPl:
+                    if otherPl.username not in player['loserPlayers'].keys():
+                        player['loserPlayers'][otherPl.username] = 1
+                    else:
+                        player['loserPlayers'][otherPl.username] += 1
+                if game.losFaction[0].name not in player['loserFactions'].keys():
+                    player['loserFactions'][game.losFaction[0].name] = 1
+                else:
+                    player['loserFactions'][game.losFaction[0].name] += 1
+                if game.mission[0].name not in player['loserMissions'].keys():
+                    player['loserMissions'][game.mission[0].name] = 1
+                else:
+                    player['loserMissions'][game.mission[0].name] += 1
+                if game.losSecondaryFirst[0].name not in player['loserSecondaries'].keys():
+                    player['loserSecondaries'][game.losSecondaryFirst[0].name] = 1
+                else:
+                    player['loserSecondaries'][game.losSecondaryFirst[0].name] += 1
+                if game.losSecondarySecond[0].name not in player['loserSecondaries'].keys():
+                    player['loserSecondaries'][game.losSecondarySecond[0].name] = 1
+                else:
+                    player['loserSecondaries'][game.losSecondarySecond[0].name] += 1
+                if game.losSecondaryThird[0].name not in player['loserSecondaries'].keys():
+                    player['loserSecondaries'][game.losSecondaryThird[0].name] = 1
+                else:
+                    player['loserSecondaries'][game.losSecondaryThird[0].name] += 1
+            player['sql'].score += game.losTotal
+        player['totalGames'] = player['sql'].wins + player['sql'].loses + player['sql'].ties
+        player['winRate'] = float("{:.2f}".format(player['sql'].wins * 100 / player['totalGames'] if player['totalGames'] > 0 else 0))
+        for otherPl in player['winnerPlayers'].keys():
+            oPl = Player.query.filter_by(username=otherPl).first()
+            tot = player['winnerPlayers'][otherPl] + (player['loserPlayers'][otherPl] if otherPl in player['loserPlayers'].keys() else 0) + (player['tiePlayers'][otherPl] if otherPl in player['tiePlayers'].keys() else 0)
+            rate = PlayerWinRatesPlayer.query.filter_by(player1=player['sql'].id).filter_by(player2=oPl.id).first()
+            if not rate:
+                rate = PlayerWinRatesPlayer(
+                    player1=player['sql'].id,
+                    player2=oPl.id
+                )
+            rate.rate1 = float("{:.2f}".format(player['winnerPlayers'][otherPl] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for otherPl in player['loserPlayers'].keys():
+            oPl = Player.query.filter_by(username=otherPl).first()
+            tot = player['loserPlayers'][otherPl] + (player['winnerPlayers'][otherPl] if otherPl in player['winnerPlayers'].keys() else 0) + (player['tiePlayers'][otherPl] if otherPl in player['tiePlayers'].keys() else 0)
+            rate = PlayerWinRatesPlayer.query.filter_by(player1=player['sql'].id).filter_by(player2=oPl.id).first()
+            if not rate:
+                rate = PlayerWinRatesPlayer(
+                    player1=player['sql'].id,
+                    player2=oPl.id
+                )
+            rate.rate2 = float("{:.2f}".format(player['loserPlayers'][otherPl] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for otherPl in player['tiePlayers'].keys():
+            oPl = Player.query.filter_by(username=otherPl).first()
+            tot = player['tiePlayers'][otherPl] + (
+                player['winnerPlayers'][otherPl] if otherPl in player['winnerPlayers'].keys() else 0) + (
+                      player['loserPlayers'][otherPl] if otherPl in player['loserPlayers'].keys() else 0)
+            rate = PlayerWinRatesPlayer.query.filter_by(player1=player['sql'].id).filter_by(player2=oPl.id).first()
+            if not rate:
+                rate = PlayerWinRatesPlayer(
+                    player1=player['sql'].id,
+                    player2=oPl.id
+                )
+            rate.rate3 = float("{:.2f}".format(player['tiePlayers'][otherPl] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+
+        for faction in player['winnerFactions'].keys():
+            fct = Faction.query.filter_by(name=faction).first()
+            tot = player['winnerFactions'][faction] + (player['loserFactions'][faction] if faction in player['loserFactions'].keys() else 0) + (player['tieFactions'][faction] if faction in player['tieFactions'].keys() else 0)
+            rate = PlayerWinRates.query.filter_by(player=player['sql'].id).filter_by(faction=fct.id).first()
+            if not rate:
+                rate = PlayerWinRates(
+                    player=player['sql'].id,
+                    faction=fct.id
+                )
+            rate.rate1 = float("{:.2f}".format(player['winnerFactions'][faction] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for faction in player['loserFactions'].keys():
+            fct = Faction.query.filter_by(name=faction).first()
+            tot = player['loserFactions'][faction] + (player['winnerFactions'][faction] if faction in player['winnerFactions'].keys() else 0) + (player['tieFactions'][faction] if faction in player['tieFactions'].keys() else 0)
+            rate = PlayerWinRates.query.filter_by(player=player['sql'].id).filter_by(faction=fct.id).first()
+            if not rate:
+                rate = PlayerWinRates(
+                    player=player['sql'].id,
+                    faction=fct.id
+                )
+            rate.rate2 = float("{:.2f}".format(player['loserFactions'][faction] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        for faction in player['tieFactions'].keys():
+            fct = Faction.query.filter_by(name=faction).first()
+            tot = player['tieFactions'][faction] + (
+                player['winnerFactions'][faction] if faction in player['winnerFactions'].keys() else 0) + (
+                      player['loserFactions'][faction] if faction in player['loserFactions'].keys() else 0)
+            rate = PlayerWinRates.query.filter_by(player=player['sql'].id).filter_by(faction=fct.id).first()
+            if not rate:
+                rate = PlayerWinRates(
+                    player=player['sql'].id,
+                    faction=fct.id
+                )
+            rate.rate3 = float("{:.2f}".format(player['tieFactions'][faction] * 100 / tot)) if tot > 0 else 0
+            db.session.add(rate)
+            db.session.commit()
+        db.session.add(player['sql'])
+        db.session.commit()
+    return player
+
+
 def getPlayers():
     players = {}
     for player in Player.query.all():
@@ -386,7 +619,7 @@ def getPlayers():
 def getPlayer(pl):
     player = {
         'sql': Player.query.filter_by(id=pl).first(),
-        'topFaction': Faction.query.first(),
+        'bestFactionRates': {},
         'topMission': Mission.query.first(),
         'topSecondary': Secondary.query.first()
     }
@@ -395,6 +628,10 @@ def getPlayer(pl):
             if player['sql'].allowSharing:
                 player['totalGames'] = player['sql'].wins + player['sql'].loses + player['sql'].ties
                 player['winRate'] = float("{:.2f}".format(player['sql'].wins * 100 / player['totalGames'] if player['totalGames'] > 0 else 0))
+                for rate in PlayerWinRates.query.filter_by(player=player['sql'].id).order_by(desc(PlayerWinRates.rate1)).all():
+                    player['bestFactionRates'][Faction.query.filter_by(id=rate.faction).first().name] = {
+                        'winRate': rate.rate1
+                    }
                 player['name'] = player['sql'].username
                 return player
             else:
@@ -742,44 +979,6 @@ def getFaction(fact, glo=False):
         if SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate1)).first():
             faction['bestSecondaries'].append(Secondary.query.filter_by(id=SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate1)).first().secondary).first())
     return faction
-
-
-def updatePlayers(db):
-    for player in Player.query.all():
-        updatePlayer(db, player.id)
-
-
-def updatePlayer(db, pl):
-    player = {
-        'sql': Player.query.filter_by(id=pl).first(),
-        # TODO añadir rates
-    }
-    player['sql'].gamesWon = []
-    player['sql'].gamesLost = []
-    player['sql'].gamesTied = []
-    player['sql'].wins = 0
-    player['sql'].loses = 0
-    player['sql'].ties = 0
-    if player['sql'].steamLink:
-        for game in Game.query.filter_by(winner=player['sql'].steamId).all():
-            if game.tie:
-                player['sql'].gamesTied.append(game)
-                player['sql'].ties += 1
-            else:
-                player['sql'].gamesWon.append(game)
-                player['sql'].wins += 1
-            player['sql'].score += game.winTotal
-        for game in Game.query.filter_by(loser=player['sql'].steamId).all():
-            if game.tie:
-                player['sql'].gamesTied.append(game)
-                player['sql'].ties += 1
-            else:
-                player['sql'].gamesLost.append(game)
-                player['sql'].loses += 1
-            player['sql'].score += game.losTotal
-        db.session.add(player['sql'])
-        db.session.commit()
-    return player
 
 
 def updateMissions(db):
