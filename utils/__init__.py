@@ -2,7 +2,7 @@ from database import (
     Game, Player, Mission, Rank, Secondary, Faction, Tournament,
     WinRates, MissionRates, SecondaryRates, PlayerMissionRates,
     PlayerWinRates, PlayerWinRatesPlayer, PlayerSecondaryRates,
-    PlayerWinRatesAgainst)
+    PlayerWinRatesAgainst, Operative)
 from sqlalchemy import extract, desc, asc, or_
 from datetime import datetime
 from collections import OrderedDict
@@ -152,7 +152,39 @@ def handleTournament(db, response):
     return response
 
 
+def handleOperatives(db, response, pls):
+    for pl in pls:
+        if 'operatives' in response[response[pl]].keys():
+            for op in response[response[pl]]['operatives'].keys():
+                weapons = response[response[pl]]['operatives'][op]['desc'].split('Weapons')[1].split('---')[0].split('\n')
+                melee = []
+                ranged = []
+                for i, weapon in enumerate(weapons):
+                    if weapon == '':
+                        if i < len(weapons)-1:
+                            if not '[' in weapons[i+1]:
+                                ranged.append(weapons[i+1])
+                    else:
+                        if ']M[' in weapon:
+                            melee.append(weapon[weapon.find(' ')+1:])
+                        if ']R[' in weapon:
+                            ranged.append(weapon[weapon.find(' ')+1:])
+                name = response[response[pl]]['operatives'][op]['desc'].split('\n')[0]
+                response[response[pl]]['operatives'][op]['sql'] = Operative.query.filter_by(name=name).filter_by(melee=','.join(melee)).filter_by(ranged=','.join(ranged)).first()
+                if not response[response[pl]]['operatives'][op]['sql']:
+                    response[response[pl]]['operatives'][op]['sql'] = Operative(
+                        name=name,
+                        faction=1,#response[response[pl]]['faction'].id,
+                        melee=','.join(melee),
+                        ranged=','.join(ranged)
+                    )
+                    db.session.add(response[response[pl]]['operatives'][op]['sql'])
+                    db.session.commit()
+    return response
+
+
 def handleGameData(response, db):
+    response = handleOperatives(db, response, ['winner', 'loser'])
     if checkData(response):
         if not Game.query.filter_by(timestamp=response['timestamp']).first():
             response = handleFactions(db, response, 'winner')
@@ -161,6 +193,7 @@ def handleGameData(response, db):
             response = handleSecondaries(db, response, 'loser')
             response = handleMission(db, response)
             response = handleTournament(db, response)
+            response = handleOperatives(db, response, ['winner', 'loser'])
 
             game = Game(
                 date=datetime.now(),
@@ -172,6 +205,8 @@ def handleGameData(response, db):
                 initFourth=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][3] else [response[response['loser']]['faction']],
                 winner=response['winner'],
                 winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
+                winOperatives=','.join([str(op['sql'].id) for op in response[response['winner']]['operatives'].values()]) if 'operatives' in response[response['winner']].keys() else '',
+                winOpKilled=','.join([str(op['roundKilled']) if op['killed'] else '0' for op in response[response['winner']]['operatives'].values()]) if 'operatives' in response[response['winner']].keys() else '',
                 winScouting=response[response['winner']]['scouting'],
                 winTotal=response[response['winner']]['total'],
                 winPrimary=response[response['winner']]['primaries']['total'],
@@ -200,6 +235,8 @@ def handleGameData(response, db):
                 winSecondaryThirdScore=response[response['winner']]['secondaries']['third']['score'],
                 loser=response['loser'],
                 losFaction=[response[response['loser']]['faction']]if response[response['loser']]['faction'] else [],
+                losOperatives=','.join([str(op['sql'].id) for op in response[response['loser']]['operatives'].values()]) if 'operatives' in response[response['loser']].keys() else '',
+                losOpKilled=','.join([str(op['roundKilled']) if op['killed'] else '0' for op in response[response['loser']]['operatives'].values()]) if 'operatives' in response[response['loser']].keys() else '',
                 losScouting=response[response['loser']]['scouting'],
                 losTotal=response[response['loser']]['total'],
                 losPrimary=response[response['loser']]['primaries']['total'],
@@ -257,7 +294,7 @@ def checkData(response):
         },
         'rollOffWinner': "",
         'rollOffWinnerSelection': "",
-        'red': {
+        response['winner']: {
             'initiative': [],
             'scouting': "",
             'faction': "",
@@ -266,6 +303,7 @@ def checkData(response):
                 'second': 0,
                 'third': 0,
                 'fourth': 0,
+                'total': 0,
             },
             'secondaries': {
                 'first': {
@@ -292,9 +330,10 @@ def checkData(response):
                     'third': 0,
                     'fourth': 0,
                 },
+                'total': 0,
             }
         },
-        'blue': {
+        response['loser']: {
             'initiative': [],
             'scouting': "",
             'faction': "",
@@ -303,6 +342,7 @@ def checkData(response):
                 'second': 0,
                 'third': 0,
                 'fourth': 0,
+                'total': 0,
             },
             'secondaries': {
                 'first': {
@@ -329,13 +369,14 @@ def checkData(response):
                     'third': 0,
                     'fourth': 0,
                 },
+                'total': 0,
             }
         }
     }
     if set(template.keys()) <= set(response.keys()):
-        if set(template['mission'].keys()) <= set(response['mission'].keys()) and set(template['red'].keys()) <= set(response['red'].keys()) and set(template['blue'].keys()) <= set(response['blue'].keys()):
-            if set(template['red']['primaries'].keys()) <= set(response['red']['primaries'].keys()) and set(template['blue']['primaries'].keys()) <= set(response['blue']['primaries'].keys()) and set(template['red']['secondaries'].keys()) <= set(response['red']['secondaries'].keys()) and set(template['blue']['secondaries'].keys()) <= set(response['blue']['secondaries'].keys()):
-                if set(template['red']['secondaries']['first'].keys()) <= set(response['red']['secondaries']['first'].keys()) and set(template['blue']['secondaries']['first'].keys()) <= set(response['blue']['secondaries']['first'].keys()) and set(template['red']['secondaries']['second'].keys()) <= set(response['red']['secondaries']['second'].keys()) and set(template['blue']['secondaries']['second'].keys()) <= set(response['blue']['secondaries']['second'].keys()) and set(template['red']['secondaries']['third'].keys()) <= set(response['red']['secondaries']['third'].keys()) and set(template['blue']['secondaries']['third'].keys()) <= set(response['blue']['secondaries']['third'].keys()):
+        if set(template['mission'].keys()) <= set(response['mission'].keys()) and set(template[response['winner']].keys()) <= set(response[response['winner']].keys()) and set(template[response['loser']].keys()) <= set(response[response['loser']].keys()):
+            if set(template[response['winner']]['primaries'].keys()) <= set(response[response['winner']]['primaries'].keys()) and set(template[response['loser']]['primaries'].keys()) <= set(response[response['loser']]['primaries'].keys()) and set(template[response['winner']]['secondaries'].keys()) <= set(response[response['winner']]['secondaries'].keys()) and set(template[response['loser']]['secondaries'].keys()) <= set(response[response['loser']]['secondaries'].keys()):
+                if set(template[response['winner']]['secondaries']['first'].keys()) <= set(response[response['winner']]['secondaries']['first'].keys()) and set(template[response['loser']]['secondaries']['first'].keys()) <= set(response[response['loser']]['secondaries']['first'].keys()) and set(template[response['winner']]['secondaries']['second'].keys()) <= set(response[response['winner']]['secondaries']['second'].keys()) and set(template[response['loser']]['secondaries']['second'].keys()) <= set(response[response['loser']]['secondaries']['second'].keys()) and set(template[response['winner']]['secondaries']['third'].keys()) <= set(response[response['winner']]['secondaries']['third'].keys()) and set(template[response['loser']]['secondaries']['third'].keys()) <= set(response[response['loser']]['secondaries']['third'].keys()):
                     return True
     return False
 

@@ -21,6 +21,7 @@ db.init_app(app)
 # TODO añadir imágenes correspondientes
 # TODO hacer subrutina de update
 # TODO añadir en database los snapshots
+# TODO hacer overwatch on TTS
 # TODO pasarme a aws con mysql
 
 

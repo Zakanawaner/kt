@@ -174,6 +174,8 @@ class Game(db.Model):
     winner = db.Column(db.String(100))
     winScouting = db.Column(db.String(20))
     winFaction = db.relationship("Faction", secondary=game_faction_winner)
+    winOperatives = db.Column(db.String(60))
+    winOpKilled = db.Column(db.String(60))
     winTotal = db.Column(db.Integer)
     winPrimary = db.Column(db.Integer)
     winPrimaryFirst = db.Column(db.Integer)
@@ -209,6 +211,8 @@ class Game(db.Model):
     loser = db.Column(db.String(100))
     losScouting = db.Column(db.String(20))
     losFaction = db.relationship("Faction", secondary=game_faction_loser)
+    losOperatives = db.Column(db.String(60))
+    losOpKilled = db.Column(db.String(60))
     losTotal = db.Column(db.Integer)
     losPrimary = db.Column(db.Integer)
     losPrimaryFirst = db.Column(db.Integer)
@@ -423,3 +427,12 @@ class Update(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime)
     description = db.Column(db.String(200))
+
+
+class Operative(db.Model):
+    __tablename__ = 'operative'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    melee = db.Column(db.String(200))
+    ranged = db.Column(db.String(200))
+    faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
