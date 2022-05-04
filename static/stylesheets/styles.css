@@ -196,6 +196,7 @@ html{
     -moz-border-radius: 60px;
     -moz-background-clip: padding;
     border-radius: 60px;
+    margin: auto;
     margin-bottom: 30px;
     object-fit: contain;
 }

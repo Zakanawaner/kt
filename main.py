@@ -106,13 +106,6 @@ def randomize():
     return redirect(url_for('update'))
 
 
-@app.route("/gamedata", methods={"GET", "POST"})
-def data():
-    createDatabase(db)
-    handleGameData(json.loads(request.data.decode()), db)
-    return {'status': 'ok'}, 200
-
-
 @app.route("/update", methods={"GET", "POST"})
 @login_required
 @only_admin
@@ -122,6 +115,24 @@ def update():
     updateSecondaries(db)
     updatePlayers(db)
     return redirect(url_for('general'))
+
+
+@app.route("/addupdate", methods={"GET", "POST"})
+@login_required
+@only_admin
+def addUpdate():
+    if request.method == 'POST':
+        addNewUpdate(db, request.form)
+        return redirect(url_for('update'))
+    fct = Faction.query.all()
+    return render_template('addupdate.html', title="Update", user=current_user if not current_user.is_anonymous else None, factions=fct)
+
+
+@app.route("/gamedata", methods={"GET", "POST"})
+def data():
+    createDatabase(db)
+    handleGameData(json.loads(request.data.decode()), db)
+    return {'status': 'ok'}, 200
 
 
 @app.route("/games", methods={"GET", "POST"})

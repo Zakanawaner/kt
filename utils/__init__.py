@@ -2,7 +2,7 @@ from database import (
     Game, Player, Mission, Rank, Secondary, Faction, Tournament,
     WinRates, MissionRates, SecondaryRates, PlayerMissionRates,
     PlayerWinRates, PlayerWinRatesPlayer, PlayerSecondaryRates,
-    PlayerWinRatesAgainst, Operative)
+    PlayerWinRatesAgainst, Operative, Update)
 from sqlalchemy import extract, desc, asc, or_
 from datetime import datetime
 from collections import OrderedDict
@@ -402,7 +402,6 @@ def createDatabase(db):
         db.session.add(Rank(name="Lord General Militant", shortName="lordgeneralmilitant", score=51200))
         db.session.add(Rank(name="Warmaster", shortName="warmaster", score=102400))
         db.session.add(Rank(name="Lord Commander", shortName="lordcommander", score=204800))
-
 
         db.session.commit()
 
@@ -893,7 +892,7 @@ def updateFaction(db, fact):
     faction['gamesLost'] = len(faction['sql'].gamesLost)
     faction['gamesTie'] = len(faction['sql'].gamesTied)
     faction['totalGames'] = faction['gamesWon'] + faction['gamesLost'] + faction['gamesTie']
-
+    faction['updates'] = Update.query.filter_by(factionAffected=fact).order_by(desc(Update.date)).all()
     for game in faction['sql'].gamesWon:
         for counter in Faction.query.all():
             if counter.name not in faction['counterRates'].keys():
@@ -1117,18 +1116,14 @@ def getFactions():
 def getFaction(fact, glo=False):
     faction = {
         'sql': Faction.query.filter_by(id=fact).first(),
-        'counterRates': {},
-        'missionRates': {},
-        'secondaryRates': {},
         'winnerRates': [],
         'loserRates': [],
-        'tieRates': [],
         'bestMissions': [],
-        'worstMissions': [],
-        'tieMissions': [],
         'bestSecondaries': [],
-        'worstSecondaries': [],
-        'tieSecondaries': [],
+        'factionRates': [],
+        'missionRates': [],
+        'secondaryRates': [],
+        'playerRates': []
     }
     faction['gamesWon'] = len(faction['sql'].gamesWon)
     faction['gamesLost'] = len(faction['sql'].gamesLost)
@@ -1143,39 +1138,45 @@ def getFaction(fact, glo=False):
 
     if not glo:
         for rate in WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate1)).all():
-            faction['counterRates'][Faction.query.filter_by(id=rate.faction2).first().name] = {
-                'winRate': rate.rate1,
-                'loseRate': rate.rate2,
-                'tieRate': rate.rate3
-            }
-            faction['winnerRates'].append(Faction.query.filter_by(id=rate.faction2).first())
-        for rate in WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate2)).all():
-            faction['loserRates'].append(Faction.query.filter_by(id=rate.faction2).first())
-        for rate in WinRates.query.filter_by(faction1=faction['sql'].id).order_by(desc(WinRates.rate3)).all():
-            faction['tieRates'].append(Faction.query.filter_by(id=rate.faction2).first())
+            fct = Faction.query.filter_by(id=rate.faction2).first()
+            faction['factionRates'].append({
+                'id': fct.id,
+                'name': fct.name,
+                'shortName': fct.shortName,
+                'winRate': rate.rate1 if rate.rate1 else 0,
+                'loseRate': rate.rate2 if rate.rate2 else 0,
+                'tieRate': rate.rate3 if rate.rate3 else 0
+            })
         for rate in MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate1)).all():
-            faction['missionRates'][Mission.query.filter_by(id=rate.mission).first().name] = {
-                'winRate': rate.rate1,
-                'loseRate': rate.rate2,
-                'tieRate': rate.rate3
-            }
-            faction['bestMissions'].append(Mission.query.filter_by(id=rate.mission).first())
-        for rate in MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate2)).all():
-            faction['worstMissions'].append(Mission.query.filter_by(id=rate.mission).first())
-        for rate in MissionRates.query.filter_by(faction=faction['sql'].id).order_by(desc(MissionRates.rate3)).all():
-            faction['tieMissions'].append(Mission.query.filter_by(id=rate.mission).first())
+            ms = Mission.query.filter_by(id=rate.mission).first()
+            faction['missionRates'].append({
+                'id': ms.id,
+                'name': ms.name,
+                'shortName': ms.shortName,
+                'winRate': rate.rate1 if rate.rate1 else 0,
+                'loseRate': rate.rate2 if rate.rate2 else 0,
+                'tieRate': rate.rate3 if rate.rate3 else 0
+            })
         for rate in SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate1)).all():
-            faction['secondaryRates'][Secondary.query.filter_by(id=rate.secondary).first().name] = {
-                'winRate': rate.rate1,
-                'loseRate': rate.rate2,
-                'tieRate': rate.rate3
-            }
-            faction['bestSecondaries'].append(Secondary.query.filter_by(id=rate.secondary).first())
-        for rate in SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate2)).all():
-            faction['worstSecondaries'].append(Secondary.query.filter_by(id=rate.secondary).first())
-        for rate in SecondaryRates.query.filter_by(faction=faction['sql'].id).order_by(desc(SecondaryRates.rate3)).all():
-            faction['tieSecondaries'].append(Secondary.query.filter_by(id=rate.secondary).first())
-
+            sec = Secondary.query.filter_by(id=rate.secondary).first()
+            faction['secondaryRates'].append({
+                'id': sec.id,
+                'name': sec.name,
+                'shortName': sec.shortName,
+                'winRate': rate.rate1 if rate.rate1 else 0,
+                'loseRate': rate.rate2 if rate.rate2 else 0,
+                'tieRate': rate.rate3 if rate.rate3 else 0
+            })
+        for rate in PlayerWinRates.query.filter_by(faction=faction['sql'].id).order_by(desc(PlayerWinRates.rate1)).all():
+            pl = Player.query.filter_by(id=rate.player).first()
+            faction['playerRates'].append({
+                'id': pl.id,
+                'name': pl.username,
+                'shortName': pl.shortName,
+                'winRate': rate.rate1 if rate.rate1 else 0,
+                'loseRate': rate.rate2 if rate.rate2 else 0,
+                'tieRate': rate.rate3 if rate.rate3 else 0
+            })
         faction['games'] = {}
         faction['maxGames'] = 0
         for i in range(0, 12):
@@ -1518,37 +1519,37 @@ def randomize_data(db):
         "Brood Coven",
     ]
     secondaries = [
-        "headhunter",
-        "challenge",
-        "rout",
-        "execution",
-        "deadly marksman",
-        "rob and ransack",
-        "seize ground",
-        "hold the line",
-        "protect assets",
-        "damage limitation",
-        "plant banner",
-        "central control",
-        "capture hostage and infiltrate",
-        "behind enemy lines",
-        "upload viral code",
-        "implant",
-        "sabotage",
-        "interloper",
-        "mark target",
-        "triangulate",
-        "vantage",
-        "retrieval",
-        "overrun"
+        "Headhunter",
+        "Challenge",
+        "Rout",
+        "Execution",
+        "Deadly Marksman",
+        "Rob and Ransack",
+        "Seize Ground",
+        "Hold the Line",
+        "Protect Assets",
+        "Damage Limitation",
+        "Plant Banner",
+        "Central Control",
+        "Capture Hostage and Infiltrate",
+        "Behind Enemy Lines",
+        "Upload Viral Code",
+        "Implant",
+        "Sabotage",
+        "Interloper",
+        "Mark Target",
+        "Triangulate",
+        "Vantage",
+        "Retrieval",
+        "Overrun"
     ]
     tournaments = [
         'Open game',
         'Matched game'
     ]
-    players = [names.get_full_name() for i in range(0, 8)]
+    players = [names.get_full_name() for i in range(0, 3)]
     players.append('mariofelectronica')
-    players.append('MoonkeyMod')
+    players.append('1003')
     for i in range(0, 40):
         random.seed(i)
         d = random.randint(int(time.time()) - 31556926, int(time.time()))
@@ -1607,7 +1608,7 @@ def randomize_data(db):
                                random.choice([True, False]),
                                random.choice([True, False])],
                 'scouting': random.choice(["Fortify", "Infiltrate", "Recon"]),
-                'faction': random.choice(factions),
+                'faction': random.choice(factions) if playersName[0] != '1003' else random.choice(["Forge World", "Death Guard"]),
                 'primaries': {
                     'first': random.randint(0, 4),
                     'second': random.randint(0, 4),
@@ -1647,7 +1648,7 @@ def randomize_data(db):
                                random.choice([True, False]),
                                random.choice([True, False])],
                 'scouting': random.choice(["Fortify", "Infiltrate", "Recon"]),
-                'faction': random.choice(factions),
+                'faction': random.choice(factions) if playersName[1] != '1003' else random.choice(["Forge World", "Death Guard"]),
                 'primaries': {
                     'first': random.randint(0, 4),
                     'second': random.randint(0, 4),
@@ -1791,4 +1792,16 @@ def randomize_data(db):
         db.session.add(response[response['loser']]['faction'])
         db.session.add(response['tournament'])
         db.session.add(game)
+        db.session.commit()
+
+
+def addNewUpdate(db, form):
+    if not Update.query.filter_by(name=form['name']).first():
+        upd = Update(
+            name=form['name'],
+            date=form['date'],
+            faction=form['faction'],
+            description=form['description'],
+        )
+        db.session.add(upd)
         db.session.commit()
