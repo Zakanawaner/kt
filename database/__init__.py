@@ -172,6 +172,7 @@ class Game(db.Model):
     initFourth = db.relationship("Faction", secondary=faction_game_init_4)
     initFifth = db.relationship("Faction", secondary=faction_game_init_5)
     winner = db.Column(db.String(100))
+    winnerId = db.Column(db.String(100))
     winScouting = db.Column(db.String(20))
     winFaction = db.relationship("Faction", secondary=game_faction_winner)
     winOperatives = db.Column(db.String(60))
@@ -209,6 +210,7 @@ class Game(db.Model):
     winSecondaryFourthScoreTurn3 = db.Column(db.Integer)
     winSecondaryFourthScoreTurn4 = db.Column(db.Integer)
     loser = db.Column(db.String(100))
+    loserId = db.Column(db.String(100))
     losScouting = db.Column(db.String(20))
     losFaction = db.relationship("Faction", secondary=game_faction_loser)
     losOperatives = db.Column(db.String(60))
@@ -427,6 +429,7 @@ class Update(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     date = db.Column(db.DateTime)
+    dateEnd = db.Column(db.DateTime)
     factionAffected = db.Column(db.Integer, db.ForeignKey('faction.id'))
     description = db.Column(db.String(200))
 

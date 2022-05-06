@@ -127,25 +127,9 @@
             </div>
         {% else %}
             <div class="player-super-container">
-                <h3>Your account is not linked to Steam</h3>
-                <p>You won't be able to see any of your game data unless you link your Steam account with this one.</p>
-                <p>To do so, open TTS and download the following mod</p>
-                <a><u>https://steamcommunity.com/sharedfiles/filedetails/?id=2801351900</u></a>
-                <p>Then copy the following code and paste on the text field on the TTS mod</p>
-                <p>{{ player['sql'].publicId }}</p>
+                <h3>This User hasn't yet linked this account with Steam</h3>
             </div>
         {% endif %}
-        <div class="player-ultra-container">
-            {% if player['sql'].allowSharing %}
-                <a href="/allowance/stop">Stop sharing my data</a>
-            {% else %}
-                <a href="/allowance/start">Allow data sharing</a>
-            {% endif %}
-            {% if player['sql'].steamLink %}
-                <a href="/link/stop">Unlink</a>
-            {% endif %}
-            <a href="/delete">Delete</a>
-            <a href="/logout">Logout</a>
-        </div>
     </div>
+
 {% endblock %}

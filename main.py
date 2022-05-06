@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, url_for, redirect, make_response, flash, jsonify
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, set_access_cookies, unset_jwt_cookies
 from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_apscheduler import APScheduler
 from utils import *
 from database import db
 from datetime import timedelta
@@ -12,17 +13,16 @@ app.config["JWT_SECRET_KEY"] = '8ed714601d86e030c1a5ffc941baf8b6'
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+scheduler = APScheduler()
+scheduler.api_enabled = True
+scheduler.init_app(app)
 loginManager = LoginManager(app)
 app.config["loginManager"] = loginManager
 jwt = JWTManager(app)
 db.init_app(app)
 
-# TODO adaptar nombre de facciones aquí quiándome del tts
-# TODO añadir imágenes correspondientes
-# TODO hacer subrutina de update
-# TODO añadir en database los snapshots
-# TODO hacer overwatch on TTS
 # TODO pasarme a aws con mysql
+# TODO terminar la lógica de updates.
 
 
 @loginManager.user_loader
@@ -128,6 +128,24 @@ def addUpdate():
     return render_template('addupdate.html', title="Update", user=current_user if not current_user.is_anonymous else None, factions=fct)
 
 
+@app.route("/startroutines", methods={"GET", "POST"})
+@login_required
+@only_admin
+def startRoutines():
+    scheduler.start()
+    flash("Background routines started")
+    return redirect(url_for('general'))
+
+
+@app.route("/stoproutines", methods={"GET", "POST"})
+@login_required
+@only_admin
+def stopRoutines():
+    scheduler.pause()
+    flash("Background routines stopped")
+    return redirect(url_for('general'))
+
+
 @app.route("/gamedata", methods={"GET", "POST"})
 def data():
     createDatabase(db)
@@ -213,7 +231,7 @@ def link(opt):
             pl = Player.query.filter_by(publicId=form['code']).first()
             if pl:
                 if not pl.steamLink:
-                    pl.steamId = form['name']
+                    pl.steamId = form['steamId']
                     pl.steamLink = True
                     db.session.add(pl)
                     db.session.commit()
@@ -223,13 +241,6 @@ def link(opt):
                     return make_response(jsonify({'result': "Already linked"}), 200)
             else:
                 return make_response(jsonify({'result': "Something went wrong"}), 200)
-        else:  # TODO to delete
-            pl = Player.query.filter_by(username='Zakanawaner').first()
-            pl.steamId = 1003
-            pl.steamLink = True
-            db.session.add(pl)
-            db.session.commit()
-            updatePlayer(db, pl.id)
     db.session.commit()
     flash("Link successfully updated")
     return redirect(url_for('general'))
@@ -259,11 +270,20 @@ def delete():
     unset_jwt_cookies(response)
     logout_user()
     flash("Deletion successful")
-    Player.query.filter_by(publicId=get_jwt_identity()).delete()
+    pl = Player.query.filter_by(publicId=get_jwt_identity()).first()
+    db.session.delete(pl)
     db.session.commit()
-    # TODO hacer la cascada de eliminación en la db
-    # TODO Actualizar games eliminando el id
     return response
+
+
+@scheduler.task('interval', id='updatingData', seconds=60, misfire_grace_time=900)
+def updateData():
+    with scheduler.app.app_context():
+        updateFactions(db)
+        updateMissions(db)
+        updateSecondaries(db)
+        updatePlayers(db)
+        print("Data updated")
 
 
 if __name__ == '__main__':

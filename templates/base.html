@@ -6,18 +6,38 @@
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/styles.css') }}">
 </head>
 <body>
-    <div class="menu">
-      <a class="nav-link" href="/">General</a>
-      <a class="nav-link" href="/games">Games</a>
-      <a class="nav-link" href="/factions">Factions</a>
-      <a class="nav-link" href="/players">Players</a>
-      <a class="nav-link" href="/missions">Missions</a>
-      <a class="nav-link" href="/secondaries">Secondaries</a>
-      {% if user %}
-        <a class="nav-link" href="/player/{{ user.id }}">{{ user.username }}</a>
-      {% else %}
-        <a class="nav-link" href="/login">Login</a>
-      {% endif %}
+
+    <div class="super-menu">
+        <details>
+            <summary class="nav-link">Menu</summary>
+            <nav class="menu1">
+              <a class="nav-link" href="/">General</a>
+              <a class="nav-link" href="/games">Games</a>
+              <a class="nav-link" href="/factions">Factions</a>
+              <a class="nav-link" href="/players">Players</a>
+              <a class="nav-link" href="/missions">Missions</a>
+              <a class="nav-link" href="/secondaries">Secondaries</a>
+              {% if user %}
+                  {% if user.permissions >= 7 %}
+                      <a class="nav-link" href="/update">Update</a>
+                      <a class="nav-link" href="/addupdate">Add Upd</a>
+                      <a class="nav-link" href="/startroutines">Start sch</a>
+                      <a class="nav-link" href="/stoproutines">Stop sch</a>
+                  {% endif %}
+                  {% if user.permissions >= 8 %}
+                      <a class="nav-link" href="/randomize">Random</a>
+                  {% endif %}
+              {% endif %}
+            </nav>
+        </details>
+        <div class="menu">
+            {% if user %}
+                <a class="nav-link" href="/player/{{ user.id }}">{{ user.username }}</a>
+            {% else %}
+                <a class="nav-link" href="/login">Login</a>
+            {% endif %}
+            <a class="nav-link" href="/about">About</a>
+        </div>
     </div>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
