@@ -1,57 +1,61 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="table-container">
-        <div class="table">
-            <div class="table-header">
-                <div class="header__item">Name</div>
-                <div class="header__item">Rank</div>
-                <div class="header__item">Win Rate</div>
-                <div class="header__item">Games</div>
-                <div class="header__item">Score</div>
-                <div class="header__item">Wins</div>
-                <div class="header__item">Loses</div>
-                <div class="header__item">Ties</div>
-                <div class="header__item">Avg Score</div>
-                <div class="header__item">Top faction</div>
-                <div class="header__item">Top counter</div>
-                <div class="header__item">Top Mission</div>
-                <div class="header__item">Top Sec</div>
-            </div>
-            <div class="table-content">
-                {% for player in players %}
-                    <div class="table-row">
-                        <div onclick="location.href='/player/{{ player['sql'].id }}';" class="table-data table-link">{{ player['name'] }}</div>
-                        <div onclick="location.href='/rank/{{ player['sql'].rank[0].id }}';" class="table-data table-link">{{ player['sql'].rank[0].name }}</div>
-                        <div class="table-data">{{ player['winRate'] }}%</div>
-                        <div class="table-data">{{ player['totalGames'] }}</div>
-                        <div class="table-data">{{ player['sql'].score }}</div>
-                        <div class="table-data">{{ player['sql'].wins }}</div>
-                        <div class="table-data">{{ player['sql'].loses }}</div>
-                        <div class="table-data">{{ player['sql'].ties }}</div>
-                        <div class="table-data">{{ player['avgScore'] }}</div>
-                        {% if player['factionRates']|length > 0 %}
-                            <div onclick="location.href='/faction/{{ player['factionRates'][0].id }}';" class="table-data table-link">{{ player['factionRates'][0].name }}</div>
-                        {% else %}
-                            <div class="table-data">-</div>
-                        {% endif %}
-                        {% if player['factionRatesAgainst']|length > 0 %}
-                            <div onclick="location.href='/faction/{{ player['factionRatesAgainst'][0].id }}';" class="table-data table-link">{{ player['factionRatesAgainst'][0].name }}</div>
-                        {% else %}
-                            <div class="table-data">-</div>
-                        {% endif %}
-                        {% if player['missionRates']|length > 0 %}
-                            <div onclick="location.href='/mission/{{ player['missionRates'][0].id }}';" class="table-data table-link">{{ player['missionRates'][0].name }}</div>
-                        {% else %}
-                            <div class="table-data">-</div>
-                        {% endif %}
-                        {% if player['secondaryRates']|length > 0 %}
-                            <div onclick="location.href='/secondary/{{ player['secondaryRates'][0].id }}';" class="table-data table-link">{{ player['secondaryRates'][0].name }}</div>
-                        {% else %}
-                            <div class="table-data">-</div>
-                        {% endif %}
+    {% if upd|length > 0 %}
+        {% for update in upd %}
+            {% if preferred == update.id|string %}
+                <div class="table-container update-dependent" id="update{{ update.id }}" style="display: flex;">
+            {% else %}
+                <div class="table-container update-dependent" id="update{{ update.id }}">
+            {% endif %}
+                <div class="table">
+                    <div class="table-header">
+                        <div class="header__item">Name</div>
+                        <div class="header__item">Rank</div>
+                        <div class="header__item">Win Rate</div>
+                        <div class="header__item">Games</div>
+                        <div class="header__item">Wins</div>
+                        <div class="header__item">Loses</div>
+                        <div class="header__item">Ties</div>
+                        <div class="header__item">Top faction</div>
+                        <div class="header__item">Top counter</div>
+                        <div class="header__item">Top Mission</div>
+                        <div class="header__item">Top Sec</div>
                     </div>
-                {% endfor %}
+                    <div class="table-content">
+                        {% for player in players %}
+                            <div class="table-row">
+                                <div onclick="location.href='/player/{{ player['sql'].id }}';" class="table-data table-link">{{ player['name'] }}</div>
+                                <div onclick="location.href='/rank/{{ player['sql'].rank[0].id }}';" class="table-data table-link">{{ player['sql'].rank[0].name }}</div>
+                                <div class="table-data">{{ player['updates'][update.id|string]['winRate'] }}%</div>
+                                <div class="table-data">{{ player['updates'][update.id|string]['totalGames'] }}</div>
+                                <div class="table-data">{{ player['updates'][update.id|string]['wins'] }}</div>
+                                <div class="table-data">{{ player['updates'][update.id|string]['loses'] }}</div>
+                                <div class="table-data">{{ player['updates'][update.id|string]['ties'] }}</div>
+                                {% if player['updates'][update.id|string]['factionRates']|length > 0 %}
+                                    <div onclick="location.href='/faction/{{ player['updates'][update.id|string]['factionRates'][0].id }}';" class="table-data table-link">{{ player['updates'][update.id|string]['factionRates'][0].name }}</div>
+                                {% else %}
+                                    <div class="table-data">-</div>
+                                {% endif %}
+                                {% if player['updates'][update.id|string]['factionRatesAgainst']|length > 0 %}
+                                    <div onclick="location.href='/faction/{{ player['updates'][update.id|string]['factionRatesAgainst'][0].id }}';" class="table-data table-link">{{ player['updates'][update.id|string]['factionRatesAgainst'][0].name }}</div>
+                                {% else %}
+                                    <div class="table-data">-</div>
+                                {% endif %}
+                                {% if player['updates'][update.id|string]['missionRates']|length > 0 %}
+                                    <div onclick="location.href='/mission/{{ player['updates'][update.id|string]['missionRates'][0].id }}';" class="table-data table-link">{{ player['updates'][update.id|string]['missionRates'][0].name }}</div>
+                                {% else %}
+                                    <div class="table-data">-</div>
+                                {% endif %}
+                                {% if player['updates'][update.id|string]['secondaryRates']|length > 0 %}
+                                    <div onclick="location.href='/secondary/{{ player['updates'][update.id|string]['secondaryRates'][0].id }}';" class="table-data table-link">{{ player['updates'][update.id|string]['secondaryRates'][0].name }}</div>
+                                {% else %}
+                                    <div class="table-data">-</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

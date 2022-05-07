@@ -1,33 +1,41 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="table-container">
-        <div class="table">
-            <div class="table-header">
-                <div class="header__item">Name</div>
-                <div class="header__item">Popularity</div>
-                <div class="header__item">Avg Score</div>
-                <div class="header__item">Top Faction</div>
-                <div class="header__item">Worst Faction</div>
-            </div>
-            <div class="table-content">
-                {% for mission in missions %}
-                    <div class="table-row">
-                        <div onclick="location.href='/mission/{{ mission['sql'].id }}';" class="table-data table-link">{{ mission['sql'].name }}</div>
-                        <div class="table-data">{{ mission['popularity'] }}%</div>
-                        <div class="table-data">{{ mission['sql'].avgScore }}</div>
-                        {% if mission['topFaction'] %}
-                            <div onclick="location.href='/faction/{{ mission['topFaction'].id }}';" class="table-data table-link">{{ mission['topFaction'].name }}</div>
-                        {% else %}
-                            <div class="table-data table-link">-</div>
-                        {% endif %}
-                        {% if mission['worstFaction'] %}
-                            <div onclick="location.href='/faction/{{ mission['worstFaction'].id }}';" class="table-data table-link">{{ mission['worstFaction'].name }}</div>
-                        {% else %}
-                            <div class="table-data table-link">-</div>
-                        {% endif %}
+    {% if upd|length > 0 %}
+        {% for update in upd %}
+            {% if preferred == update.id|string %}
+                <div class="table-container update-dependent" id="update{{ update.id }}" style="display: flex;">
+            {% else %}
+                <div class="table-container update-dependent" id="update{{ update.id }}">
+            {% endif %}
+                <div class="table">
+                    <div class="table-header">
+                        <div class="header__item">Name</div>
+                        <div class="header__item">Popularity</div>
+                        <div class="header__item">Avg Score</div>
+                        <div class="header__item">Top Faction</div>
+                        <div class="header__item">Worst Faction</div>
                     </div>
-                {% endfor %}
+                    <div class="table-content">
+                        {% for mission in missions %}
+                            <div class="table-row">
+                                <div onclick="location.href='/mission/{{ mission['sql'].id }}';" class="table-data table-link">{{ mission['sql'].name }}</div>
+                                <div class="table-data">{{ mission['updates'][update.id|string]['popularity'] }}%</div>
+                                <div class="table-data">{{ mission['sql'].avgScore }}</div>
+                                {% if mission['updates'][update.id|string]['topFaction'] %}
+                                    <div onclick="location.href='/faction/{{ mission['updates'][update.id|string]['topFaction'].id }}';" class="table-data table-link">{{ mission['updates'][update.id|string]['topFaction'].name }}</div>
+                                {% else %}
+                                    <div class="table-data table-link">-</div>
+                                {% endif %}
+                                {% if mission['updates'][update.id|string]['worstFaction'] %}
+                                    <div onclick="location.href='/faction/{{ mission['updates'][update.id|string]['worstFaction'].id }}';" class="table-data table-link">{{ mission['updates'][update.id|string]['worstFaction'].name }}</div>
+                                {% else %}
+                                    <div class="table-data table-link">-</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

@@ -275,6 +275,7 @@ class Secondary(db.Model):
     avgScoreSecond = db.Column(db.Float)
     avgScoreThird = db.Column(db.Float)
     avgScoreFourth = db.Column(db.Float)
+    totalGames = db.Column(db.Integer)
 
 
 class Faction(db.Model):
@@ -409,6 +410,8 @@ class Player(db.Model, UserMixin):
     publicId = db.Column(db.Integer)
     username = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(200))
+    email = db.Column(db.String(200))
+    subscribed = db.Column(db.Boolean)
     shortName = db.Column(db.String(30))
     permissions = db.Column(db.Integer)
     steamLink = db.Column(db.Boolean)

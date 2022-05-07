@@ -1,45 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="table-container">
-        <div class="table">
-            <div class="table-header">
-                <div class="header__item">Name</div>
-                <div class="header__item">Winrate</div>
-                <div class="header__item">Best Counter</div>
-                <div class="header__item">Worst Counter</div>
-                <div class="header__item">Popularity</div>
-                <div class="header__item">Top Mission</div>
-                <div class="header__item">Top Secondaries</div>
-            </div>
-            <div class="table-content">
-                {% for faction in factions %}
-                    <div class="table-row">
-                        <div onclick="location.href='/faction/{{ faction['sql'].id }}';" class="table-data table-link">{{ faction['sql'].name }}</div>
-                        <div class="table-data">{{ faction['winRate'] }}</div>
-                        {% if faction['winnerRates']|length >0 %}
-                            <div onclick="location.href='/faction/{{ faction['winnerRates'][0].id }}';" class="table-data table-link">{{ faction['winnerRates'][0].name }}</div>
-                        {% else %}
-                            <div class="table-data table-link">-</div>
-                        {% endif %}
-                        {% if faction['loserRates']|length >0 %}
-                            <div onclick="location.href='/faction/{{ faction['loserRates'][0].id }}';" class="table-data table-link">{{ faction['loserRates'][0].name }}</div>
-                        {% else %}
-                            <div class="table-data table-link">-</div>
-                        {% endif %}
-                        <div class="table-data">{{ faction['popularity'] }}%</div>
-                        {% if faction['bestMissions']|length >0 %}
-                            <div onclick="location.href='/mission/{{ faction['bestMissions'][0].id }}';" class="table-data table-link">{{ faction['bestMissions'][0].name }}</div>
-                        {% else %}
-                            <div class="table-data table-link">-</div>
-                        {% endif %}
-                        {% if faction['bestSecondaries']|length >0 %}
-                            <div onclick="location.href='/secondary/{{ faction['bestSecondaries'][0].id }}';" class="table-data table-link">{{ faction['bestSecondaries'][0].name }}</div>
-                        {% else %}
-                            <div class="table-data table-link">-</div>
-                        {% endif %}
+    {% if upd|length > 0 %}
+        {% for update in upd %}
+            {% if preferred == update.id|string %}
+                <div class="table-container update-dependent" id="update{{ update.id }}" style="display: flex;">
+            {% else %}
+                <div class="table-container update-dependent" id="update{{ update.id }}">
+            {% endif %}
+                <div class="table">
+                    <div class="table-header">
+                        <div class="header__item">Name</div>
+                        <div class="header__item">Winrate</div>
+                        <div class="header__item">Best Counter</div>
+                        <div class="header__item">Worst Counter</div>
+                        <div class="header__item">Popularity</div>
+                        <div class="header__item">Top Mission</div>
+                        <div class="header__item">Top Secondaries</div>
                     </div>
-                {% endfor %}
+                    <div class="table-content">
+                        {% for faction in factions %}
+                            <div class="table-row">
+                                <div onclick="location.href='/faction/{{ faction['sql'].id }}';" class="table-data table-link">{{ faction['sql'].name }}</div>
+                                <div class="table-data">{{ faction['updates'][update.id|string]['winRate'] }}</div>
+                                {% if faction['updates'][update.id|string]['winnerRates']|length >0 %}
+                                    <div onclick="location.href='/faction/{{ faction['updates'][update.id|string]['winnerRates'][0].id }}';" class="table-data table-link">{{ faction['updates'][update.id|string]['winnerRates'][0].name }}</div>
+                                {% else %}
+                                    <div class="table-data table-link">-</div>
+                                {% endif %}
+                                {% if faction['updates'][update.id|string]['loserRates']|length >0 %}
+                                    <div onclick="location.href='/faction/{{ faction['updates'][update.id|string]['loserRates'][0].id }}';" class="table-data table-link">{{ faction['updates'][update.id|string]['loserRates'][0].name }}</div>
+                                {% else %}
+                                    <div class="table-data table-link">-</div>
+                                {% endif %}
+                                <div class="table-data">{{ faction['updates'][update.id|string]['popularity'] }}%</div>
+                                {% if faction['updates'][update.id|string]['bestMissions']|length >0 %}
+                                    <div onclick="location.href='/mission/{{ faction['updates'][update.id|string]['bestMissions'][0].id }}';" class="table-data table-link">{{ faction['updates'][update.id|string]['bestMissions'][0].name }}</div>
+                                {% else %}
+                                    <div class="table-data table-link">-</div>
+                                {% endif %}
+                                {% if faction['updates'][update.id|string]['bestSecondaries']|length >0 %}
+                                    <div onclick="location.href='/secondary/{{ faction['updates'][update.id|string]['bestSecondaries'][0].id }}';" class="table-data table-link">{{ faction['updates'][update.id|string]['bestSecondaries'][0].name }}</div>
+                                {% else %}
+                                    <div class="table-data table-link">-</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

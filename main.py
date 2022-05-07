@@ -22,7 +22,6 @@ jwt = JWTManager(app)
 db.init_app(app)
 
 # TODO pasarme a aws con mysql
-# TODO terminar la lógica de updates.
 
 
 @loginManager.user_loader
@@ -41,7 +40,10 @@ def refreshToken(jwt_header, jwt_data):
 def general():
     createDatabase(db)
     gen = getGeneral()
-    return render_template('general.html', title="General", user=current_user if not current_user.is_anonymous else None, gen=gen)
+    return render_template('general.html',
+                           title="General", user=current_user if not current_user.is_anonymous else None,
+                           gen=gen, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -103,7 +105,7 @@ def randomize():
     #    os.remove('database.sqlite')
     #    pass
     randomize_data(db)
-    return redirect(url_for('update'))
+    return redirect(url_for('general'))
 
 
 @app.route("/update", methods={"GET", "POST"})
@@ -119,7 +121,7 @@ def update():
 
 @app.route("/addupdate", methods={"GET", "POST"})
 @login_required
-@only_admin
+@only_collaborator
 def addUpdate():
     if request.method == 'POST':
         addNewUpdate(db, request.form)
@@ -156,66 +158,85 @@ def data():
 @app.route("/games", methods={"GET", "POST"})
 def games():
     gms = getGames()
-    return render_template('games.html', title="Games", user=current_user if not current_user.is_anonymous else None, games=gms)
+    return render_template('games.html',
+                           title="Games", user=current_user if not current_user.is_anonymous else None,
+                           games=gms, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route("/game/<gm>", methods={"GET", "POST"})
 def game(gm):
     gm = getGame(gm)
-    return render_template('game.html', title="Game", user=current_user if not current_user.is_anonymous else None, game=gm)
+    return render_template('game.html',
+                           title="Game", user=current_user if not current_user.is_anonymous else None, game=gm, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route("/players", methods={"GET", "POST"})
 def players():
     pls = getPlayers()
-    return render_template('players.html', title="Players", user=current_user if not current_user.is_anonymous else None, players=pls)
+    return render_template('players.html',
+                           title="Players", user=current_user if not current_user.is_anonymous else None, players=pls, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route("/player/<pl>", methods={"GET", "POST"})
 def player(pl):
     pl = getPlayer(pl)
     if pl['sql'] == current_user:
-        return render_template('profile.html', title=pl['sql'].username, user=current_user, player=pl)
+        return render_template('profile.html', title=pl['sql'].username, user=current_user, player=pl, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
     if not pl['sql'].allowSharing:
         flash("Player hidden")
         return redirect(url_for('general'))
-    return render_template('player.html', title=pl['sql'].username, user=current_user if not current_user.is_anonymous else None, player=pl)
+    return render_template('player.html',
+                           title=pl['sql'].username, user=current_user if not current_user.is_anonymous else None, player=pl, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route("/factions", methods={"GET", "POST"})
 def factions():
     fct = getFactions()
-    return render_template('factions.html', title="Factions", user=current_user if not current_user.is_anonymous else None, factions=fct)
+    return render_template('factions.html',
+                           title="Factions", user=current_user if not current_user.is_anonymous else None, factions=fct, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route("/faction/<fact>", methods={"GET", "POST"})
 def faction(fact):
     fct = getFaction(fact)
-    return render_template('faction.html', title=fct['sql'].name, user=current_user if not current_user.is_anonymous else None, faction=fct)
+    return render_template('faction.html',
+                           title=fct['sql'].name, user=current_user if not current_user.is_anonymous else None, faction=fct, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route("/missions", methods={"GET", "POST"})
 def missions():
     mss = getMissions()
-    return render_template('missions.html', title="Missions", user=current_user if not current_user.is_anonymous else None, missions=mss)
+    return render_template('missions.html',
+                           title="Missions", user=current_user if not current_user.is_anonymous else None, missions=mss, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route("/mission/<ms>", methods={"GET", "POST"})
 def mission(ms):
     mss = getMission(ms)
-    return render_template('mission.html', title=mss['sql'].name, user=current_user if not current_user.is_anonymous else None, mission=mss)
+    return render_template('mission.html', title=mss['sql'].name, user=current_user if not current_user.is_anonymous else None, mission=mss, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route("/secondaries", methods={"GET", "POST"})
 def secondaries():
     scs = getSecondaries()
-    return render_template('secondaries.html', title="Secondaries", user=current_user if not current_user.is_anonymous else None, secondaries=scs)
+    return render_template('secondaries.html', title="Secondaries", user=current_user if not current_user.is_anonymous else None, secondaries=scs, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route("/secondary/<sc>", methods={"GET", "POST"})
 def secondary(sc):
     sc = getSecondary(sc)
-    return render_template('secondary.html', title=sc['sql'].name, user=current_user if not current_user.is_anonymous else None, secondary=sc)
+    return render_template('secondary.html', title=sc['sql'].name, user=current_user if not current_user.is_anonymous else None, secondary=sc, upd=getUpdates(),
+                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
 @app.route("/link/<opt>", methods={"GET", "POST"})
@@ -276,7 +297,7 @@ def delete():
     return response
 
 
-@scheduler.task('interval', id='updatingData', seconds=60, misfire_grace_time=900)
+@scheduler.task('interval', id='updatingData', seconds=180, misfire_grace_time=900)
 def updateData():
     with scheduler.app.app_context():
         updateFactions(db)

@@ -6,7 +6,6 @@
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/styles.css') }}">
 </head>
 <body>
-
     <div class="super-menu">
         <details>
             <summary class="nav-link">Menu</summary>
@@ -19,17 +18,30 @@
               <a class="nav-link" href="/secondaries">Secondaries</a>
               {% if user %}
                   {% if user.permissions >= 7 %}
-                      <a class="nav-link" href="/update">Update</a>
                       <a class="nav-link" href="/addupdate">Add Upd</a>
-                      <a class="nav-link" href="/startroutines">Start sch</a>
-                      <a class="nav-link" href="/stoproutines">Stop sch</a>
                   {% endif %}
                   {% if user.permissions >= 8 %}
+                      <a class="nav-link" href="/update">Update</a>
+                      <a class="nav-link" href="/startroutines">Start sch</a>
+                      <a class="nav-link" href="/stoproutines">Stop sch</a>
                       <a class="nav-link" href="/randomize">Random</a>
                   {% endif %}
               {% endif %}
             </nav>
         </details>
+        {% if upd|length > 0 %}
+            <div class="menu">
+                <select id="update" name="update" onchange="onUpdateSelected(this.value);">
+                    {% for update in upd %}
+                        {% if preferred == update.id|string %}
+                            <option value="{{ update.id }}" selected>{{ update.name }} ({{ update.date.strftime('%Y-%m-%d') }})</option>
+                        {% else %}
+                            <option value="{{ update.id }}">{{ update.name }} ({{ update.date.strftime('%Y-%m-%d') }})</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
         <div class="menu">
             {% if user %}
                 <a class="nav-link" href="/player/{{ user.id }}">{{ user.username }}</a>
@@ -51,4 +63,18 @@
     {% block content %}
     {% endblock %}
 </body>
+    <script>
+        var objects = document.getElementsByClassName('update-dependent');
+
+        function onUpdateSelected(val) {
+            document.cookie = "preferred_update="+val;
+            for (let obj of objects) {
+                if (obj.id == ('update' + val)) {
+                    obj.style.display = 'flex';
+                } else {
+                    obj.style.display = 'none';
+                }
+            }
+        }
+    </script>
 </html>
