@@ -488,33 +488,29 @@ def checkData(response):
 ############
 # Database #
 def createDatabase(db):
-    if os.path.exists('database.sqlite'):
-        # os.remove('database.sqlite')
-        pass
-    else:
-        db.create_all()
+    db.create_all()
 
-        db.session.add(Rank(name="Guardsman", shortName="guardsman", score=0))
-        db.session.add(Rank(name="Sergeant", shortName="sergeant", score=50))
-        db.session.add(Rank(name="Lieutenant", shortName="lieutenant", score=100))
-        db.session.add(Rank(name="Captain", shortName="captain", score=200))
-        db.session.add(Rank(name="Major", shortName="major", score=400))
-        db.session.add(Rank(name="Colonel", shortName="colonel", score=800))
-        db.session.add(Rank(name="Major General", shortName="majorgeneral", score=1600))
-        db.session.add(Rank(name="Lieutenant General", shortName="lieutenantgeneral", score=3200))
-        db.session.add(Rank(name="Marshall", shortName="marshall", score=6400))
-        db.session.add(Rank(name="General", shortName="general", score=12800))
-        db.session.add(Rank(name="Lord General", shortName="lordgeneral", score=25600))
-        db.session.add(Rank(name="Lord General Militant", shortName="lordgeneralmilitant", score=51200))
-        db.session.add(Rank(name="Warmaster", shortName="warmaster", score=102400))
-        db.session.add(Rank(name="Lord Commander", shortName="lordcommander", score=204800))
+    db.session.add(Rank(name="Guardsman", shortName="guardsman", score=0))
+    db.session.add(Rank(name="Sergeant", shortName="sergeant", score=50))
+    db.session.add(Rank(name="Lieutenant", shortName="lieutenant", score=100))
+    db.session.add(Rank(name="Captain", shortName="captain", score=200))
+    db.session.add(Rank(name="Major", shortName="major", score=400))
+    db.session.add(Rank(name="Colonel", shortName="colonel", score=800))
+    db.session.add(Rank(name="Major General", shortName="majorgeneral", score=1600))
+    db.session.add(Rank(name="Lieutenant General", shortName="lieutenantgeneral", score=3200))
+    db.session.add(Rank(name="Marshall", shortName="marshall", score=6400))
+    db.session.add(Rank(name="General", shortName="general", score=12800))
+    db.session.add(Rank(name="Lord General", shortName="lordgeneral", score=25600))
+    db.session.add(Rank(name="Lord General Militant", shortName="lordgeneralmilitant", score=51200))
+    db.session.add(Rank(name="Warmaster", shortName="warmaster", score=102400))
+    db.session.add(Rank(name="Lord Commander", shortName="lordcommander", score=204800))
 
-        db.session.add(Update(name="First APP launch",
-                              date=datetime.fromtimestamp(int(time.time())),
-                              dateEnd=datetime.fromtimestamp(int(time.time()) + 31556926),
-                              description="First update dated on the web launch day"))
+    db.session.add(Update(name="First APP launch",
+                          date=datetime.fromtimestamp(int(time.time())),
+                          dateEnd=datetime.fromtimestamp(int(time.time()) + 31556926),
+                          description="First update dated on the web launch day"))
 
-        db.session.commit()
+    db.session.commit()
 
 
 #########

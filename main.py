@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for, redirect, make_response, flash, jsonify
+from flask import Flask, request, render_template, url_for, redirect, make_response, flash, jsonify, current_app
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, set_access_cookies, unset_jwt_cookies
 from flask_login import LoginManager, login_user, login_required, logout_user
 from flask_apscheduler import APScheduler
@@ -20,6 +20,8 @@ loginManager = LoginManager(app)
 app.config["loginManager"] = loginManager
 jwt = JWTManager(app)
 db.init_app(app)
+with app.app_context():
+    createDatabase(db)
 
 # TODO pasarme a aws con mysql
 
@@ -38,7 +40,6 @@ def refreshToken(jwt_header, jwt_data):
 
 @app.route("/", methods={"GET", "POST"})
 def general():
-    createDatabase(db)
     gen = getGeneral()
     return render_template('general.html',
                            title="General", user=current_user if not current_user.is_anonymous else None,
@@ -54,7 +55,6 @@ def about():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    createDatabase(db)
     if request.method == 'POST':
         status, new_user = userSignup(db, request.form)
         if status == 401:
@@ -106,10 +106,6 @@ def logout():
 @login_required
 @only_admin
 def randomize():
-    createDatabase(db)
-    # if os.path.exists('database.sqlite'):
-    #    os.remove('database.sqlite')
-    #    pass
     randomize_data(db)
     return redirect(url_for('general'))
 
@@ -156,7 +152,6 @@ def stopRoutines():
 
 @app.route("/gamedata", methods={"GET", "POST"})
 def data():
-    createDatabase(db)
     handleGameData(json.loads(request.data.decode()), db)
     return {'status': 'ok'}, 200
 
