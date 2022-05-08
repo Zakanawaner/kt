@@ -6,12 +6,14 @@ from utils import *
 from database import db
 from datetime import timedelta
 import json
+import pymysql
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '8ed714601d86e030c1a5ffc941baf8b6'
 app.config["JWT_SECRET_KEY"] = '8ed714601d86e030c1a5ffc941baf8b6'
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://ktdusername:ktdpassword@ktdfree.chue8zgeelbk.us-east-2.rds.amazonaws.com/db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 scheduler = APScheduler()
 scheduler.api_enabled = True
@@ -20,10 +22,9 @@ loginManager = LoginManager(app)
 app.config["loginManager"] = loginManager
 jwt = JWTManager(app)
 db.init_app(app)
+
 with app.app_context():
     createDatabase(db)
-
-# TODO pasarme a aws con mysql
 
 
 @loginManager.user_loader
@@ -310,3 +311,4 @@ def updateData():
 
 if __name__ == '__main__':
     app.run(port=3000)
+    # app.run(host='0.0.0.0', port=8080) AWS
