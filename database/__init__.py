@@ -164,6 +164,7 @@ class Game(db.Model):
     __tablename__ = 'game'
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime)
+    tournament = db.Column(db.Integer, db.ForeignKey('tournament.id'))
     timestamp = db.Column(db.Integer)
     mission = db.relationship("Mission", secondary=game_mission)
     initFirst = db.relationship("Faction", secondary=faction_game_init_1)

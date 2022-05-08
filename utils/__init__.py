@@ -260,6 +260,7 @@ def handleGameData(response, db):
             game = Game(
                 date=datetime.now(),
                 timestamp=response['timestamp'],
+                tournament=response['tournament'].id,
                 mission=[response['mission']] if response['mission'] else [],
                 initFirst=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][
                     0] else [response[response['loser']]['faction']],
@@ -508,9 +509,8 @@ def createDatabase(db):
         db.session.add(Rank(name="Warmaster", shortName="warmaster", score=102400))
         db.session.add(Rank(name="Lord Commander", shortName="lordcommander", score=204800))
 
-        # TODO change to datetime.now()
         db.session.add(Update(name="First APP launch",
-                              date=datetime.fromtimestamp(int(time.time()) - 31556926),
+                              date=datetime.fromtimestamp(int(time.time())),
                               dateEnd=datetime.fromtimestamp(int(time.time()) + 31556926),
                               description="First update dated on the web launch day"))
 
@@ -528,6 +528,11 @@ def getGame(gm):
     game = {
         'sql': Game.query.filter_by(id=gm).first(),
     }
+    game['winner'] = Player.query.filter_by(allowSharing=True).filter_by(steamId=game['sql'].winnerId).first()
+    game['loser'] = Player.query.filter_by(allowSharing=True).filter_by(steamId=game['sql'].loserId).first()
+    game['winner'] = game['winner'].username if game['winner'] else "Anonymous"
+    game['loser'] = game['loser'].username if game['loser'] else "Anonymous"
+    game['tournament'] = Tournament.query.filter_by(id=game['sql'].tournament).first()
     return game
 
 
@@ -2307,7 +2312,7 @@ def randomize_data(db):
                 'secondaries': {
                     'first': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3),
+                        'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
                         'third': 0,
@@ -2315,7 +2320,7 @@ def randomize_data(db):
                     },
                     'second': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3),
+                        'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
                         'third': 0,
@@ -2323,7 +2328,7 @@ def randomize_data(db):
                     },
                     'third': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3),
+                        'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
                         'third': 0,
@@ -2349,7 +2354,7 @@ def randomize_data(db):
                 'secondaries': {
                     'first': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3),
+                        'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
                         'third': 0,
@@ -2357,7 +2362,7 @@ def randomize_data(db):
                     },
                     'second': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3),
+                        'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
                         'third': 0,
@@ -2365,7 +2370,7 @@ def randomize_data(db):
                     },
                     'third': {
                         'name': random.choice(secondaries),
-                        'score': random.randint(0, 3),
+                        'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
                         'third': 0,
@@ -2378,7 +2383,7 @@ def randomize_data(db):
                                                          response[playersName[0]]['primaries']['second'] + \
                                                          response[playersName[0]]['primaries']['third'] + \
                                                          response[playersName[0]]['primaries']['fourth']
-        response[playersName[1]]['primaries']['total'] = response[playersName[0]]['primaries']['first'] + \
+        response[playersName[1]]['primaries']['total'] = response[playersName[1]]['primaries']['first'] + \
                                                          response[playersName[1]]['primaries']['second'] + \
                                                          response[playersName[1]]['primaries']['third'] + \
                                                          response[playersName[1]]['primaries']['fourth']
@@ -2415,6 +2420,7 @@ def randomize_data(db):
         game = Game(
             date=datetime.fromtimestamp(d),
             timestamp=response['timestamp'],
+            tournament=response['tournament'].id,
             mission=[response['mission']] if response['mission'] else [],
             initFirst=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][0] else [
                 response[response['loser']]['faction']],

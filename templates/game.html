@@ -1,71 +1,142 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="graph">
-        <h1>{{ game['sql'].date.strftime("%Y-%m-%d") }}</h1>
+    <div class="game">
+        <h2>{{ game['sql'].date.strftime("%Y-%m-%d") }}</h2>
         <h1>{{ game['sql'].mission[0].name }}</h1>
+        <h3>{{ game['tournament'].name }}</h3>
         <div class="game-ultra-container">
-            <div class="graph">
-                <img class="circular_image" src="{{ url_for('static', filename='images/' + game['sql'].winFaction[0].shortName + '.png') }}"/>
-                <h2>{{ game['sql'].winFaction[0].name }}</h2>
-                <h3>{{ game['sql'].winTotal }}</h3>
-                <h3>{{ game['sql'].winSecondaryFirst[0].name }}</h3>
-                <h3>{{ game['sql'].winSecondarySecond[0].name }}</h3>
-                <h3>{{ game['sql'].winSecondaryThird[0].name }}</h3>
-                <h3>Scouting: {{ game['sql'].winScouting }}</h3>
-            </div>
-            <h3>VS</h3>
-            <div class="graph">
-                <img class="circular_image" src="{{ url_for('static', filename='images/' + game['sql'].losFaction[0].shortName + '.png') }}"/>
-                <h2>{{ game['sql'].losFaction[0].name }}</h2>
-                <h3>{{ game['sql'].losTotal }}</h3>
-                <h3>{{ game['sql'].losSecondaryFirst[0].name }}</h3>
-                <h3>{{ game['sql'].losSecondarySecond[0].name }}</h3>
-                <h3>{{ game['sql'].losSecondaryThird[0].name }}</h3>
-                <h3>Scouting: {{ game['sql'].losScouting }}</h3>
-            </div>
-        </div>
-        <div class="table">
-            <div class="table-header">
-                <div class="header__item">Turn</div>
-                <div class="header__item">Initiative</div>
-                <div class="header__item">{{ game['sql'].winFaction[0].name }} Prim</div>
-                <div class="header__item">{{ game['sql'].losFaction[0].name }} Prim</div>
-                <div class="header__item">{{ game['sql'].winFaction[0].name }} Sec</div>
-                <div class="header__item">{{ game['sql'].losFaction[0].name }} Sec</div>
-
-            </div>
-            <div class="table-content">
-                <div class="table-row">
-                    <div class="table-data">First</div>
-                    <div class="table-data">{{ game['sql'].initFirst[0].name }}</div>
-                    <div class="table-data">{{ game['sql'].winPrimaryFirst }}</div>
-                    <div class="table-data">{{ game['sql'].losPrimaryFirst }}</div>
-                    <div class="table-data">{{ game['sql'].winSecondaryFirstTurn1 }}</div>
-                    <div class="table-data">{{ game['sql'].losSecondaryFirstTurn1 }}</div>
+            <div class="game-super-container">
+                <div class="graph">
+                    <h3>{{ game['winner'] }}</h3>
+                    <img class="circular_image" src="{{ url_for('static', filename='images/' + game['sql'].winFaction[0].shortName + '.png') }}"/>
+                    <h2>{{ game['sql'].winFaction[0].name }}</h2>
+                    <h3>{{ game['sql'].winTotal }}</h3>
+                    <h3>{{ game['sql'].winSecondaryFirst[0].name }}</h3>
+                    <h3>{{ game['sql'].winSecondarySecond[0].name }}</h3>
+                    <h3>{{ game['sql'].winSecondaryThird[0].name }}</h3>
                 </div>
-                <div class="table-row">
-                    <div class="table-data">Second</div>
-                    <div class="table-data">{{ game['sql'].initSecond[0].name }}</div>
-                    <div class="table-data">{{ game['sql'].winPrimarySecond }}</div>
-                    <div class="table-data">{{ game['sql'].losPrimarySecond }}</div>
-                    <div class="table-data">{{ game['sql'].winSecondaryFirstTurn2 }}</div>
-                    <div class="table-data">{{ game['sql'].winSecondaryFirstTurn2 }}</div>
+                <div class="graph">
+                    <h3>{{ game['loser'] }}</h3>
+                    <img class="circular_image" src="{{ url_for('static', filename='images/' + game['sql'].losFaction[0].shortName + '.png') }}"/>
+                    <h2>{{ game['sql'].losFaction[0].name }}</h2>
+                    <h3>{{ game['sql'].losTotal }}</h3>
+                    <h3>{{ game['sql'].losSecondaryFirst[0].name }}</h3>
+                    <h3>{{ game['sql'].losSecondarySecond[0].name }}</h3>
+                    <h3>{{ game['sql'].losSecondaryThird[0].name }}</h3>
                 </div>
-                <div class="table-row">
-                    <div class="table-data">Third</div>
-                    <div class="table-data">{{ game['sql'].initThird[0].name }}</div>
-                    <div class="table-data">{{ game['sql'].winPrimaryThird }}</div>
-                    <div class="table-data">{{ game['sql'].losPrimaryThird }}</div>
-                    <div class="table-data">{{ game['sql'].winSecondaryFirstTurn3 }}</div>
-                    <div class="table-data">{{ game['sql'].losSecondaryFirstTurn3 }}</div>
+            </div>
+            <h2>Scouting</h2>
+            <div class="game-super-container">
+                <div class="graph">
+                    <h3>{{ game['sql'].winScouting }} / {{ game['sql'].losScouting }}</h3>
+                    <h3>Winner: {{ game['sql'].rollOffWinner[0].name }}</h3>
+                    <h3>Selection: {{ game['sql'].rollOffSelection }}</h3>
                 </div>
-                <div class="table-row">
-                    <div class="table-data">Fourth</div>
-                    <div class="table-data">{{ game['sql'].initFourth[0].name }}</div>
-                    <div class="table-data">{{ game['sql'].winPrimaryFourth }}</div>
-                    <div class="table-data">{{ game['sql'].losPrimaryFourth }}</div>
-                    <div class="table-data">{{ game['sql'].winSecondaryFirstTurn4 }}</div>
-                    <div class="table-data">{{ game['sql'].losSecondaryFirstTurn4 }}</div>
+            </div>
+            <h2>Primaries</h2>
+            <div class="game-table-container">
+                <div class="table">
+                    <div class="table-header">
+                        <div class="header__item">Turn</div>
+                        <div class="header__item">Initiative</div>
+                        <div class="header__item">{{ game['sql'].winFaction[0].name }}</div>
+                        <div class="header__item">{{ game['sql'].losFaction[0].name }}</div>
+                    </div>
+                    <div class="table-content">
+                        <div class="table-row">
+                            <div class="table-data">First</div>
+                            <div class="table-data">{{ game['sql'].initFirst[0].name }}</div>
+                            <div class="table-data">{{ game['sql'].winPrimaryFirst }}</div>
+                            <div class="table-data">{{ game['sql'].losPrimaryFirst }}</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-data">Second</div>
+                            <div class="table-data">{{ game['sql'].initSecond[0].name }}</div>
+                            <div class="table-data">{{ game['sql'].winPrimarySecond }}</div>
+                            <div class="table-data">{{ game['sql'].losPrimarySecond }}</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-data">Third</div>
+                            <div class="table-data">{{ game['sql'].initThird[0].name }}</div>
+                            <div class="table-data">{{ game['sql'].winPrimaryThird }}</div>
+                            <div class="table-data">{{ game['sql'].losPrimaryThird }}</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-data">Fourth</div>
+                            <div class="table-data">{{ game['sql'].initFourth[0].name }}</div>
+                            <div class="table-data">{{ game['sql'].winPrimaryFourth }}</div>
+                            <div class="table-data">{{ game['sql'].losPrimaryFourth }}</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-data">Total</div>
+                            <div class="table-data">-</div>
+                            <div class="table-data">{{ game['sql'].winPrimary }}</div>
+                            <div class="table-data">{{ game['sql'].losPrimary }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2>Secondaries</h2>
+            <div class="game-table-container">
+                <div class="table">
+                    <div class="table-header">
+                        <div class="header__item">Secondary</div>
+                        <div class="header__item">Turn 1</div>
+                        <div class="header__item">Turn 2</div>
+                        <div class="header__item">Turn 3</div>
+                        <div class="header__item">Turn 4</div>
+                        <div class="header__item">Total</div>
+                    </div>
+                    <div class="table-content">
+                        <div class="table-row">
+                            <div class="table-data">{{ game['sql'].winFaction[0].name }}-{{ game['sql'].winSecondaryFirst[0].name }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondaryFirstScoreTurn1 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondaryFirstScoreTurn2 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondaryFirstScoreTurn3 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondaryFirstScoreTurn4 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondaryFirstScore }}</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-data">{{ game['sql'].winFaction[0].name }}-{{ game['sql'].winSecondarySecond[0].name }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondarySecondScoreTurn1 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondarySecondScoreTurn2 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondarySecondScoreTurn3 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondarySecondScoreTurn4 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondarySecondScore }}</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-data">{{ game['sql'].winFaction[0].name }}-{{ game['sql'].winSecondaryThird[0].name }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondaryThirdScoreTurn1 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondaryThirdScoreTurn2 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondaryThirdScoreTurn3 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondaryThirdScoreTurn4 }}</div>
+                            <div class="table-data">{{ game['sql'].winSecondaryThirdScore }}</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-data">{{ game['sql'].losFaction[0].name }}-{{ game['sql'].losSecondaryFirst[0].name }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondaryFirstScoreTurn1 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondaryFirstScoreTurn2 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondaryFirstScoreTurn3 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondaryFirstScoreTurn4 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondaryFirstScore }}</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-data">{{ game['sql'].losFaction[0].name }}-{{ game['sql'].losSecondarySecond[0].name }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondarySecondScoreTurn1 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondarySecondScoreTurn2 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondarySecondScoreTurn3 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondarySecondScoreTurn4 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondarySecondScore }}</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-data">{{ game['sql'].losFaction[0].name }}-{{ game['sql'].losSecondaryThird[0].name }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondaryThirdScoreTurn1 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondaryThirdScoreTurn2 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondaryThirdScoreTurn3 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondaryThirdScoreTurn4 }}</div>
+                            <div class="table-data">{{ game['sql'].losSecondaryThirdScore }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

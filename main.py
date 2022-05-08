@@ -46,6 +46,12 @@ def general():
                            preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
 
 
+@app.route("/about", methods={"GET", "POST"})
+def about():
+    return render_template('about.html',
+                           title="About", user=current_user if not current_user.is_anonymous else None)
+
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     createDatabase(db)
@@ -297,7 +303,7 @@ def delete():
     return response
 
 
-@scheduler.task('interval', id='updatingData', seconds=180, misfire_grace_time=900)
+@scheduler.task('interval', id='updatingData', seconds=600, misfire_grace_time=1200)
 def updateData():
     with scheduler.app.app_context():
         updateFactions(db)
