@@ -1,3 +1,4 @@
+from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
@@ -308,6 +309,7 @@ class WinRates(db.Model):
     rate1 = db.Column(db.Float)
     rate2 = db.Column(db.Float)
     rate3 = db.Column(db.Float)
+    games = db.Column(db.Integer)
 
 
 class MissionRates(db.Model):
@@ -319,6 +321,7 @@ class MissionRates(db.Model):
     rate1 = db.Column(db.Float)
     rate2 = db.Column(db.Float)
     rate3 = db.Column(db.Float)
+    games = db.Column(db.Integer)
 
 
 class SecondaryRates(db.Model):
@@ -330,6 +333,7 @@ class SecondaryRates(db.Model):
     rate1 = db.Column(db.Float)
     rate2 = db.Column(db.Float)
     rate3 = db.Column(db.Float)
+    games = db.Column(db.Integer)
 
 
 class PlayerWinRatesPlayer(db.Model):
@@ -341,6 +345,7 @@ class PlayerWinRatesPlayer(db.Model):
     rate1 = db.Column(db.Float)
     rate2 = db.Column(db.Float)
     rate3 = db.Column(db.Float)
+    games = db.Column(db.Integer)
 
 
 class PlayerWinRates(db.Model):
@@ -352,6 +357,7 @@ class PlayerWinRates(db.Model):
     rate1 = db.Column(db.Float)
     rate2 = db.Column(db.Float)
     rate3 = db.Column(db.Float)
+    games = db.Column(db.Integer)
 
 
 class PlayerWinRatesAgainst(db.Model):
@@ -363,6 +369,7 @@ class PlayerWinRatesAgainst(db.Model):
     rate1 = db.Column(db.Float)
     rate2 = db.Column(db.Float)
     rate3 = db.Column(db.Float)
+    games = db.Column(db.Integer)
 
 
 class PlayerMissionRates(db.Model):
@@ -374,6 +381,7 @@ class PlayerMissionRates(db.Model):
     rate1 = db.Column(db.Float)
     rate2 = db.Column(db.Float)
     rate3 = db.Column(db.Float)
+    games = db.Column(db.Integer)
 
 
 class PlayerSecondaryRates(db.Model):
@@ -385,6 +393,7 @@ class PlayerSecondaryRates(db.Model):
     rate1 = db.Column(db.Float)
     rate2 = db.Column(db.Float)
     rate3 = db.Column(db.Float)
+    games = db.Column(db.Integer)
 
 
 class Rank(db.Model):

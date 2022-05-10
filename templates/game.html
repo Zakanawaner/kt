@@ -33,7 +33,7 @@
                     <h3>Selection: {{ game['sql'].rollOffSelection }}</h3>
                 </div>
             </div>
-            <h2>Primaries</h2>
+            <h2 onclick="location.href='/mission/{{ game['sql'].mission[0].id }}';">Primaries {{ game['sql'].mission[0].name }}</h2>
             <div class="game-table-container">
                 <div class="table">
                     <div class="table-header">
@@ -45,25 +45,25 @@
                     <div class="table-content">
                         <div class="table-row">
                             <div class="table-data">First</div>
-                            <div class="table-data">{{ game['sql'].initFirst[0].name }}</div>
+                            <div class="table-data table-link" onclick="location.href='/faction/{{ game['sql'].initFirst[0].id }}';">{{ game['sql'].initFirst[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winPrimaryFirst }}</div>
                             <div class="table-data">{{ game['sql'].losPrimaryFirst }}</div>
                         </div>
                         <div class="table-row">
                             <div class="table-data">Second</div>
-                            <div class="table-data">{{ game['sql'].initSecond[0].name }}</div>
+                            <div class="table-data table-link" onclick="location.href='/faction/{{ game['sql'].initSecond[0].id }}';">{{ game['sql'].initSecond[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winPrimarySecond }}</div>
                             <div class="table-data">{{ game['sql'].losPrimarySecond }}</div>
                         </div>
                         <div class="table-row">
                             <div class="table-data">Third</div>
-                            <div class="table-data">{{ game['sql'].initThird[0].name }}</div>
+                            <div class="table-data table-link" onclick="location.href='/faction/{{ game['sql'].initThird[0].id }}';">{{ game['sql'].initThird[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winPrimaryThird }}</div>
                             <div class="table-data">{{ game['sql'].losPrimaryThird }}</div>
                         </div>
                         <div class="table-row">
                             <div class="table-data">Fourth</div>
-                            <div class="table-data">{{ game['sql'].initFourth[0].name }}</div>
+                            <div class="table-data table-link" onclick="location.href='/faction/{{ game['sql'].initFourth[0].id }}';">{{ game['sql'].initFourth[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winPrimaryFourth }}</div>
                             <div class="table-data">{{ game['sql'].losPrimaryFourth }}</div>
                         </div>
@@ -89,7 +89,7 @@
                     </div>
                     <div class="table-content">
                         <div class="table-row">
-                            <div class="table-data">{{ game['sql'].winFaction[0].name }}-{{ game['sql'].winSecondaryFirst[0].name }}</div>
+                            <div class="table-data table-link" onclick="location.href='/secondary/{{ game['sql'].winSecondaryFirst[0].id }}';">{{ game['sql'].winFaction[0].name }}-{{ game['sql'].winSecondaryFirst[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winSecondaryFirstScoreTurn1 }}</div>
                             <div class="table-data">{{ game['sql'].winSecondaryFirstScoreTurn2 }}</div>
                             <div class="table-data">{{ game['sql'].winSecondaryFirstScoreTurn3 }}</div>
@@ -97,7 +97,7 @@
                             <div class="table-data">{{ game['sql'].winSecondaryFirstScore }}</div>
                         </div>
                         <div class="table-row">
-                            <div class="table-data">{{ game['sql'].winFaction[0].name }}-{{ game['sql'].winSecondarySecond[0].name }}</div>
+                            <div class="table-data table-link" onclick="location.href='/secondary/{{ game['sql'].winSecondarySecond[0].id }}';">{{ game['sql'].winFaction[0].name }}-{{ game['sql'].winSecondarySecond[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winSecondarySecondScoreTurn1 }}</div>
                             <div class="table-data">{{ game['sql'].winSecondarySecondScoreTurn2 }}</div>
                             <div class="table-data">{{ game['sql'].winSecondarySecondScoreTurn3 }}</div>
@@ -105,7 +105,7 @@
                             <div class="table-data">{{ game['sql'].winSecondarySecondScore }}</div>
                         </div>
                         <div class="table-row">
-                            <div class="table-data">{{ game['sql'].winFaction[0].name }}-{{ game['sql'].winSecondaryThird[0].name }}</div>
+                            <div class="table-data table-link" onclick="location.href='/secondary/{{ game['sql'].winSecondaryThird[0].id }}';">{{ game['sql'].winFaction[0].name }}-{{ game['sql'].winSecondaryThird[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winSecondaryThirdScoreTurn1 }}</div>
                             <div class="table-data">{{ game['sql'].winSecondaryThirdScoreTurn2 }}</div>
                             <div class="table-data">{{ game['sql'].winSecondaryThirdScoreTurn3 }}</div>
@@ -113,7 +113,7 @@
                             <div class="table-data">{{ game['sql'].winSecondaryThirdScore }}</div>
                         </div>
                         <div class="table-row">
-                            <div class="table-data">{{ game['sql'].losFaction[0].name }}-{{ game['sql'].losSecondaryFirst[0].name }}</div>
+                            <div class="table-data table-link" onclick="location.href='/secondary/{{ game['sql'].losSecondaryFirst[0].id }}';">{{ game['sql'].losFaction[0].name }}-{{ game['sql'].losSecondaryFirst[0].name }}</div>
                             <div class="table-data">{{ game['sql'].losSecondaryFirstScoreTurn1 }}</div>
                             <div class="table-data">{{ game['sql'].losSecondaryFirstScoreTurn2 }}</div>
                             <div class="table-data">{{ game['sql'].losSecondaryFirstScoreTurn3 }}</div>
@@ -121,7 +121,7 @@
                             <div class="table-data">{{ game['sql'].losSecondaryFirstScore }}</div>
                         </div>
                         <div class="table-row">
-                            <div class="table-data">{{ game['sql'].losFaction[0].name }}-{{ game['sql'].losSecondarySecond[0].name }}</div>
+                            <div class="table-data table-link" onclick="location.href='/secondary/{{ game['sql'].losSecondarySecond[0].id }}';">{{ game['sql'].losFaction[0].name }}-{{ game['sql'].losSecondarySecond[0].name }}</div>
                             <div class="table-data">{{ game['sql'].losSecondarySecondScoreTurn1 }}</div>
                             <div class="table-data">{{ game['sql'].losSecondarySecondScoreTurn2 }}</div>
                             <div class="table-data">{{ game['sql'].losSecondarySecondScoreTurn3 }}</div>
@@ -129,7 +129,7 @@
                             <div class="table-data">{{ game['sql'].losSecondarySecondScore }}</div>
                         </div>
                         <div class="table-row">
-                            <div class="table-data">{{ game['sql'].losFaction[0].name }}-{{ game['sql'].losSecondaryThird[0].name }}</div>
+                            <div class="table-data table-link" onclick="location.href='/secondary/{{ game['sql'].losSecondaryThird[0].id }}';">{{ game['sql'].losFaction[0].name }}-{{ game['sql'].losSecondaryThird[0].name }}</div>
                             <div class="table-data">{{ game['sql'].losSecondaryThirdScoreTurn1 }}</div>
                             <div class="table-data">{{ game['sql'].losSecondaryThirdScoreTurn2 }}</div>
                             <div class="table-data">{{ game['sql'].losSecondaryThirdScoreTurn3 }}</div>

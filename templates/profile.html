@@ -133,6 +133,7 @@
                             </div>
                         </div>
                     {% else %}
+                    <div class="player-ultra-container">
                         <div class="player-super-container">
                             <h3>Your account is not linked to Steam</h3>
                             <p>You won't be able to see any of your game data unless you link your Steam account with this one.</p>
@@ -141,11 +142,34 @@
                             <p>Then copy the following code and paste on the text field on the TTS mod</p>
                             <p>{{ player['sql'].publicId }}</p>
                         </div>
+                    </div>
                     {% endif %}
                 {% else %}
-                    <div class="player-super-container">
-                        <h3>You are not sharing your data</h3>
-                        <p>You won't be able to see any of your game data unless you allow sharing your data.</p>
+                    <div class="player-ultra-container">
+                        <div class="player-super-container">
+                            <h3>You are not sharing your data</h3>
+                            <p>You won't be able to see any of your game data unless you allow sharing your data.</p>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if not player['sql'].subscribed %}
+                    <div class="player-ultra-container">
+                        <div class="login player-super-container">
+                            <h2>Subscribe to KTD news</h2>
+                            <form class="login-form" action="/subscribe" method="post">
+                                <input placeholder="email" type="text" name="email" id="email">
+                                <button type="submit">Subscribe</button>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="player-ultra-container">
+                        <div class="login player-super-container">
+                            <h3>You are subcribed to KTD news</h3>
+                            <form class="login-form" action="/unsubscribe" method="post">
+                                <button type="submit">Unsubscribe</button>
+                            </form>
+                        </div>
                     </div>
                 {% endif %}
                 <div class="player-ultra-container">

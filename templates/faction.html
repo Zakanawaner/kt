@@ -68,18 +68,22 @@
                         <div class="table">
                             <div class="table-header">
                                 <div class="header__item">Name</div>
+                                <div class="header__item">Games</div>
                                 <div class="header__item">Win Rate</div>
                                 <div class="header__item">Lose Rate</div>
                                 <div class="header__item">Tie Rate</div>
                             </div>
                             <div class="table-content">
                                 {% for fact in faction['updates'][update.id|string]['factionRates'] %}
-                                    <div class="table-row">
-                                        <div onclick="location.href='/faction/{{ fact['id'] }}';" class="table-data table-link">{{ fact['name'] }}</div>
-                                        <div class="table-data">{{ fact['winRate'] }}%</div>
-                                        <div class="table-data">{{ fact['loseRate'] }}%</div>
-                                        <div class="table-data">{{ fact['tieRate'] }}%</div>
-                                    </div>
+                                    {% if fact['games'] > 0 %}
+                                        <div class="table-row">
+                                            <div onclick="location.href='/faction/{{ fact['id'] }}';" class="table-data table-link">{{ fact['name'] }}</div>
+                                            <div class="table-data">{{ fact['games'] }}</div>
+                                            <div class="table-data">{{ fact['winRate'] }}%</div>
+                                            <div class="table-data">{{ fact['loseRate'] }}%</div>
+                                            <div class="table-data">{{ fact['tieRate'] }}%</div>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -89,18 +93,22 @@
                         <div class="table">
                             <div class="table-header">
                                 <div class="header__item">Name</div>
+                                <div class="header__item">Games</div>
                                 <div class="header__item">Win Rate</div>
                                 <div class="header__item">Lose Rate</div>
                                 <div class="header__item">Tie Rate</div>
                             </div>
                             <div class="table-content">
                                 {% for mission in faction['updates'][update.id|string]['missionRates'] %}
-                                    <div class="table-row">
-                                        <div onclick="location.href='/mission/{{ mission['id'] }}';" class="table-data table-link">{{ mission['name'] }}</div>
-                                        <div class="table-data">{{ mission['winRate'] }}%</div>
-                                        <div class="table-data">{{ mission['loseRate'] }}%</div>
-                                        <div class="table-data">{{ mission['tieRate'] }}%</div>
-                                    </div>
+                                    {% if mission['games'] > 0 %}
+                                        <div class="table-row">
+                                            <div onclick="location.href='/mission/{{ mission['id'] }}';" class="table-data table-link">{{ mission['name'] }}</div>
+                                            <div class="table-data">{{ mission['games'] }}</div>
+                                            <div class="table-data">{{ mission['winRate'] }}%</div>
+                                            <div class="table-data">{{ mission['loseRate'] }}%</div>
+                                            <div class="table-data">{{ mission['tieRate'] }}%</div>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -110,18 +118,22 @@
                         <div class="table">
                             <div class="table-header">
                                 <div class="header__item">Name</div>
+                                <div class="header__item">Games</div>
                                 <div class="header__item">Win Rate</div>
                                 <div class="header__item">Lose Rate</div>
                                 <div class="header__item">Tie Rate</div>
                             </div>
                             <div class="table-content">
                                 {% for secondary in faction['updates'][update.id|string]['secondaryRates'] %}
-                                    <div class="table-row">
-                                        <div onclick="location.href='/secondary/{{ secondary['id'] }}';" class="table-data table-link">{{ secondary['name'] }}</div>
-                                        <div class="table-data">{{ secondary['winRate'] }}%</div>
-                                        <div class="table-data">{{ secondary['loseRate'] }}%</div>
-                                        <div class="table-data">{{ secondary['tieRate'] }}%</div>
-                                    </div>
+                                    {% if secondary['games'] > 0 %}
+                                        <div class="table-row">
+                                            <div onclick="location.href='/secondary/{{ secondary['id'] }}';" class="table-data table-link">{{ secondary['name'] }}</div>
+                                            <div class="table-data">{{ secondary['games'] }}</div>
+                                            <div class="table-data">{{ secondary['winRate'] }}%</div>
+                                            <div class="table-data">{{ secondary['loseRate'] }}%</div>
+                                            <div class="table-data">{{ secondary['tieRate'] }}%</div>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>

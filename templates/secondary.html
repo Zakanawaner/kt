@@ -39,18 +39,22 @@
                         <div class="table">
                             <div class="table-header">
                                 <div class="header__item">Name</div>
+                                <div class="header__item">Games</div>
                                 <div class="header__item">Win Rate</div>
                                 <div class="header__item">Lose Rate</div>
                                 <div class="header__item">Tie Rate</div>
                             </div>
                             <div class="table-content">
                                 {% for key, fact in secondary['updates'][update.id|string]['bestFactions'].items() %}
-                                    <div class="table-row">
-                                        <div onclick="location.href='/faction/{{ fact['id'] }}';" class="table-data table-link">{{ key }}</div>
-                                        <div class="table-data">{{ fact['winRate'] }}%</div>
-                                        <div class="table-data">{{ fact['loseRate'] }}%</div>
-                                        <div class="table-data">{{ fact['tieRate'] }}%</div>
-                                    </div>
+                                    {% if fact['games'] > 0 %}
+                                        <div class="table-row">
+                                            <div onclick="location.href='/faction/{{ fact['id'] }}';" class="table-data table-link">{{ key }}</div>
+                                            <div class="table-data">{{ fact['games'] }}</div>
+                                            <div class="table-data">{{ fact['winRate'] }}%</div>
+                                            <div class="table-data">{{ fact['loseRate'] }}%</div>
+                                            <div class="table-data">{{ fact['tieRate'] }}%</div>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>

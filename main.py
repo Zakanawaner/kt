@@ -1,314 +1,37 @@
-from flask import Flask, request, render_template, url_for, redirect, make_response, flash, jsonify, current_app
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, set_access_cookies, unset_jwt_cookies
-from flask_login import LoginManager, login_user, login_required, logout_user
-from flask_apscheduler import APScheduler
-from utils import *
-from database import db
-from datetime import timedelta
-import json
-import pymysql
+from flask import Flask
+from utils import createApp, createDatabase
+
+from bpAuth import authBP
+from bpSched import schedulerBP
+from bpGeneric import genericBP
+from bpPlayer import playerBP
+from bpMission import missionBP
+from bpFaction import factionBP
+from bpSec import secondaryBP
+from bpGame import gameBP
+from bpAdmin import adminBP
+from bpMail import mailBP
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = '8ed714601d86e030c1a5ffc941baf8b6'
-app.config["JWT_SECRET_KEY"] = '8ed714601d86e030c1a5ffc941baf8b6'
-app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
-# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://ktdusername:ktdpassword@ktdfree.chue8zgeelbk.us-east-2.rds.amazonaws.com/db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-scheduler = APScheduler()
-scheduler.api_enabled = True
-scheduler.init_app(app)
-loginManager = LoginManager(app)
-app.config["loginManager"] = loginManager
-jwt = JWTManager(app)
-db.init_app(app)
 
-with app.app_context():
-    createDatabase(db)
+app.register_blueprint(authBP)
+app.register_blueprint(schedulerBP)
+app.register_blueprint(genericBP)
+app.register_blueprint(playerBP)
+app.register_blueprint(missionBP)
+app.register_blueprint(factionBP)
+app.register_blueprint(secondaryBP)
+app.register_blueprint(gameBP)
+app.register_blueprint(adminBP)
+app.register_blueprint(mailBP)
 
-
-@loginManager.user_loader
-def loadUser(user_id):
-    return getPlayerById(user_id)
-
-
-@jwt.expired_token_loader
-def refreshToken(jwt_header, jwt_data):
-    response = make_response(redirect(url_for('login')))
-    unset_jwt_cookies(response)
-    return response
-
-
-@app.route("/", methods={"GET", "POST"})
-def general():
-    gen = getGeneral()
-    return render_template('general.html',
-                           title="General", user=current_user if not current_user.is_anonymous else None,
-                           gen=gen, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/about", methods={"GET", "POST"})
-def about():
-    return render_template('about.html',
-                           title="About", user=current_user if not current_user.is_anonymous else None)
-
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        status, new_user = userSignup(db, request.form)
-        if status == 401:
-            flash("Your password has tu have 8 characters, 1 uppercase and 1 digit")
-            return redirect(url_for('signup'))
-        if status == 402:
-            flash("The username already exists")
-            return redirect(url_for('signup'))
-        if status == 200:
-            response = redirect(url_for('general'))
-            set_access_cookies(response, create_access_token(identity=new_user.publicId, expires_delta=timedelta(days=365)))
-            login_user(new_user)
-            flash("Registered successfully")
-            return response
-        if status == 403:
-            flash("Password fields must coincide")
-            return redirect(url_for('signup'))
-    return render_template('signup.html', title="Signup")
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        status, user = userLogin(request.form)
-        if status == 200:
-            flash("Login successful")
-            response = redirect(url_for('general'))
-            set_access_cookies(response, create_access_token(identity=user.publicId))
-            login_user(user)
-            return response
-        if status == 401:
-            flash("Could not verify")
-            return make_response(render_template('login.html', title="Login"), 401,
-                                 {'Authentication': '"login required"'})
-    return render_template('login.html', title="Login")
-
-
-@app.route('/logout', methods=['GET', 'POST'])
-@login_required
-def logout():
-    response = redirect(url_for('general'))
-    unset_jwt_cookies(response)
-    logout_user()
-    flash("Logout successfully")
-    return response
-
-
-@app.route("/randomize", methods={"GET", "POST"})
-@login_required
-@only_admin
-def randomize():
-    randomize_data(db)
-    return redirect(url_for('general'))
-
-
-@app.route("/update", methods={"GET", "POST"})
-@login_required
-@only_admin
-def update():
-    updateFactions(db)
-    updateMissions(db)
-    updateSecondaries(db)
-    updatePlayers(db)
-    return redirect(url_for('general'))
-
-
-@app.route("/addupdate", methods={"GET", "POST"})
-@login_required
-@only_collaborator
-def addUpdate():
-    if request.method == 'POST':
-        addNewUpdate(db, request.form)
-        return redirect(url_for('update'))
-    fct = Faction.query.all()
-    return render_template('addupdate.html', title="Update", user=current_user if not current_user.is_anonymous else None, factions=fct)
-
-
-@app.route("/startroutines", methods={"GET", "POST"})
-@login_required
-@only_admin
-def startRoutines():
-    scheduler.start()
-    flash("Background routines started")
-    return redirect(url_for('general'))
-
-
-@app.route("/stoproutines", methods={"GET", "POST"})
-@login_required
-@only_admin
-def stopRoutines():
-    scheduler.pause()
-    flash("Background routines stopped")
-    return redirect(url_for('general'))
-
-
-@app.route("/gamedata", methods={"GET", "POST"})
-def data():
-    handleGameData(json.loads(request.data.decode()), db)
-    return {'status': 'ok'}, 200
-
-
-@app.route("/games", methods={"GET", "POST"})
-def games():
-    gms = getGames()
-    return render_template('games.html',
-                           title="Games", user=current_user if not current_user.is_anonymous else None,
-                           games=gms, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/game/<gm>", methods={"GET", "POST"})
-def game(gm):
-    gm = getGame(gm)
-    return render_template('game.html',
-                           title="Game", user=current_user if not current_user.is_anonymous else None, game=gm, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/players", methods={"GET", "POST"})
-def players():
-    pls = getPlayers()
-    return render_template('players.html',
-                           title="Players", user=current_user if not current_user.is_anonymous else None, players=pls, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/player/<pl>", methods={"GET", "POST"})
-def player(pl):
-    pl = getPlayer(pl)
-    if pl['sql'] == current_user:
-        return render_template('profile.html', title=pl['sql'].username, user=current_user, player=pl, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-    if not pl['sql'].allowSharing:
-        flash("Player hidden")
-        return redirect(url_for('general'))
-    return render_template('player.html',
-                           title=pl['sql'].username, user=current_user if not current_user.is_anonymous else None, player=pl, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/factions", methods={"GET", "POST"})
-def factions():
-    fct = getFactions()
-    return render_template('factions.html',
-                           title="Factions", user=current_user if not current_user.is_anonymous else None, factions=fct, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/faction/<fact>", methods={"GET", "POST"})
-def faction(fact):
-    fct = getFaction(fact)
-    return render_template('faction.html',
-                           title=fct['sql'].name, user=current_user if not current_user.is_anonymous else None, faction=fct, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/missions", methods={"GET", "POST"})
-def missions():
-    mss = getMissions()
-    return render_template('missions.html',
-                           title="Missions", user=current_user if not current_user.is_anonymous else None, missions=mss, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/mission/<ms>", methods={"GET", "POST"})
-def mission(ms):
-    mss = getMission(ms)
-    return render_template('mission.html', title=mss['sql'].name, user=current_user if not current_user.is_anonymous else None, mission=mss, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/secondaries", methods={"GET", "POST"})
-def secondaries():
-    scs = getSecondaries()
-    return render_template('secondaries.html', title="Secondaries", user=current_user if not current_user.is_anonymous else None, secondaries=scs, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/secondary/<sc>", methods={"GET", "POST"})
-def secondary(sc):
-    sc = getSecondary(sc)
-    return render_template('secondary.html', title=sc['sql'].name, user=current_user if not current_user.is_anonymous else None, secondary=sc, upd=getUpdates(),
-                           preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1')
-
-
-@app.route("/link/<opt>", methods={"GET", "POST"})
-def link(opt):
-    if opt == "stop":
-        pl = Player.query.filter_by(id=current_user.id).first()
-        pl.steamId = 0
-        pl.steamLink = False
-        db.session.add(pl)
-    elif opt == "start":
-        if request.method == "POST":
-            form = json.loads(request.data.decode())
-            pl = Player.query.filter_by(publicId=form['code']).first()
-            if pl:
-                if not pl.steamLink:
-                    pl.steamId = form['steamId']
-                    pl.steamLink = True
-                    db.session.add(pl)
-                    db.session.commit()
-                    updatePlayer(db, pl.id)
-                    return make_response(jsonify({'result': "Everything good"}), 200)
-                else:
-                    return make_response(jsonify({'result': "Already linked"}), 200)
-            else:
-                return make_response(jsonify({'result': "Something went wrong"}), 200)
-    db.session.commit()
-    flash("Link successfully updated")
-    return redirect(url_for('general'))
-
-
-@app.route("/allowance/<opt>", methods={"GET", "POST"})
-@jwt_required()
-@login_required
-def allowance(opt):
-    pl = Player.query.filter_by(publicId=get_jwt_identity()).first()
-    if opt == "stop":
-        pl.allowSharing = False
-    elif opt == "start":
-        pl.allowSharing = True
-    db.session.add(pl)
-    db.session.commit()
-    updatePlayer(db, pl.id)
-    flash("Selection successfully updated")
-    return redirect(url_for('general'))
-
-
-@app.route("/delete", methods={"GET", "POST"})
-@jwt_required()
-@login_required
-def delete():
-    response = redirect(url_for('general'))
-    unset_jwt_cookies(response)
-    logout_user()
-    flash("Deletion successful")
-    pl = Player.query.filter_by(publicId=get_jwt_identity()).first()
-    db.session.delete(pl)
-    db.session.commit()
-    return response
-
-
-@scheduler.task('interval', id='updatingData', seconds=600, misfire_grace_time=1200)
-def updateData():
-    with scheduler.app.app_context():
-        updateFactions(db)
-        updateMissions(db)
-        updateSecondaries(db)
-        updatePlayers(db)
-        print("Data updated")
+app = createApp(app)
+createDatabase(app)
 
 
 if __name__ == '__main__':
     app.run(port=3000)
-    # app.run(host='0.0.0.0', port=8080) AWS
+    # app.run(host='0.0.0.0', port=8080)
+
+
+# TODO check global calculations
