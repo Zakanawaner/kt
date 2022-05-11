@@ -1,10 +1,15 @@
-from database import Game, Player, Tournament
+from database import Game, Player, Tournament, Update, GameType
+from sqlalchemy import desc
 
 
 #########
 # Games #
 def getGames():
-    games = Game.query.all()
+    games = {
+        'updates': {}
+    }
+    for upd in Update.query.order_by(desc(Update.date)).all():
+        games['updates'][str(upd.id)] = Game.query.filter(Game.date >= upd.date).filter(Game.date < upd.dateEnd).order_by(desc(Game.date)).all()
     return games
 
 
@@ -17,4 +22,9 @@ def getGame(gm):
     game['winner'] = game['winner'].username if game['winner'] else "Anonymous"
     game['loser'] = game['loser'].username if game['loser'] else "Anonymous"
     game['tournament'] = Tournament.query.filter_by(id=game['sql'].tournament).first()
+    game['type'] = GameType.query.filter_by(id=game['sql'].gameType).first()
     return game
+
+
+def getGameTypes():
+    return GameType.query.all()

@@ -78,7 +78,7 @@ html{
 .card {
   margin: 50px auto;
   padding: 30px;
-  width: 200px;
+  width: 300px;
   height: 200px;
   border-radius: 40px;
   display: flex;
@@ -434,7 +434,7 @@ html{
 .player-super-container p{
     text-align:center;
     max-width: 100%;
-    font-size: 20px;
+    font-size: 15px;
     color: rgba(255,101,0,1);
 }
 
@@ -614,6 +614,10 @@ max-width: 80%;
 }
 
 .update-dependent {
+    display: none;
+}
+
+.gameType-dependent {
     display: none;
 }
 

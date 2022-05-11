@@ -23,19 +23,24 @@ from utils.general import *
 ################
 # APP Function #
 def createApp(app):
+    config = json.load(open("secret/dev.json"))
+    # config = json.load(open("secret/prod.json"))
+
     app.config["SECRET_KEY"] = handleSecretKey()
+    app.config['PORT'] = config['port']
+    app.config['HOST'] = config['host']
 
     app.config["JWT_SECRET_KEY"] = handleSecretKey()
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = json.load(open("secret/keys.json"))['db-dev-uri']
-    # app.config["SQLALCHEMY_DATABASE_URI"] = json.load(open("secret/keys.json"))['db-prod-uri']
+    app.config["SQLALCHEMY_DATABASE_URI"] = config['db-uri']
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USERNAME'] = json.load(open("secret/keys.json"))['mail']
-    app.config['MAIL_PASSWORD'] = json.load(open("secret/keys.json"))['mail-pass']
+    app.config['MAIL_USERNAME'] = config['mail']
+    app.config['MAIL_PASSWORD'] = config['mail-pass']
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
     app.config['MAIL_ASCII_ATTACHMENTS'] = True
@@ -139,7 +144,7 @@ def randomize_data():
     players = [names.get_full_name() for i in range(0, 3)]
     players.append('mariofelectronica')
     for i in range(0, 1):
-        d = random.randint(int(time.time()), int(time.time()) + 31556926)
+        d = random.randint(int(time.time()) - 31556926, int(time.time()) + 31556926)
         datetime.fromtimestamp(d)
         ok = False
         while not ok:
@@ -158,6 +163,7 @@ def randomize_data():
                 ok = True
         response = {
             'tournament': random.choice(tournaments),
+            'gameType': random.choice(tournaments),
             'timestamp': int(time.time()) - 31556926 + i,
             'mission': random.choice([
                 {
@@ -321,11 +327,14 @@ def randomize_data():
         response = handleSecondaries(db, response, 'loser')
         response = handleMission(db, response)
         response = handleTournament(db, response)
+        response = handleGameType(db, response)
+        response = handleOperatives(db, response, ['winner', 'loser'])
 
         game = Game(
             date=datetime.fromtimestamp(d),
             timestamp=response['timestamp'],
             tournament=response['tournament'].id,
+            gameType=response['gameType'].id,
             mission=[response['mission']] if response['mission'] else [],
             initFirst=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][0] else [
                 response[response['loser']]['faction']],
@@ -338,6 +347,8 @@ def randomize_data():
             winner=response['winner'],
             winnerId=response[response['winner']]['steamId'],
             winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
+            winOperatives=','.join([str(op['sql'].id) for op in response[response['winner']]['operatives'].values()]),
+            winOpKilled=','.join([str(op['roundKilled']) if op['killed'] else '0' for op in response[response['winner']]['operatives'].values()]),
             winScouting=response[response['winner']]['scouting'],
             winTotal=response[response['winner']]['total'],
             winPrimary=response[response['winner']]['primaries']['total'],
@@ -367,6 +378,8 @@ def randomize_data():
             loser=response['loser'],
             loserId=response[response['loser']]['steamId'],
             losFaction=[response[response['loser']]['faction']] if response[response['loser']]['faction'] else [],
+            losOperatives=','.join([str(op['sql'].id) for op in response[response['loser']]['operatives'].values()]),
+            losOpKilled=','.join([str(op['roundKilled']) if op['killed'] else '0' for op in response[response['loser']]['operatives'].values()]),
             losScouting=response[response['loser']]['scouting'],
             losTotal=response[response['loser']]['total'],
             losPrimary=response[response['loser']]['primaries']['total'],
@@ -399,6 +412,7 @@ def randomize_data():
             tie=response['tie']
         )
         response['tournament'].games.append(game)
+        response['gameType'].games.append(game)
         if response['tie']:
             response[response['winner']]['faction'].gamesTied.append(game)
             if response[response['winner']]['faction'] != response[response['loser']]['faction']:
@@ -409,6 +423,7 @@ def randomize_data():
         db.session.add(response[response['winner']]['faction'])
         db.session.add(response[response['loser']]['faction'])
         db.session.add(response['tournament'])
+        db.session.add(response['gameType'])
         db.session.add(game)
         db.session.commit()
 
@@ -431,17 +446,16 @@ def addNewUpdate(form):
 
 def getUpdates():
     upd = Update.query.order_by(desc(Update.date)).all()
-    upd.append((Update(id=0, name="All Time", date=datetime.fromtimestamp(0))))
     return upd
 
 
 def handleSecretKey():
-    keys = json.load(open("secret/keys.json"))
+    keys = json.load(open("secret/dev.json"))
     if keys['secret-key']:
         return keys['secret-key']
     else:
         key = secrets.token_hex(16)
         keys['secret-key'] = key
-        json.dump(keys, open("secret/keys.json", 'w'), indent=4)
+        json.dump(keys, open("secret/dev.json", 'w'), indent=4)
         return key
 

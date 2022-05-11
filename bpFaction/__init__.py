@@ -3,6 +3,7 @@ from flask_login import current_user
 
 from utils import getUpdates
 from utils.faction import getFactions, getFaction
+from utils.games import getGameTypes
 
 
 factionBP = Blueprint('factionBluePrint', __name__)
@@ -17,7 +18,9 @@ def factions():
         user=current_user if not current_user.is_anonymous else None,
         factions=fct,
         upd=getUpdates(),
-        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
+        gt=getGameTypes(),
+        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '0',
+        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '0'
     )
 
 
@@ -30,5 +33,7 @@ def faction(fact):
         user=current_user if not current_user.is_anonymous else None,
         faction=fct,
         upd=getUpdates(),
-        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
+        gt=getGameTypes(),
+        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '0',
+        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '0'
     )

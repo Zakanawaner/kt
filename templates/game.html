@@ -3,6 +3,7 @@
     <div class="game">
         <h2>{{ game['sql'].date.strftime("%Y-%m-%d") }}</h2>
         <h1>{{ game['sql'].mission[0].name }}</h1>
+        <h3>{{ game['type'].name }}</h3>
         <h3>{{ game['tournament'].name }}</h3>
         <div class="game-ultra-container">
             <div class="game-super-container">
@@ -25,12 +26,18 @@
                     <h3>{{ game['sql'].losSecondaryThird[0].name }}</h3>
                 </div>
             </div>
+            <h2>Roll Off</h2>
+            <div class="game-super-container">
+                <div class="graph">
+                    <h3>Winner: {{ game['sql'].rollOffWinner[0].name }}</h3>
+                    <h3>Selection: {{ game['sql'].rollOffSelection }}</h3>
+                </div>
+            </div>
             <h2>Scouting</h2>
             <div class="game-super-container">
                 <div class="graph">
                     <h3>{{ game['sql'].winScouting }} / {{ game['sql'].losScouting }}</h3>
-                    <h3>Winner: {{ game['sql'].rollOffWinner[0].name }}</h3>
-                    <h3>Selection: {{ game['sql'].rollOffSelection }}</h3>
+                    <h3>Winner: {{ game['sql'].initFirst[0].name }}</h3>
                 </div>
             </div>
             <h2 onclick="location.href='/mission/{{ game['sql'].mission[0].id }}';">Primaries {{ game['sql'].mission[0].name }}</h2>

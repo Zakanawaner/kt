@@ -3,7 +3,8 @@ import time
 from datetime import datetime
 from database import (
     Game, Player, Mission, Rank, Secondary,
-    Faction, Tournament, Operative, Update
+    Faction, Tournament, Operative, Update,
+    GameType
 )
 
 
@@ -91,6 +92,22 @@ def handleTournament(db, response):
             db.session.add(response['tournament'])
         else:
             response['tournament'] = Tournament.query.filter_by(name=response['tournament']).first()
+    else:
+        response['tournament'] = None
+    db.session.commit()
+    return response
+
+
+def handleGameType(db, response):
+    if 'gameType' in response.keys():
+        if not GameType.query.filter_by(name=response['gameType']).first():
+            response['gameType'] = GameType(name=response['gameType'],
+                                            shortName=response['gameType'].lower().replace(' ', ''), )
+            db.session.add(response['gameType'])
+        else:
+            response['gameType'] = GameType.query.filter_by(name=response['gameType']).first()
+    else:
+        response['gameType'] = None
     db.session.commit()
     return response
 
@@ -125,6 +142,8 @@ def handleOperatives(db, response, pls):
                     )
                     db.session.add(response[response[pl]]['operatives'][op]['sql'])
                     db.session.commit()
+        else:
+            response[response[pl]]['operatives'] = {}
     return response
 
 
@@ -137,12 +156,14 @@ def handleGameData(response, db):
             response = handleSecondaries(db, response, 'loser')
             response = handleMission(db, response)
             response = handleTournament(db, response)
+            response = handleGameType(db, response)
             response = handleOperatives(db, response, ['winner', 'loser'])
 
             game = Game(
                 date=datetime.now(),
                 timestamp=response['timestamp'],
                 tournament=response['tournament'].id,
+                gameType=response['gameType'].id,
                 mission=[response['mission']] if response['mission'] else [],
                 initFirst=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][
                     0] else [response[response['loser']]['faction']],
@@ -155,13 +176,8 @@ def handleGameData(response, db):
                 winner=response['winner'],
                 winnerId=response[response['winner']]['steamId'],
                 winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
-                winOperatives=','.join([str(op['sql'].id) for op in
-                                        response[response['winner']]['operatives'].values()]) if 'operatives' in
-                                                                                                 response[response[
-                                                                                                     'winner']].keys() else '',
-                winOpKilled=','.join([str(op['roundKilled']) if op['killed'] else '0' for op in
-                                      response[response['winner']]['operatives'].values()]) if 'operatives' in response[
-                    response['winner']].keys() else '',
+                winOperatives=','.join([str(op['sql'].id) for op in response[response['winner']]['operatives'].values()]),
+                winOpKilled=','.join([str(op['roundKilled']) if op['killed'] else '0' for op in response[response['winner']]['operatives'].values()]),
                 winScouting=response[response['winner']]['scouting'],
                 winTotal=response[response['winner']]['total'],
                 winPrimary=response[response['winner']]['primaries']['total'],
@@ -191,14 +207,8 @@ def handleGameData(response, db):
                 loser=response['loser'],
                 loserId=response[response['loser']]['steamId'],
                 losFaction=[response[response['loser']]['faction']] if response[response['loser']]['faction'] else [],
-                losOperatives=','.join(
-                    [str(op['sql'].id) for op in response[response['loser']]['operatives'].values()]) if 'operatives' in
-                                                                                                         response[
-                                                                                                             response[
-                                                                                                                 'loser']].keys() else '',
-                losOpKilled=','.join([str(op['roundKilled']) if op['killed'] else '0' for op in
-                                      response[response['loser']]['operatives'].values()]) if 'operatives' in response[
-                    response['loser']].keys() else '',
+                losOperatives=','.join([str(op['sql'].id) for op in response[response['loser']]['operatives'].values()]),
+                losOpKilled=','.join([str(op['roundKilled']) if op['killed'] else '0' for op in response[response['loser']]['operatives'].values()]),
                 losScouting=response[response['loser']]['scouting'],
                 losTotal=response[response['loser']]['total'],
                 losPrimary=response[response['loser']]['primaries']['total'],
@@ -242,9 +252,10 @@ def handleGameData(response, db):
 
             db.session.add(response[response['winner']]['faction'])
             db.session.add(response[response['loser']]['faction'])
-            if 'tournament' in response.keys():
-                response['tournament'].games.append(game)
-                db.session.add(response['tournament'])
+            response['tournament'].games.append(game)
+            response['gameType'].games.append(game)
+            db.session.add(response['tournament'])
+            db.session.add(response['gameType'])
             db.session.add(game)
             db.session.commit()
 
@@ -256,6 +267,9 @@ def checkData(response):
             "name": "Loot and Salvage",
             'objGuid': ""
         },
+        'timestamp': "",
+        'tournament': "",
+        'gameType': "",
         'rollOffWinner': "",
         'rollOffWinnerSelection': "",
         response['winner']: {
@@ -391,5 +405,12 @@ def createTables(db):
                           date=datetime.fromtimestamp(int(time.time())),
                           dateEnd=datetime.fromtimestamp(int(time.time()) + 31556926),
                           description="First update dated on the web launch day"))
-
+    db.session.add(Update(name="All Time",
+                          date=datetime.fromtimestamp(0),
+                          dateEnd=datetime.fromtimestamp(9999999999),
+                          description="All time data",
+                          id=0))
+    db.session.add(GameType(name="All plays",
+                            shortName="allplays",
+                            id=0))
     db.session.commit()

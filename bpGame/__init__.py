@@ -3,7 +3,7 @@ import json
 from flask import Blueprint, request, render_template, current_app
 from flask_login import current_user
 from utils import getUpdates
-from utils.games import getGames, getGame
+from utils.games import getGames, getGame, getGameTypes
 from utils.dataHandlers import handleGameData
 
 
@@ -25,7 +25,9 @@ def games():
         user=current_user if not current_user.is_anonymous else None,
         games=gms,
         upd=getUpdates(),
-        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
+        gt=getGameTypes(),
+        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '0',
+        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '0'
     )
 
 
@@ -38,5 +40,7 @@ def game(gm):
         user=current_user if not current_user.is_anonymous else None,
         game=gm,
         upd=getUpdates(),
-        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
+        gt=getGameTypes(),
+        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '0',
+        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '0'
     )

@@ -114,6 +114,11 @@ game_tournament = db.Table(
     db.Column('tournament_id', db.Integer, db.ForeignKey('tournament.id'), primary_key=True, unique=False),
     db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True, unique=False)
 )
+game_gametype = db.Table(
+    'game_gametype',
+    db.Column('gametype_id', db.Integer, db.ForeignKey('gametype.id'), primary_key=True, unique=False),
+    db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True, unique=False)
+)
 game_secondary_1 = db.Table(
     'game_secondary_1',
     db.Column('secondary_id', db.Integer, db.ForeignKey('secondary.id'), primary_key=True, unique=False),
@@ -166,6 +171,7 @@ class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime)
     tournament = db.Column(db.Integer, db.ForeignKey('tournament.id'))
+    gameType = db.Column(db.Integer, db.ForeignKey('gametype.id'))
     timestamp = db.Column(db.Integer)
     mission = db.relationship("Mission", secondary=game_mission)
     initFirst = db.relationship("Faction", secondary=faction_game_init_1)
@@ -412,6 +418,14 @@ class Tournament(db.Model):
     dateInit = db.Column(db.DateTime)
     dateEnd = db.Column(db.DateTime)
     games = db.relationship("Game", secondary=game_tournament)
+
+
+class GameType(db.Model):
+    __tablename__ = 'gametype'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    shortName = db.Column(db.String(100))
+    games = db.relationship("Game", secondary=game_gametype)
 
 
 class Player(db.Model, UserMixin):

@@ -9,8 +9,7 @@ from collections import OrderedDict
 ###########
 # General #
 def getGeneral():
-    players = Player.query.order_by(desc(Player.score)).all()
-    topPlayers = players[0:3]
+    players = Player.query.filter_by(allowSharing=True).filter_by(steamLink=True).order_by(desc(Player.score)).all()
     factions = {}
     auxTop = 0
     auxBot = 0
@@ -79,9 +78,9 @@ def getGeneral():
         'factionMostWinRate': topFaction.name if topFaction else None,
         'factionLessWinRate': botFaction.name if botFaction else None,
         'totalPlayers': len(players),
-        'top1Player': topPlayers[0].username if topPlayers else None,
-        'top2Player': topPlayers[1].username if len(topPlayers) > 1 else None,
-        'top3Player': topPlayers[2].username if len(topPlayers) > 2 else None,
+        'top1Player': players[0].username if players else None,
+        'top2Player': players[1].username if len(players) > 1 else None,
+        'top3Player': players[2].username if len(players) > 2 else None,
         'played': {},
         'maxPlayed': 0
     }

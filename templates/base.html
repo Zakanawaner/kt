@@ -29,8 +29,8 @@
               {% endif %}
             </nav>
         </details>
-        {% if upd|length > 0 %}
-            <div class="menu">
+        <div class="menu">
+            {% if upd|length > 0 %}
                 <select id="update" name="update" onchange="onUpdateSelected(this.value);">
                     {% for update in upd %}
                         {% if preferred == update.id|string %}
@@ -40,8 +40,19 @@
                         {% endif %}
                     {% endfor %}
                 </select>
-            </div>
-        {% endif %}
+            {% endif %}
+            {% if gt|length > 0 %}
+                <select id="gameType" name="gameType" onchange="onGameTypeSelected(this.value);">
+                    {% for gameType in gt %}
+                        {% if preferredGameType == gameType.id|string %}
+                            <option value="{{ gameType.id }}" selected>{{ gameType.name }}</option>
+                        {% else %}
+                            <option value="{{ gameType.id }}">{{ gameType.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            {% endif %}
+        </div>
         <div class="menu">
             {% if user %}
                 <a class="nav-link" href="/player/{{ user.id }}">{{ user.username }}</a>
@@ -64,17 +75,22 @@
     {% endblock %}
 </body>
     <script>
-        var objects = document.getElementsByClassName('update-dependent');
+        var objectsUp = document.getElementsByClassName('update-dependent');
+        var objectsGt = document.getElementsByClassName('gameType-dependent');
 
         function onUpdateSelected(val) {
             document.cookie = "preferred_update="+val;
-            for (let obj of objects) {
+            for (let obj of objectsUp) {
                 if (obj.id == ('update' + val)) {
                     obj.style.display = 'flex';
                 } else {
                     obj.style.display = 'none';
                 }
             }
+        }
+        function onGameTypeSelected(val) {
+            document.cookie = "preferred_gameType="+val;
+            location.reload();
         }
     </script>
 </html>
