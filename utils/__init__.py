@@ -138,13 +138,23 @@ def randomize_data():
     ]
     players = [names.get_full_name() for i in range(0, 3)]
     players.append('mariofelectronica')
-    for i in range(0, 400):
+    for i in range(0, 1):
         d = random.randint(int(time.time()), int(time.time()) + 31556926)
         datetime.fromtimestamp(d)
         ok = False
         while not ok:
             playersName = [random.choice(players), random.choice(players)]
             if playersName[0] != playersName[1]:
+                ok = True
+        ok = False
+        while not ok:
+            secondaries0 = [random.choice(secondaries), random.choice(secondaries), random.choice(secondaries)]
+            if secondaries0[0] != secondaries0[1] != secondaries0[2]:
+                ok = True
+        ok = False
+        while not ok:
+            secondaries1 = [random.choice(secondaries), random.choice(secondaries), random.choice(secondaries)]
+            if secondaries1[0] != secondaries1[1] != secondaries1[2]:
                 ok = True
         response = {
             'tournament': random.choice(tournaments),
@@ -206,7 +216,7 @@ def randomize_data():
                 },
                 'secondaries': {
                     'first': {
-                        'name': random.choice(secondaries),
+                        'name': secondaries0[0],
                         'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
@@ -214,7 +224,7 @@ def randomize_data():
                         'fourth': 0,
                     },
                     'second': {
-                        'name': random.choice(secondaries),
+                        'name': secondaries0[1],
                         'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
@@ -222,7 +232,7 @@ def randomize_data():
                         'fourth': 0,
                     },
                     'third': {
-                        'name': random.choice(secondaries),
+                        'name': secondaries0[2],
                         'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
@@ -248,7 +258,7 @@ def randomize_data():
                 },
                 'secondaries': {
                     'first': {
-                        'name': random.choice(secondaries),
+                        'name': secondaries1[0],
                         'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
@@ -256,7 +266,7 @@ def randomize_data():
                         'fourth': 0,
                     },
                     'second': {
-                        'name': random.choice(secondaries),
+                        'name': secondaries1[1],
                         'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,
@@ -264,7 +274,7 @@ def randomize_data():
                         'fourth': 0,
                     },
                     'third': {
-                        'name': random.choice(secondaries),
+                        'name': secondaries1[2],
                         'score': random.randint(0, 2),
                         'first': 0,
                         'second': 0,

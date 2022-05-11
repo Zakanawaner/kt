@@ -47,7 +47,7 @@ def updatePlayer(db, pl):
                 'loserPlayers': {},
                 'tiePlayers': {}
             }
-            for game in Game.query.filter(Game.date >= update.date).filter(Game.date <=  update.dateEnd).filter_by(winnerId=playerGl['sql'].steamId).all():
+            for game in Game.query.filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).filter_by(winnerId=playerGl['sql'].steamId).all():
                 otherPl = Player.query.filter_by(steamId=game.loserId).first()
                 if game.tie:
                     playerGl['sql'].gamesTied.append(game)
@@ -116,7 +116,7 @@ def updatePlayer(db, pl):
                     else:
                         player['winnerSecondaries'][game.winSecondaryThird[0].name] += 1
                 playerGl['sql'].score += game.winTotal
-            for game in Game.query.filter(Game.date >= update.date).filter(Game.date <=  update.dateEnd).filter_by(loserId=playerGl['sql'].steamId).all():
+            for game in Game.query.filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).filter_by(loserId=playerGl['sql'].steamId).all():
                 otherPl = Player.query.filter_by(steamId=game.winnerId).first()
                 if game.tie:
                     playerGl['sql'].gamesTied.append(game)

@@ -40,6 +40,7 @@ def signup():
         if status == 200:
             response = redirect(url_for('genericBluePrint.general'))
             set_access_cookies(response, create_access_token(identity=new_user.publicId, expires_delta=timedelta(days=365)))
+            response.set_cookie("preferred", "0")
             login_user(new_user)
             flash("Registered successfully")
             return response
@@ -57,6 +58,7 @@ def login():
             flash("Login successful")
             response = redirect(url_for('genericBluePrint.general'))
             set_access_cookies(response, create_access_token(identity=user.publicId))
+            response.set_cookie("preferred", "0")
             login_user(user)
             return response
         if status == 401:
