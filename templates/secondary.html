@@ -9,20 +9,20 @@
             {% endif %}
                 <h1>{{ secondary['sql'].name }}</h1>
                 <div class="pie-container at-0-8">
-                    <div class="pie animate no-round" style="--p:{{ secondary['updates'][update.id|string]['popularity'] }};--c:rgba(255,101,0,1);--b:15px">
+                    <div class="pie animate no-round" style="--p:{{ secondary['updates'][update.id|string][preferredGameType]['popularity'] }};--c:rgba(255,101,0,1);--b:15px">
                         <p>Popularity</p>
-                        <p>{{ secondary['updates'][update.id|string]['popularity'] }}%</p>
+                        <p>{{ secondary['updates'][update.id|string][preferredGameType]['popularity'] }}%</p>
                     </div>
                 </div>
                 <!--<div class="graph-container">
                     <div class="year-stats">
-                        {% for month in secondary['updates'][update.id|string]['games'].keys() %}
+                        {% for month in secondary['updates'][update.id|string][preferredGameType]['games'].keys() %}
                             <div class="month-group hoverme">
                                 <div class="pop">
-                                    <p class="text">{{ secondary['updates'][update.id|string]['games'][month] }} games</p>
+                                    <p class="text">{{ secondary['updates'][update.id|string][preferredGameType]['games'][month] }} games</p>
                                 </div>
-                                {% if secondary['updates'][update.id|string]['maxGames'] > 0 %}
-                                    <div class="bar" style="height: {{ secondary['updates'][update.id|string]['games'][month] * 100 / secondary['updates'][update.id|string]['maxGames'] }}%;"></div>
+                                {% if secondary['updates'][update.id|string][preferredGameType]['maxGames'] > 0 %}
+                                    <div class="bar" style="height: {{ secondary['updates'][update.id|string][preferredGameType]['games'][month] * 100 / secondary['updates'][update.id|string][preferredGameType]['maxGames'] }}%;"></div>
                                     <div class="back-bar" style="height: {{ 100 }}%;"></div>
                                 {% else %}
                                     <div class="bar" style="height: {{ 0 }}%;"></div>
@@ -45,7 +45,7 @@
                                 <div class="header__item">Tie Rate</div>
                             </div>
                             <div class="table-content">
-                                {% for key, fact in secondary['updates'][update.id|string]['bestFactions'].items() %}
+                                {% for key, fact in secondary['updates'][update.id|string][preferredGameType]['bestFactions'].items() %}
                                     {% if fact['games'] > 0 %}
                                         <div class="table-row">
                                             <div onclick="location.href='/faction/{{ fact['id'] }}';" class="table-data table-link">{{ key }}</div>

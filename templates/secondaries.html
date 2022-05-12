@@ -19,15 +19,15 @@
                         {% for secondary in secondaries %}
                             <div class="table-row">
                                 <div onclick="location.href='/secondary/{{ secondary['sql'].id }}';" class="table-data table-link">{{ secondary['sql'].name }}</div>
-                                <div class="table-data">{{ secondary['updates'][update.id|string]['popularity'] }}%</div>
+                                <div class="table-data">{{ secondary['updates'][update.id|string][preferredGameType]['popularity'] }}%</div>
                                 <div class="table-data">{{ secondary['sql'].avgScore }}</div>
-                                {% if secondary['updates'][update.id|string]['topFaction'] %}
-                                    <div onclick="location.href='/faction/{{ secondary['updates'][update.id|string]['topFaction'].id }}';" class="table-data table-link">{{ secondary['updates'][update.id|string]['topFaction'].name }}</div>
+                                {% if secondary['updates'][update.id|string][preferredGameType]['topFaction'] %}
+                                    <div onclick="location.href='/faction/{{ secondary['updates'][update.id|string][preferredGameType]['topFaction'].id }}';" class="table-data table-link">{{ secondary['updates'][update.id|string][preferredGameType]['topFaction'].name }}</div>
                                 {% else %}
                                     <div class="table-data table-link">-</div>
                                 {% endif %}
-                                {% if secondary['worstFaction'] %}
-                                    <div onclick="location.href='/faction/{{ secondary['updates'][update.id|string]['worstFaction'].id }}';" class="table-data table-link">{{ secondary['updates'][update.id|string]['worstFaction'].name }}</div>
+                                {% if secondary['updates'][update.id|string][preferredGameType]['worstFaction'] %}
+                                    <div onclick="location.href='/faction/{{ secondary['updates'][update.id|string][preferredGameType]['worstFaction'].id }}';" class="table-data table-link">{{ secondary['updates'][update.id|string][preferredGameType]['worstFaction'].name }}</div>
                                 {% else %}
                                     <div class="table-data table-link">-</div>
                                 {% endif %}

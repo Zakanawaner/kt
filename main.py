@@ -33,19 +33,20 @@ if __name__ == '__main__':
     app.run(host=app.config['HOST'], port=app.config['PORT'])
 
 # TODO TTS:
-#  - Asegurarme de que se manda gametype en lugar de tournament
-#  - Overlap en scouting phase
-#  - Añadir equipement chosen en checklist
-#  - Cambiar el game type y añadir en algún sitio el torneo
-#  - Cambiar el broadcast de final de game para ir al botón del medio en lugar del scoreboard
 #  - Texto de inicio que diga abrir el check list
 #  - Activated button when tabled
-#  - Ver si puedo limpiar el texto que sale en tooltip de overwatch
 #  - Hacer algo para evitar doble click en los botones de la máquina de estados
+#  - Highlight permanente cuando el modelo ha hecho overwatch
 
 # TODO WEB
 #  - Añadir algo de texto en about y tal
-#  - Añadir el filtro de game type (hecho para games, pensar en algo para el resto)
 #  - Darle una última vuelta a los sched
 #  - Para admin, poder gestionar directamente la bd (opcional)
 #  - Gestionar las configuraciones en aws y en local
+#  - Comprobar player con gametype
+
+# TODO Future
+#  - Posibilidad de añadir manualmente partidas
+#  - Implementar tiers y ventajas por tier
+#  - Número de bichos muertos por player
+#  - Numero total de bichos muertos

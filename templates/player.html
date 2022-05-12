@@ -9,40 +9,40 @@
             {% endif %}
                 <h1>{{ player['sql'].username }}</h1>
                 {% if player['sql'].allowSharing and player['sql'].steamLink %}
-                    <h3>Winrate: {{ player['updates'][update.id|string]['winRate'] }}</h3>
+                    <h3>Winrate: {{ player['updates'][update.id|string][preferredGameType]['winRate'] }}</h3>
                     <div class="player-ultra-container">
-                        <h3>Games won: {{ player['updates'][update.id|string]['wins'] }}</h3>
-                        <h3>Games lost: {{ player['updates'][update.id|string]['loses'] }}</h3>
-                        <h3>Games tied: {{ player['updates'][update.id|string]['ties'] }}</h3>
+                        <h3>Games won: {{ player['updates'][update.id|string][preferredGameType]['wins'] }}</h3>
+                        <h3>Games lost: {{ player['updates'][update.id|string][preferredGameType]['loses'] }}</h3>
+                        <h3>Games tied: {{ player['updates'][update.id|string][preferredGameType]['ties'] }}</h3>
                     </div>
                     <div class="player-super-container">
                         <div class="pie-container at-0-8">
                             <div class="pie-inner">
-                                {% if player['updates'][update.id|string]['factionRates']|length > 0 %}
+                                {% if player['updates'][update.id|string][preferredGameType]['factionRates']|length > 0 %}
                                     <h3>Best Faction</h3>
-                                    <div onclick="location.href='/faction/{{ player['updates'][update.id|string]['factionRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ player['updates'][update.id|string]['factionRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
-                                        <img class="pie_image" src="{{ url_for('static', filename='images/' + player['updates'][update.id|string]['factionRates'][0]['shortName'] + '.png') }}"/>
+                                    <div onclick="location.href='/faction/{{ player['updates'][update.id|string][preferredGameType]['factionRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ player['updates'][update.id|string][preferredGameType]['factionRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
+                                        <img class="pie_image" src="{{ url_for('static', filename='images/' + player['updates'][update.id|string][preferredGameType]['factionRates'][0]['shortName'] + '.png') }}"/>
                                     </div>
-                                    <p>{{ player['updates'][update.id|string]['factionRates'][0]['name'] }}</p>
-                                    <p>{{ player['updates'][update.id|string]['factionRates'][0]['winRate'] }}%</p>
+                                    <p>{{ player['updates'][update.id|string][preferredGameType]['factionRates'][0]['name'] }}</p>
+                                    <p>{{ player['updates'][update.id|string][preferredGameType]['factionRates'][0]['winRate'] }}%</p>
                                 {% endif %}
                             </div>
                             <div class="pie-inner">
-                                {% if player['updates'][update.id|string]['missionRates']|length > 0 %}
+                                {% if player['updates'][update.id|string][preferredGameType]['missionRates']|length > 0 %}
                                     <h3>Best Mission</h3>
-                                    <div onclick="location.href='/mission/{{ player['updates'][update.id|string]['missionRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ player['updates'][update.id|string]['missionRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
+                                    <div onclick="location.href='/mission/{{ player['updates'][update.id|string][preferredGameType]['missionRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ player['updates'][update.id|string][preferredGameType]['missionRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                     </div>
-                                    <p>{{ player['updates'][update.id|string]['missionRates'][0]['name'] }}</p>
-                                    <p>{{ player['updates'][update.id|string]['missionRates'][0]['winRate'] }}%</p>
+                                    <p>{{ player['updates'][update.id|string][preferredGameType]['missionRates'][0]['name'] }}</p>
+                                    <p>{{ player['updates'][update.id|string][preferredGameType]['missionRates'][0]['winRate'] }}%</p>
                                 {% endif %}
                             </div>
                             <div class="pie-inner">
-                                {% if player['updates'][update.id|string]['secondaryRates']|length > 0 %}
+                                {% if player['updates'][update.id|string][preferredGameType]['secondaryRates']|length > 0 %}
                                     <h3>Best Secondary</h3>
-                                    <div onclick="location.href='/secondary/{{ player['updates'][update.id|string]['secondaryRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ player['updates'][update.id|string]['secondaryRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
+                                    <div onclick="location.href='/secondary/{{ player['updates'][update.id|string][preferredGameType]['secondaryRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ player['updates'][update.id|string][preferredGameType]['secondaryRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                     </div>
-                                    <p>{{ player['updates'][update.id|string]['secondaryRates'][0]['name'] }}</p>
-                                    <p>{{ player['updates'][update.id|string]['secondaryRates'][0]['winRate'] }}%</p>
+                                    <p>{{ player['updates'][update.id|string][preferredGameType]['secondaryRates'][0]['name'] }}</p>
+                                    <p>{{ player['updates'][update.id|string][preferredGameType]['secondaryRates'][0]['winRate'] }}%</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                                     <div class="header__item">Tie Rate</div>
                                 </div>
                                 <div class="table-content">
-                                    {% for faction in player['updates'][update.id|string]['factionRatesAgainst'] %}
+                                    {% for faction in player['updates'][update.id|string][preferredGameType]['factionRatesAgainst'] %}
                                         <div class="table-row">
                                             <div onclick="location.href='/faction/{{ faction['id'] }}';" class="table-data table-link">{{ faction['name'] }}</div>
                                             <div class="table-data">{{ faction['winRate'] }}%</div>
@@ -77,7 +77,7 @@
                                     <div class="header__item">Tie Rate</div>
                                 </div>
                                 <div class="table-content">
-                                    {% for faction in player['updates'][update.id|string]['factionRates'] %}
+                                    {% for faction in player['updates'][update.id|string][preferredGameType]['factionRates'] %}
                                         <div class="table-row">
                                             <div onclick="location.href='/faction/{{ faction['id'] }}';" class="table-data table-link">{{ faction['name'] }}</div>
                                             <div class="table-data">{{ faction['winRate'] }}%</div>
@@ -98,7 +98,7 @@
                                     <div class="header__item">Tie Rate</div>
                                 </div>
                                 <div class="table-content">
-                                    {% for mission in player['updates'][update.id|string]['missionRates'] %}
+                                    {% for mission in player['updates'][update.id|string][preferredGameType]['missionRates'] %}
                                         <div class="table-row">
                                             <div onclick="location.href='/mission/{{ mission['id'] }}';" class="table-data table-link">{{ mission['name'] }}</div>
                                             <div class="table-data">{{ mission['winRate'] }}%</div>
@@ -119,7 +119,7 @@
                                     <div class="header__item">Tie Rate</div>
                                 </div>
                                 <div class="table-content">
-                                    {% for secondary in player['updates'][update.id|string]['secondaryRates'] %}
+                                    {% for secondary in player['updates'][update.id|string][preferredGameType]['secondaryRates'] %}
                                         <div class="table-row">
                                             <div onclick="location.href='/secondary/{{ secondary['id'] }}';" class="table-data table-link">{{ secondary['name'] }}</div>
                                             <div class="table-data">{{ secondary['winRate'] }}%</div>

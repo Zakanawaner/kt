@@ -310,6 +310,7 @@ class WinRates(db.Model):
     __tablename__ = 'winrates'
     id = db.Column(db.Integer, primary_key=True)
     fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    fromGameType = db.Column(db.Integer, db.ForeignKey('gametype.id'))
     faction1 = db.Column(db.Integer, db.ForeignKey('faction.id'))
     faction2 = db.Column(db.Integer, db.ForeignKey('faction.id'))
     rate1 = db.Column(db.Float)
@@ -322,6 +323,7 @@ class MissionRates(db.Model):
     __tablename__ = 'missionrates'
     id = db.Column(db.Integer, primary_key=True)
     fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    fromGameType = db.Column(db.Integer, db.ForeignKey('gametype.id'))
     faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
     mission = db.Column(db.Integer, db.ForeignKey('mission.id'))
     rate1 = db.Column(db.Float)
@@ -334,6 +336,7 @@ class SecondaryRates(db.Model):
     __tablename__ = 'secondaryrates'
     id = db.Column(db.Integer, primary_key=True)
     fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    fromGameType = db.Column(db.Integer, db.ForeignKey('gametype.id'))
     faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
     secondary = db.Column(db.Integer, db.ForeignKey('secondary.id'))
     rate1 = db.Column(db.Float)
@@ -346,6 +349,7 @@ class PlayerWinRatesPlayer(db.Model):
     __tablename__ = 'playerwinratesplayer'
     id = db.Column(db.Integer, primary_key=True)
     fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    fromGameType = db.Column(db.Integer, db.ForeignKey('gametype.id'))
     player1 = db.Column(db.Integer, db.ForeignKey('player.id'))
     player2 = db.Column(db.Integer, db.ForeignKey('player.id'))
     rate1 = db.Column(db.Float)
@@ -358,6 +362,7 @@ class PlayerWinRates(db.Model):
     __tablename__ = 'playerwinrates'
     id = db.Column(db.Integer, primary_key=True)
     fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    fromGameType = db.Column(db.Integer, db.ForeignKey('gametype.id'))
     player = db.Column(db.Integer, db.ForeignKey('player.id'))
     faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
     rate1 = db.Column(db.Float)
@@ -370,6 +375,7 @@ class PlayerWinRatesAgainst(db.Model):
     __tablename__ = 'playerwinratesagainst'
     id = db.Column(db.Integer, primary_key=True)
     fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    fromGameType = db.Column(db.Integer, db.ForeignKey('gametype.id'))
     player = db.Column(db.Integer, db.ForeignKey('player.id'))
     faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
     rate1 = db.Column(db.Float)
@@ -382,6 +388,7 @@ class PlayerMissionRates(db.Model):
     __tablename__ = 'playermissionrates'
     id = db.Column(db.Integer, primary_key=True)
     fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    fromGameType = db.Column(db.Integer, db.ForeignKey('gametype.id'))
     player = db.Column(db.Integer, db.ForeignKey('player.id'))
     mission = db.Column(db.Integer, db.ForeignKey('mission.id'))
     rate1 = db.Column(db.Float)
@@ -394,6 +401,7 @@ class PlayerSecondaryRates(db.Model):
     __tablename__ = 'playersecondaryrates'
     id = db.Column(db.Integer, primary_key=True)
     fromUpdate = db.Column(db.Integer, db.ForeignKey('update.id'))
+    fromGameType = db.Column(db.Integer, db.ForeignKey('gametype.id'))
     player = db.Column(db.Integer, db.ForeignKey('player.id'))
     secondary = db.Column(db.Integer, db.ForeignKey('secondary.id'))
     rate1 = db.Column(db.Float)
