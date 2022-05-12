@@ -13,7 +13,7 @@ def only_admin(func):
     return decorated_view
 
 
-def only_collaborator(func):
+def only_right_hand(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if current_user.permissions >= 7:
@@ -21,7 +21,7 @@ def only_collaborator(func):
     return decorated_view
 
 
-def only_tier6(func):
+def only_left_hand(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if current_user.permissions >= 6:
@@ -29,7 +29,7 @@ def only_tier6(func):
     return decorated_view
 
 
-def only_tier5(func):
+def only_collaborator(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if current_user.permissions >= 5:
@@ -37,7 +37,7 @@ def only_tier5(func):
     return decorated_view
 
 
-def only_tier4(func):
+def only_adamantium(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if current_user.permissions >= 4:
@@ -45,7 +45,7 @@ def only_tier4(func):
     return decorated_view
 
 
-def only_tier3(func):
+def only_diamantite(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if current_user.permissions >= 3:
@@ -53,7 +53,7 @@ def only_tier3(func):
     return decorated_view
 
 
-def only_tier2(func):
+def only_ceramite(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if current_user.permissions >= 2:
@@ -61,7 +61,7 @@ def only_tier2(func):
     return decorated_view
 
 
-def only_tier1(func):
+def only_plasteel(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if current_user.permissions >= 1:

@@ -30,3 +30,12 @@ def about():
         title="About",
         user=current_user if not current_user.is_anonymous else None
     )
+
+
+@genericBP.route("/team", methods={"GET", "POST"})
+def team():
+    return render_template(
+        'teamKTD.html',
+        title="Team KTD",
+        user=current_user if not current_user.is_anonymous else None
+    )

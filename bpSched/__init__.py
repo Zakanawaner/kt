@@ -25,12 +25,6 @@ def updateData():
         updatePlayers(current_app.config['database'])
 
 
-@scheduler.task('interval', id='mailTest', seconds=10, misfire_grace_time=1200)
-def mailTest():
-    with scheduler.app.app_context():
-        sendWeeklyMail()
-
-
 @scheduler.task('cron', id='weeklyMail', week='*', day_of_week='sun')
 def weeklyMail():
     with scheduler.app.app_context():
@@ -41,7 +35,8 @@ def weeklyMail():
 @login_required
 @only_admin
 def startRoutines():
-    scheduler.start()
+    if scheduler.state == 0:
+        scheduler.start()
     flash("Background routines started")
     return redirect(url_for('genericBluePrint.general'))
 
@@ -50,6 +45,7 @@ def startRoutines():
 @login_required
 @only_admin
 def stopRoutines():
-    scheduler.pause()
+    if scheduler.state == 1:
+        scheduler.shutdown()
     flash("Background routines stopped")
     return redirect(url_for('genericBluePrint.general'))
