@@ -37,7 +37,7 @@ def updateSecondary(db, sc):
                     Game.date >= update.date).filter(
                     Game.date <= update.dateEnd).filter(
                     Game.winSecondaryFirst.contains(secondaryGl['sql'])).all():
-                if game.gameType == gameType.id or gameType.id == 0:
+                if game.gameType == gameType.id or gameType.id == 1:
                     secondary[gameTypeId]['totalGames'] += 1
                     secondary[gameTypeId]['totalScore'] += game.winSecondaryFirstScore
                     secondary[gameTypeId]['totalScoreFirst'] += game.winSecondaryFirstScoreTurn1 if game.winSecondaryFirstScoreTurn1 else 0
@@ -48,7 +48,7 @@ def updateSecondary(db, sc):
                     Game.date >= update.date).filter(
                     Game.date <= update.dateEnd).filter(
                     Game.winSecondarySecond.contains(secondaryGl['sql'])).all():
-                if game.gameType == gameType.id or gameType.id == 0:
+                if game.gameType == gameType.id or gameType.id == 1:
                     secondary[gameTypeId]['totalGames'] += 1
                     secondary[gameTypeId]['totalScore'] += game.winSecondarySecondScore
                     secondary[gameTypeId]['totalScoreFirst'] += game.winSecondarySecondScoreTurn1 if game.winSecondarySecondScoreTurn1 else 0
@@ -59,7 +59,7 @@ def updateSecondary(db, sc):
                     Game.date >= update.date).filter(
                     Game.date <= update.dateEnd).filter(
                     Game.winSecondaryThird.contains(secondaryGl['sql'])).all():
-                if game.gameType == gameType.id or gameType.id == 0:
+                if game.gameType == gameType.id or gameType.id == 1:
                     secondary[gameTypeId]['totalGames'] += 1
                     secondary[gameTypeId]['totalScore'] += game.winSecondaryThirdScore
                     secondary[gameTypeId]['totalScoreFirst'] += game.winSecondaryThirdScoreTurn1 if game.winSecondaryThirdScoreTurn1 else 0
@@ -70,7 +70,7 @@ def updateSecondary(db, sc):
                     Game.date >= update.date).filter(
                     Game.date <= update.dateEnd).filter(
                     Game.losSecondaryFirst.contains(secondaryGl['sql'])).all():
-                if game.gameType == gameType.id or gameType.id == 0:
+                if game.gameType == gameType.id or gameType.id == 1:
                     secondary[gameTypeId]['totalGames'] += 1
                     secondary[gameTypeId]['totalScore'] += game.losSecondaryFirstScore
                     secondary[gameTypeId]['totalScoreFirst'] += game.losSecondaryFirstScoreTurn1 if game.losSecondaryFirstScoreTurn1 else 0
@@ -81,7 +81,7 @@ def updateSecondary(db, sc):
                     Game.date >= update.date).filter(
                     Game.date <= update.dateEnd).filter(
                     Game.losSecondarySecond.contains(secondaryGl['sql'])).all():
-                if game.gameType == gameType.id or gameType.id == 0:
+                if game.gameType == gameType.id or gameType.id == 1:
                     secondary[gameTypeId]['totalGames'] += 1
                     secondary[gameTypeId]['totalScore'] += game.losSecondarySecondScore
                     secondary[gameTypeId]['totalScoreFirst'] += game.losSecondarySecondScoreTurn1 if game.losSecondarySecondScoreTurn1 else 0
@@ -92,7 +92,7 @@ def updateSecondary(db, sc):
                     Game.date >= update.date).filter(
                     Game.date <= update.dateEnd).filter(
                     Game.losSecondaryThird.contains(secondaryGl['sql'])).all():
-                if game.gameType == gameType.id or gameType.id == 0:
+                if game.gameType == gameType.id or gameType.id == 1:
                     secondary[gameTypeId]['totalGames'] += 1
                     secondary[gameTypeId]['totalScore'] += game.losSecondaryThirdScore
                     secondary[gameTypeId]['totalScoreFirst'] += game.losSecondaryThirdScoreTurn1 if game.losSecondaryThirdScoreTurn1 else 0
@@ -151,7 +151,7 @@ def getSecondary(sc):
                     'id': rate.faction,
                     'shortName': Faction.query.filter_by(id=rate.faction).first().shortName
                 }
-            if gameType.id == 0:
+            if gameType.id == 1:
                 popularity = len(Game.query.filter(
                     Game.date >= update.date).filter(
                     Game.date <= update.dateEnd).filter(

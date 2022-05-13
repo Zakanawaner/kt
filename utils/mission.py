@@ -34,7 +34,7 @@ def updateMission(db, fact):
                 'totalGames': 0
             }
             for game in Game.query.filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).filter(Game.mission.contains(missionGl['sql'])).all():
-                if gameType.id == 0 or game.gameType == gameType.id:
+                if gameType.id == 1 or game.gameType == gameType.id:
                     mission[gameTypeId]['totalGames'] += 2
                     mission[gameTypeId]['totalScore'] += game.winPrimary + game.losPrimary
                     mission[gameTypeId]['totalScoreFirst'] += game.winPrimaryFirst + game.losPrimaryFirst
@@ -102,7 +102,7 @@ def getMission(ms):
                     'shortName': Faction.query.filter_by(id=rate.faction).first().shortName
                 }
             try:
-                if gameType.id == 0:
+                if gameType.id == 1:
                     mission[gameTypeId]['popularity'] = float("{:.2f}".format(len(Game.query.filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).filter(Game.mission.contains(missionGl['sql'])).all()) * 100 / len(Game.query.filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).all())))
                 else:
                     mission[gameTypeId]['popularity'] = float("{:.2f}".format(len(Game.query.filter_by(gameType=gameType.id).filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).filter(Game.mission.contains(missionGl['sql'])).all()) * 100 / len(Game.query.filter_by(gameType=gameType.id).filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).all())))

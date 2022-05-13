@@ -42,7 +42,7 @@ def updateFaction(db, fact):
             }
             for game in factionGl['sql'].gamesWon:
                 if update.date <= game.date <= update.dateEnd:
-                    if game.gameType == gameType.id or gameType.id == 0:
+                    if game.gameType == gameType.id or gameType.id == 1:
                         faction[gameTypeId]['totalGames'] += 1
                         faction[gameTypeId]['gamesWon'] += 1
                         for counter in Faction.query.all():
@@ -76,7 +76,7 @@ def updateFaction(db, fact):
                             faction[gameTypeId]['bestSecondary'][game.winSecondaryThird[0].shortName] = [game]
             for game in factionGl['sql'].gamesLost:
                 if update.date <= game.date <= update.dateEnd:
-                    if game.gameType == gameType.id or gameType.id == 0:
+                    if game.gameType == gameType.id or gameType.id == 1:
                         faction[gameTypeId]['totalGames'] += 1
                         faction[gameTypeId]['gamesLost'] += 1
                         for counter in Faction.query.all():
@@ -110,7 +110,7 @@ def updateFaction(db, fact):
                             faction[gameTypeId]['worstSecondary'][game.losSecondaryThird[0].shortName] = [game]
             for game in factionGl['sql'].gamesTied:
                 if update.date <= game.date <= update.dateEnd:
-                    if game.gameType == gameType.id or gameType.id == 0:
+                    if game.gameType == gameType.id or gameType.id == 1:
                         faction[gameTypeId]['totalGames'] += 1
                         faction[gameTypeId]['gamesTie'] += 1
                         for counter in Faction.query.all():
