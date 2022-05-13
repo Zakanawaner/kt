@@ -37,10 +37,8 @@ if __name__ == '__main__':
 
 # TODO WEB
 #  - Añadir algo de texto en about y tal
-#  - Darle una última vuelta a los sched
-#  - Para admin, poder gestionar directamente la bd (opcional)
-#  - Gestionar las configuraciones en aws y en local
-#  - Comprobar player con gametype
+#  - Mirar bien los mail y el estilo y tal
+#  - Comprobar player con gametype -> Player bien pero profile no...?????
 
 # TODO Future
 #  - Posibilidad de añadir manualmente partidas
