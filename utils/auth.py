@@ -21,7 +21,7 @@ def userSignup(db, form):
             return 402, None
         ok = False
         while not ok:
-            publicId = secrets.token_hex(16)
+            publicId = str(secrets.token_hex(16))
             if not Player.query.filter_by(publicId=publicId).first():
                 ok = True
         new_user = Player(
