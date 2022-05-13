@@ -34,9 +34,6 @@ if __name__ == '__main__':
 
 # TODO TTS:
 #  - Texto de inicio que diga abrir el check list
-#  - Activated button when tabled
-#  - Hacer algo para evitar doble click en los botones de la máquina de estados
-#  - Highlight permanente cuando el modelo ha hecho overwatch
 
 # TODO WEB
 #  - Añadir algo de texto en about y tal

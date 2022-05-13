@@ -23,8 +23,7 @@ from utils.general import *
 ################
 # APP Function #
 def createApp(app):
-    config = json.load(open("secret/dev.json"))
-    # config = json.load(open("secret/prod.json"))
+    config = json.load(open("secret/config.json"))
 
     app.config["SECRET_KEY"] = handleSecretKey()
     app.config['PORT'] = config['port']
