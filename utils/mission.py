@@ -43,11 +43,11 @@ def updateMission(db, fact):
                     mission[gameTypeId]['totalScoreFourth'] += game.winPrimaryFourth + game.losPrimaryFourth
         missionGl['updates'][str(update.id)] = mission
     try:
-        missionGl['sql'].avgScore = float("{:.2f}".format(missionGl['updates']['0']['0']['totalScore'] / missionGl['updates']['0']['0']['totalGames']))
-        missionGl['sql'].avgScoreFirst = float("{:.2f}".format(missionGl['updates']['0']['0']['totalScoreFirst'] / missionGl['updates']['0']['0']['totalGames']))
-        missionGl['sql'].avgScoreSecond = float("{:.2f}".format(missionGl['updates']['0']['0']['totalScoreSecond'] / missionGl['updates']['0']['0']['totalGames']))
-        missionGl['sql'].avgScoreThird = float("{:.2f}".format(missionGl['updates']['0']['0']['totalScoreThird'] / missionGl['updates']['0']['0']['totalGames']))
-        missionGl['sql'].avgScoreFourth = float("{:.2f}".format(missionGl['updates']['0']['0']['totalScoreFourth'] / missionGl['updates']['0']['0']['totalGames']))
+        missionGl['sql'].avgScore = float("{:.2f}".format(missionGl['updates']['1']['1']['totalScore'] / missionGl['updates']['1']['1']['totalGames']))
+        missionGl['sql'].avgScoreFirst = float("{:.2f}".format(missionGl['updates']['1']['1']['totalScoreFirst'] / missionGl['updates']['1']['1']['totalGames']))
+        missionGl['sql'].avgScoreSecond = float("{:.2f}".format(missionGl['updates']['1']['1']['totalScoreSecond'] / missionGl['updates']['1']['1']['totalGames']))
+        missionGl['sql'].avgScoreThird = float("{:.2f}".format(missionGl['updates']['1']['1']['totalScoreThird'] / missionGl['updates']['1']['1']['totalGames']))
+        missionGl['sql'].avgScoreFourth = float("{:.2f}".format(missionGl['updates']['1']['1']['totalScoreFourth'] / missionGl['updates']['1']['1']['totalGames']))
     except ZeroDivisionError:
         missionGl['sql'].avgScore = 0
         missionGl['sql'].avgScoreFirst = 0
