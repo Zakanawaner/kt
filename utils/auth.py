@@ -1,4 +1,4 @@
-import shortuuid
+import secrets
 
 from database import Player, Rank
 from password_strength import PasswordPolicy
@@ -20,7 +20,7 @@ def userSignup(db, form):
         if Player.query.filter_by(username=form['username']).first():
             return 402, None
         new_user = Player(
-            publicId=str(shortuuid.uuid(name=form['username'])),
+            publicId=secrets.token_hex(),
             username=form['username'],
             password=hashed_password,
             shortName=form['username'].lower().replace(" ", ""),
