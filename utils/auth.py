@@ -19,8 +19,13 @@ def userSignup(db, form):
         hashed_password = generate_password_hash(form['password'], method='sha256')
         if Player.query.filter_by(username=form['username']).first():
             return 402, None
+        ok = False
+        while not ok:
+            publicId = secrets.token_hex(16)
+            if not Player.query.filter_by(publicId=publicId).first():
+                ok = True
         new_user = Player(
-            publicId=secrets.token_hex(),
+            publicId=publicId,
             username=form['username'],
             password=hashed_password,
             shortName=form['username'].lower().replace(" ", ""),
