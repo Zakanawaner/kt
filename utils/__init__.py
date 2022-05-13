@@ -449,12 +449,11 @@ def getUpdates():
 
 
 def handleSecretKey():
-    keys = json.load(open("secret/dev.json"))
+    keys = json.load(open("secret/config.json"))
     if keys['secret-key']:
         return keys['secret-key']
     else:
         key = secrets.token_hex(16)
         keys['secret-key'] = key
-        json.dump(keys, open("secret/dev.json", 'w'), indent=4)
+        json.dump(keys, open("secret/config.json", 'w'), indent=4)
         return key
-
