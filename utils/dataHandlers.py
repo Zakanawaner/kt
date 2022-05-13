@@ -401,16 +401,17 @@ def createTables(db):
     db.session.add(Rank(name="Warmaster", shortName="warmaster", score=102400))
     db.session.add(Rank(name="Lord Commander", shortName="lordcommander", score=204800))
 
-    db.session.add(Update(name="First APP launch",
-                          date=datetime.fromtimestamp(int(time.time())),
-                          dateEnd=datetime.fromtimestamp(int(time.time()) + 31556926),
-                          description="First update dated on the web launch day"))
     db.session.add(Update(name="All Time",
                           date=datetime.fromtimestamp(0),
                           dateEnd=datetime.fromtimestamp(9999999999),
                           description="All time data",
-                          id=0))
+                          id=1))
     db.session.add(GameType(name="All plays",
                             shortName="allplays",
-                            id=0))
+                            id=1))
+    db.session.commit()
+    db.session.add(Update(name="First APP launch",
+                          date=datetime.fromtimestamp(int(time.time())),
+                          dateEnd=datetime.fromtimestamp(int(time.time()) + 31556926),
+                          description="First update dated on the web launch day"))
     db.session.commit()

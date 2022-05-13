@@ -19,8 +19,8 @@ def factions():
         factions=fct,
         upd=getUpdates(),
         gt=getGameTypes(),
-        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '0',
-        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '0'
+        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
+        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
     )
 
 
@@ -34,6 +34,6 @@ def faction(fact):
         faction=fct,
         upd=getUpdates(),
         gt=getGameTypes(),
-        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '0',
-        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '0'
+        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
+        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
     )

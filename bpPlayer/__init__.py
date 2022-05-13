@@ -16,8 +16,8 @@ def players():
         players=pls,
         upd=getUpdates(),
         gt=getGameTypes(),
-        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '0',
-        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '0'
+        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
+        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
     )
 
 
@@ -32,8 +32,8 @@ def player(pl):
             player=pl,
             upd=getUpdates(),
             gt=getGameTypes(),
-            preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '0',
-            preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '0'
+            preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
+            preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
         )
     if not pl['sql'].allowSharing:
         flash("Player hidden")
@@ -45,6 +45,6 @@ def player(pl):
         player=pl,
         upd=getUpdates(),
         gt=getGameTypes(),
-        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '0',
-        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '0'
+        preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
+        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
     )
