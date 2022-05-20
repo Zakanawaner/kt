@@ -1,9 +1,9 @@
 import json
 import secrets
-import random
 import names
 import os
 
+from flask import current_app
 from database import db
 from bpAuth import loginManager, jwt
 from bpSched import scheduler
@@ -55,6 +55,8 @@ def createApp(app):
     db.init_app(app)
     app.config["database"] = db
 
+    app.config["dataManager"] = json.load(open("hard/data.json"))
+
     return app
 
 
@@ -96,12 +98,6 @@ def randomize_data():
         "Hive Fleet",
         "Brood Coven",
     ]
-    factions = [
-        "Space Marines",
-        "Grey Knights",
-        "Imperial Guard",
-        "Veteran Guard",
-    ]
     secondaries = [
         "Headhunter",
         "Challenge",
@@ -126,14 +122,6 @@ def randomize_data():
         "Vantage",
         "Retrieval",
         "Overrun"
-    ]
-    secondaries = [
-        "Headhunter",
-        "Challenge",
-        "Rout",
-        "Execution",
-        "Deadly Marksman",
-        "Rob and Ransack",
     ]
     tournaments = [
         'Open play',
@@ -320,111 +308,7 @@ def randomize_data():
             response['loser'] = playersName[1]
             response['tie'] = True
 
-        response = handleFactions(db, response, 'winner')
-        response = handleFactions(db, response, 'loser')
-        response = handleSecondaries(db, response, 'winner')
-        response = handleSecondaries(db, response, 'loser')
-        response = handleMission(db, response)
-        response = handleTournament(db, response)
-        response = handleGameType(db, response)
-        response = handleOperatives(db, response, ['winner', 'loser'])
-
-        game = Game(
-            date=datetime.fromtimestamp(d),
-            timestamp=response['timestamp'],
-            tournament=response['tournament'].id,
-            gameType=response['gameType'].id,
-            mission=[response['mission']] if response['mission'] else [],
-            initFirst=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][0] else [
-                response[response['loser']]['faction']],
-            initSecond=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][1] else [
-                response[response['loser']]['faction']],
-            initThird=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][2] else [
-                response[response['loser']]['faction']],
-            initFourth=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][3] else [
-                response[response['loser']]['faction']],
-            winner=response['winner'],
-            winnerId=response[response['winner']]['steamId'],
-            winFaction=[response[response['winner']]['faction']] if response[response['winner']]['faction'] else [],
-            winOperatives=','.join([str(op['sql'].id) for op in response[response['winner']]['operatives'].values()]),
-            winOpKilled=','.join([str(op['roundKilled']) if op['killed'] else '0' for op in response[response['winner']]['operatives'].values()]),
-            winScouting=response[response['winner']]['scouting'],
-            winTotal=response[response['winner']]['total'],
-            winPrimary=response[response['winner']]['primaries']['total'],
-            winPrimaryFirst=response[response['winner']]['primaries']['first'],
-            winPrimarySecond=response[response['winner']]['primaries']['second'],
-            winPrimaryThird=response[response['winner']]['primaries']['third'],
-            winPrimaryFourth=response[response['winner']]['primaries']['fourth'],
-            winSecondary=response[response['winner']]['secondaries']['total'],
-            winSecondaryFirst=[response[response['winner']]['secondaries']['first']['name']],
-            winSecondaryFirstScoreTurn1=response[response['winner']]['secondaries']['first']['first'],
-            winSecondaryFirstScoreTurn2=response[response['winner']]['secondaries']['first']['second'],
-            winSecondaryFirstScoreTurn3=response[response['winner']]['secondaries']['first']['third'],
-            winSecondaryFirstScoreTurn4=response[response['winner']]['secondaries']['first']['fourth'],
-            winSecondaryFirstScore=response[response['winner']]['secondaries']['first']['score'],
-            winSecondarySecond=[response[response['winner']]['secondaries']['second']['name']],
-            winSecondarySecondScoreTurn1=response[response['winner']]['secondaries']['second']['first'],
-            winSecondarySecondScoreTurn2=response[response['winner']]['secondaries']['second']['second'],
-            winSecondarySecondScoreTurn3=response[response['winner']]['secondaries']['second']['third'],
-            winSecondarySecondScoreTurn4=response[response['winner']]['secondaries']['second']['fourth'],
-            winSecondarySecondScore=response[response['winner']]['secondaries']['second']['score'],
-            winSecondaryThird=[response[response['winner']]['secondaries']['third']['name']],
-            winSecondaryThirdScoreTurn1=response[response['winner']]['secondaries']['third']['first'],
-            winSecondaryThirdScoreTurn2=response[response['winner']]['secondaries']['third']['second'],
-            winSecondaryThirdScoreTurn3=response[response['winner']]['secondaries']['third']['third'],
-            winSecondaryThirdScoreTurn4=response[response['winner']]['secondaries']['third']['fourth'],
-            winSecondaryThirdScore=response[response['winner']]['secondaries']['third']['score'],
-            loser=response['loser'],
-            loserId=response[response['loser']]['steamId'],
-            losFaction=[response[response['loser']]['faction']] if response[response['loser']]['faction'] else [],
-            losOperatives=','.join([str(op['sql'].id) for op in response[response['loser']]['operatives'].values()]),
-            losOpKilled=','.join([str(op['roundKilled']) if op['killed'] else '0' for op in response[response['loser']]['operatives'].values()]),
-            losScouting=response[response['loser']]['scouting'],
-            losTotal=response[response['loser']]['total'],
-            losPrimary=response[response['loser']]['primaries']['total'],
-            losPrimaryFirst=response[response['loser']]['primaries']['first'],
-            losPrimarySecond=response[response['loser']]['primaries']['second'],
-            losPrimaryThird=response[response['loser']]['primaries']['third'],
-            losPrimaryFourth=response[response['loser']]['primaries']['fourth'],
-            losSecondary=response[response['loser']]['secondaries']['total'],
-            losSecondaryFirst=[response[response['loser']]['secondaries']['first']['name']],
-            losSecondaryFirstScoreTurn1=response[response['loser']]['secondaries']['first']['first'],
-            losSecondaryFirstScoreTurn2=response[response['loser']]['secondaries']['first']['second'],
-            losSecondaryFirstScoreTurn3=response[response['loser']]['secondaries']['first']['third'],
-            losSecondaryFirstScoreTurn4=response[response['loser']]['secondaries']['first']['fourth'],
-            losSecondaryFirstScore=response[response['loser']]['secondaries']['first']['score'],
-            losSecondarySecond=[response[response['loser']]['secondaries']['second']['name']],
-            losSecondarySecondScoreTurn1=response[response['loser']]['secondaries']['second']['first'],
-            losSecondarySecondScoreTurn2=response[response['loser']]['secondaries']['second']['second'],
-            losSecondarySecondScoreTurn3=response[response['loser']]['secondaries']['second']['third'],
-            losSecondarySecondScoreTurn4=response[response['loser']]['secondaries']['second']['fourth'],
-            losSecondarySecondScore=response[response['loser']]['secondaries']['second']['score'],
-            losSecondaryThird=[response[response['loser']]['secondaries']['third']['name']],
-            losSecondaryThirdScoreTurn1=response[response['loser']]['secondaries']['third']['first'],
-            losSecondaryThirdScoreTurn2=response[response['loser']]['secondaries']['third']['second'],
-            losSecondaryThirdScoreTurn3=response[response['loser']]['secondaries']['third']['third'],
-            losSecondaryThirdScoreTurn4=response[response['loser']]['secondaries']['third']['fourth'],
-            losSecondaryThirdScore=response[response['loser']]['secondaries']['third']['score'],
-            rollOffWinner=[
-                response[response['rollOffWinner']]['faction']] if 'rollOffWinner' in response.keys() else [],
-            rollOffSelection=response['rollOffWinnerSelection'] if 'rollOffWinnerSelection' in response.keys() else '',
-            tie=response['tie']
-        )
-        response['tournament'].games.append(game)
-        response['gameType'].games.append(game)
-        if response['tie']:
-            response[response['winner']]['faction'].gamesTied.append(game)
-            if response[response['winner']]['faction'] != response[response['loser']]['faction']:
-                response[response['loser']]['faction'].gamesTied.append(game)
-        else:
-            response[response['winner']]['faction'].gamesWon.append(game)
-            response[response['loser']]['faction'].gamesLost.append(game)
-        db.session.add(response[response['winner']]['faction'])
-        db.session.add(response[response['loser']]['faction'])
-        db.session.add(response['tournament'])
-        db.session.add(response['gameType'])
-        db.session.add(game)
-        db.session.commit()
+        handleGameData(response, current_app.config['database'])
 
 
 def addNewUpdate(form):

@@ -13,6 +13,15 @@ def only_admin(func):
     return decorated_view
 
 
+# Exclusive data
+# Tournament data
+# Operative data
+# Personal data
+# Manual adding
+# Tournament adding
+# Update
+# Add update
+# Change permissions
 def only_right_hand(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -21,6 +30,14 @@ def only_right_hand(func):
     return decorated_view
 
 
+# Exclusive data
+# Tournament data
+# Personal data
+# Operative data
+# Manual adding
+# Tournament adding
+# Update
+# Add update
 def only_left_hand(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -29,6 +46,13 @@ def only_left_hand(func):
     return decorated_view
 
 
+# Exclusive data
+# Tournament data
+# Personal data
+# Operative data
+# Manual adding
+# Tournament adding
+# Add update
 def only_collaborator(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -37,6 +61,11 @@ def only_collaborator(func):
     return decorated_view
 
 
+# Exclusive data
+# Tournament data
+# Personal data
+# Operative data
+# Manual adding
 def only_adamantium(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -45,6 +74,10 @@ def only_adamantium(func):
     return decorated_view
 
 
+# Exclusive data
+# Tournament data
+# Personal data
+# Operative data
 def only_diamantite(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -53,6 +86,9 @@ def only_diamantite(func):
     return decorated_view
 
 
+# Exclusive data
+# Tournament data
+# Personal data
 def only_ceramite(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -61,6 +97,8 @@ def only_ceramite(func):
     return decorated_view
 
 
+# Exclusive data
+# Tournament data
 def only_plasteel(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):

@@ -1,0 +1,45 @@
+{
+  "gameType": {
+    "open": "Open play",
+    "matched": "Matched play",
+    "narrative": "Narrative play"
+  },
+  "missions": {
+    "lootandsalvage": {
+      "code": 1.1,
+      "name": "Loot and Salvage"
+    },
+    "consecration": {
+      "code": 1.2,
+      "name": "Consecration"
+    },
+    "awakenthedata-spirits": {
+      "code": 1.3,
+      "name": "Awaken the Data-spirits"
+    },
+    "escalatinghostilities": {
+      "code": 2.1,
+      "name": "Escalating Hostilities"
+    },
+    "seizeground": {
+      "code": 2.2,
+      "name": "Seize Ground"
+    },
+    "domination": {
+      "code": 2.3,
+      "name": "Domination"
+    },
+    "securearcheotech": {
+      "code": 3.1,
+      "name": "Secure Archeotech"
+    },
+    "duelofwits": {
+      "code": 3.2,
+      "name": "Duel of Wits"
+    },
+    "mastertheterminals": {
+      "code": 3.3,
+      "name": "Master the Terminals"
+    }
+  }
+}

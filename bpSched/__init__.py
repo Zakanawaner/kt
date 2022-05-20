@@ -16,7 +16,7 @@ scheduler = APScheduler()
 scheduler.api_enabled = True
 
 
-@scheduler.task('interval', id='updatingData', seconds=600, misfire_grace_time=1200)
+@scheduler.task('interval', id='updateData', seconds=1800, misfire_grace_time=2000)
 def updateData():
     with scheduler.app.app_context():
         updateFactions(current_app.config['database'])
@@ -35,6 +35,8 @@ def weeklyMail():
 @login_required
 @only_admin
 def startRoutines():
+    with scheduler.app.app_context():
+        sendWeeklyMail()
     if scheduler.state == 0:
         scheduler.start()
     flash("Background routines started")

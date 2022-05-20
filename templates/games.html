@@ -20,7 +20,7 @@
                     </div>
                     <div class="table-content">
                         {% for game in games['updates'][update.id|string] %}
-                            {% if game.gameType|string == preferredGameType or preferredGameType == '0' %}
+                            {% if game.gameType|string == preferredGameType or preferredGameType == '1' %}
                                 <div class="table-row">
                                     <div onclick="location.href='/game/{{ game.id }}';" class="table-data table-link">{{ game.date.strftime("%Y-%m-%d") }}</div>
                                     <div onclick="location.href='/mission/{{ game.mission[0].id }}';" class="table-data table-link">{{ game.mission[0].name }}</div>

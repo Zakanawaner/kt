@@ -263,9 +263,8 @@ def handleGameData(response, db):
 def checkData(response):
     template = {
         'mission': {
-            "code": 1.1,
-            "name": "Loot and Salvage",
-            'objGuid': ""
+            "code": 0,
+            "name": ""
         },
         'timestamp': "",
         'tournament': "",

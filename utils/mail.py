@@ -2,12 +2,15 @@ import re
 
 from flask import current_app, render_template
 from flask_mail import Message
+from sqlalchemy import desc
 
-from database import Player
+from database import Player, Game, WinRates, Update, GameType, Faction
+from datetime import datetime, timedelta
 
 
 def sendWeeklyMail():
     mailManager = current_app.config['mailManager']
+    data = current_app.config['dataManager']
     sender = current_app.config['MAIL_USERNAME']
     for recipient in Player.query.filter_by(subscribed=True).filter_by(allowSharing=True).all():
         if recipient.email:
@@ -16,7 +19,156 @@ def sendWeeklyMail():
                 sender=sender,
                 recipients=[recipient.email]
             )
-            body = render_template('weeklyMailTemplate.html', username=recipient.username)
+            openPlay = GameType.query.filter_by(name=data['gameType']['open']).first()
+            matchedPlay = GameType.query.filter_by(name=data['gameType']['matched']).first()
+            narrativePlay = GameType.query.filter_by(name=data['gameType']['narrative']).first()
+            games = {
+                'open': Game.query.filter_by(gameType=openPlay.id).filter(Game.date >= datetime.now() - timedelta(days=7)).all() if openPlay else [],
+                'matched': Game.query.filter_by(gameType=matchedPlay.id).filter(Game.date >= datetime.now() - timedelta(days=7)).all() if matchedPlay else [],
+                'narrative': Game.query.filter_by(gameType=narrativePlay.id).filter(Game.date >= datetime.now() - timedelta(days=7)).all() if narrativePlay else [],
+            }
+            factionsOpen = {}
+            for game in games['open']:
+                if not game.tie:
+                    if game.winFaction[0].shortName in factionsOpen.keys():
+                        factionsOpen[game.winFaction[0].shortName]['wins'] += 1
+                    else:
+                        factionsOpen[game.winFaction[0].shortName] = {
+                            'wins': 1,
+                            'loses': 0,
+                            'ties': 0,
+                            'name': game.winFaction[0].name
+                        }
+                    if game.losFaction[0].shortName in factionsOpen.keys():
+                        factionsOpen[game.losFaction[0].shortName]['loses'] += 1
+                    else:
+                        factionsOpen[game.losFaction[0].shortName] = {
+                            'wins': 0,
+                            'loses': 1,
+                            'ties': 0,
+                            'name': game.losFaction[0].name
+                        }
+                else:
+                    if game.winFaction[0].shortName in factionsOpen.keys():
+                        factionsOpen[game.winFaction[0].shortName]['ties'] += 1
+                    else:
+                        factionsOpen[game.winFaction[0].shortName] = {
+                            'wins': 0,
+                            'loses': 0,
+                            'ties': 1,
+                            'name': game.winFaction[0].name
+                        }
+                    if game.losFaction[0].shortName in factionsOpen.keys():
+                        factionsOpen[game.losFaction[0].shortName]['loses'] += 1
+                    else:
+                        factionsOpen[game.losFaction[0].shortName] = {
+                            'wins': 0,
+                            'loses': 0,
+                            'ties': 1,
+                            'name': game.losFaction[0].name
+                        }
+            factionsMatched = {}
+            for game in games['matched']:
+                if not game.tie:
+                    if game.winFaction[0].shortName in factionsMatched.keys():
+                        factionsMatched[game.winFaction[0].shortName]['wins'] += 1
+                    else:
+                        factionsMatched[game.winFaction[0].shortName] = {
+                            'wins': 1,
+                            'loses': 0,
+                            'ties': 0,
+                            'name': game.winFaction[0].name
+                        }
+                    if game.losFaction[0].shortName in factionsMatched.keys():
+                        factionsMatched[game.losFaction[0].shortName]['loses'] += 1
+                    else:
+                        factionsMatched[game.losFaction[0].shortName] = {
+                            'wins': 0,
+                            'loses': 1,
+                            'ties': 0,
+                            'name': game.losFaction[0].name
+                        }
+                else:
+                    if game.winFaction[0].shortName in factionsMatched.keys():
+                        factionsMatched[game.winFaction[0].shortName]['ties'] += 1
+                    else:
+                        factionsMatched[game.winFaction[0].shortName] = {
+                            'wins': 0,
+                            'loses': 0,
+                            'ties': 1,
+                            'name': game.winFaction[0].name
+                        }
+                    if game.losFaction[0].shortName in factionsMatched.keys():
+                        factionsMatched[game.losFaction[0].shortName]['loses'] += 1
+                    else:
+                        factionsMatched[game.losFaction[0].shortName] = {
+                            'wins': 0,
+                            'loses': 0,
+                            'ties': 1,
+                            'name': game.losFaction[0].name
+                        }
+            factionsNarrative = {}
+            for game in games['narrative']:
+                if not game.tie:
+                    if game.winFaction[0].shortName in factionsNarrative.keys():
+                        factionsNarrative[game.winFaction[0].shortName]['wins'] += 1
+                    else:
+                        factionsNarrative[game.winFaction[0].shortName] = {
+                            'wins': 1,
+                            'loses': 0,
+                            'ties': 0,
+                            'name': game.winFaction[0].name
+                        }
+                    if game.losFaction[0].shortName in factionsNarrative.keys():
+                        factionsNarrative[game.losFaction[0].shortName]['loses'] += 1
+                    else:
+                        factionsNarrative[game.losFaction[0].shortName] = {
+                            'wins': 0,
+                            'loses': 1,
+                            'ties': 0,
+                            'name': game.losFaction[0].name
+                        }
+                else:
+                    if game.winFaction[0].shortName in factionsNarrative.keys():
+                        factionsNarrative[game.winFaction[0].shortName]['ties'] += 1
+                    else:
+                        factionsNarrative[game.winFaction[0].shortName] = {
+                            'wins': 0,
+                            'loses': 0,
+                            'ties': 1,
+                            'name': game.winFaction[0].name
+                        }
+                    if game.losFaction[0].shortName in factionsNarrative.keys():
+                        factionsNarrative[game.losFaction[0].shortName]['loses'] += 1
+                    else:
+                        factionsNarrative[game.losFaction[0].shortName] = {
+                            'wins': 0,
+                            'loses': 0,
+                            'ties': 1,
+                            'name': game.losFaction[0].name
+                        }
+            factions = {
+                'open': factionsOpen,
+                'matched': factionsMatched,
+                'narrative': factionsNarrative
+            }
+            for gt in factions.keys():
+                for fct in factions[gt].keys():
+                    wins = factions[gt][fct]['wins']
+                    loses = factions[gt][fct]['loses']
+                    ties = factions[gt][fct]['ties']
+                    try:
+                        factions[gt][fct]['winRate'] = wins * 100 / (wins + loses + ties)
+                        factions[gt][fct]['loseRate'] = loses * 100 / (wins + loses + ties)
+                        factions[gt][fct]['tieRate'] = ties * 100 / (wins + loses + ties)
+                    except ZeroDivisionError:
+                        factions[gt][fct]['winRate'] = 0
+                        factions[gt][fct]['loseRate'] = 0
+                        factions[gt][fct]['tieRate'] = 0
+            factions['open'] = dict(sorted(factions['open'].items(), key=lambda item: item[1]['winRate'], reverse=True))
+            factions['matched'] = dict(sorted(factions['matched'].items(), key=lambda item: item[1]['winRate'], reverse=True))
+            factions['narrative'] = dict(sorted(factions['narrative'].items(), key=lambda item: item[1]['narrative'], reverse=True))
+            body = render_template('weeklyMailTemplate.html', username=recipient.username, games=games, factions=factions)
             msg.html = body
             mailManager.send(msg)
 

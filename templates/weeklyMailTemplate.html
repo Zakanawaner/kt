@@ -1,8 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-  <div class="player">
-    <h3>{{ username }}</h3>
+  <div style="background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(114,53,0,1) 70%);
+            background-repeat: no-repeat;
+            min-height: 100%;
+            font-family: 'Libre Baskerville', serif;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 30px;
+            margin: 50px 15px 0px 15px;
+            padding: 20px;
+            float: left;">
+    <h1 style="color: rgba(255,101,0,1);
+            text-transform: uppercase;
+            font-weight: bold;
+            text-align:center;
+            font-size: 30px;
+            margin-top: 0px;">
+      Your Weekly Kill Team Data
+    </h1>
+    <h3 style="color: rgba(255,101,0,1);
+              text-transform: uppercase;
+              font-weight: bold;
+              text-align:center;
+              font-size: 20px;
+              margin-top: 20px;">
+      Open Game ({{ games['open']|length }})
+    </h3>
+    {% for key, fct in factions['open'].items() %}
+      <img style="width: 120px;
+                  height: 120px;
+                  border-radius: 60px;
+                  object-fit: contain;
+                  margin-left: auto;
+                  margin-right: auto;
+                  display: block;"
+           src="{{ url_for('static', filename='images/' + key + '.png') }}"/>
+      <h3 style="color: rgba(255,101,0,1);
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+        {{ fct['name'] }}
+      </h3>
+      <div style="margin: auto;
+                  padding: 20px;">
+          <h3 style="color: rgba(255,101,0,1);
+                    margin: 20px;
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+            Win Rate: {{ fct['winRate'] }}%
+          </h3>
+          <h3 style="color: rgba(255,101,0,1);
+                    margin: 20px;
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+            Lose Rate: {{ fct['loseRate'] }}%
+          </h3>
+          <h3 style="color: rgba(255,101,0,1);
+                    margin: 20px;
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+            Tie Rate: {{ fct['tieRate'] }}%
+          </h3>
+      </div>
+    {% endfor %}
+    <h3 style="color: rgba(255,101,0,1);
+              text-transform: uppercase;
+              font-weight: bold;
+              text-align:center;
+              font-size: 20px;
+              margin-top: 20px;">
+      Matched Game ({{ games['matched']|length }})
+    </h3>
+    {% for key, fct in factions['matched'].items() %}
+      <img style="width: 120px;
+                  height: 120px;
+                  border-radius: 60px;
+                  object-fit: contain;
+                  margin-left: auto;
+                  margin-right: auto;
+                  display: block;"
+           src="{{ url_for('static', filename='images/' + key + '.png') }}"/>
+      <h3 style="color: rgba(255,101,0,1);
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+        {{ fct['name'] }}
+      </h3>
+      <div style="margin: auto;
+                  padding: 20px;">
+          <h3 style="color: rgba(255,101,0,1);
+                    margin: 20px;
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+            Win Rate: {{ fct['winRate'] }}%
+          </h3>
+          <h3 style="color: rgba(255,101,0,1);
+                    margin: 20px;
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+            Lose Rate: {{ fct['loseRate'] }}%
+          </h3>
+          <h3 style="color: rgba(255,101,0,1);
+                    margin: 20px;
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+            Tie Rate: {{ fct['tieRate'] }}%
+          </h3>
+      </div>
+    {% endfor %}
+    <h3 style="color: rgba(255,101,0,1);
+              text-transform: uppercase;
+              font-weight: bold;
+              text-align:center;
+              font-size: 20px;
+              margin-top: 20px;">
+      Narrative Game ({{ games['narrative']|length }})
+    </h3>
+    {% for key, fct in factions['narrative'].items() %}
+      <img style="width: 120px;
+                  height: 120px;
+                  border-radius: 60px;
+                  object-fit: contain;
+                  margin-left: auto;
+                  margin-right: auto;
+                  display: block;"
+           src="{{ url_for('static', filename='images/' + key + '.png') }}"/>
+      <h3 style="color: rgba(255,101,0,1);
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+        {{ fct['name'] }}
+      </h3>
+      <div style="margin: auto;
+                  padding: 20px;">
+          <h3 style="color: rgba(255,101,0,1);
+                    margin: 20px;
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+            Win Rate: {{ fct['winRate'] }}%
+          </h3>
+          <h3 style="color: rgba(255,101,0,1);
+                    margin: 20px;
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+            Lose Rate: {{ fct['loseRate'] }}%
+          </h3>
+          <h3 style="color: rgba(255,101,0,1);
+                    margin: 20px;
+                    text-transform: uppercase;
+                    text-align:center;
+                    font-size: 15px;
+                    word-wrap: wrap;">
+            Tie Rate: {{ fct['tieRate'] }}%
+          </h3>
+      </div>
+    {% endfor %}
   </div>
 </body>
 </html>

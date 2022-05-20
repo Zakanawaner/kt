@@ -34,14 +34,21 @@ if __name__ == '__main__':
 
 # TODO TTS:
 #  - Texto de inicio que diga abrir el check list
+#  - Controlar que solo se añadan bichos con comand node en la estructura del juego
+#  - Si da tiempo, guardar tirdas por jugador?
 
 # TODO WEB
-#  - Añadir algo de texto en about y tal
 #  - Mirar bien los mail y el estilo y tal
-#  - Comprobar player con gametype -> Player bien pero profile no...?????
 
 # TODO Future
 #  - Posibilidad de añadir manualmente partidas
+#  - Añadir torneos a mano
 #  - Implementar tiers y ventajas por tier
 #  - Número de bichos muertos por player
 #  - Numero total de bichos muertos
+#  - Añadir auto publicaciones de twitter (e Insta?)
+#  - Hacer un Discord
+#  - Hacer un sistema de subscripción a tornemos
+#  - Integrar en css version movil
+#  - Eventualmente pasar a react...?
+#  - Hacer un generador de cartas
