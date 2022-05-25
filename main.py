@@ -39,6 +39,8 @@ if __name__ == '__main__':
 
 # TODO WEB
 #  - Mirar bien los mail y el estilo y tal
+#  - Mirar el tema de las preferred una vez haya hecho una bd nueva
+#  - Hacer una página informativa de rangos
 
 # TODO Future
 #  - Posibilidad de añadir manualmente partidas
