@@ -41,5 +41,34 @@
       "code": 3.3,
       "name": "Master the Terminals"
     }
+  },
+  "cardGenerator": {
+    "style": {
+      "card-back-image": "position: absolute;\n    margin: auto;\n    width: 1in;\n    height: 1in;\n    top: 1.5in;\n    left: 1in;\n    opacity: .2;\n    background-color: transparent;\n    background-image: url(https://64.media.tumblr.com/7b29de5faa9fb2d5905344e91f57f27e/tumblr_plp9ysx19Z1tdqkuno1_1280.png);\n    background-size: cover;\n    background-position: center center;\n    z-index: -1;",
+      "name-ability": "margin: auto;\n    width: 90%;",
+      "name-name": "margin-right: 9px;\n    top: 20%;\n    font-family: Arial;\n    font-weight: bold;\n    color: white;",
+      "name": "position: relative;\n    left: 1in;",
+      "type": "position: relative;\n    left: 1in;",
+      "type-ability": "margin: auto;\n    width: 90%;",
+      "type-name-op": "margin-right: 8px;\n    top: 20%;\n    font-family: Arial;\n    font-size: 10px;\n    font-style: italic;\n    color: white;",
+      "picture": "position: relative;\n    width: 1in;\n    height: 1in;\n    top: -.5in;\n    border-radius: 50%;\n    background-image: url(###picture);\n    background-size: cover;\n    background-position: center center;\n    z-index: 1;",
+      "stats": "position: relative;\n    top: -1in;\n    left: .9in;\n    width: 2.1in;\n    height: .3in;\n    padding-left: 10px;",
+      "stats-name": "position: relative;\n    top: -1in;\n    left: .9in;\n    width: 2.1in;\n    height: .3in;\n    background: linear-gradient(90deg, rgba(255,195,123,1) 1%, rgba(242,156,255,1) 100%);\n    display: flex;\n    justify-content: flex-start;\n    z-index: -0;",
+      "stats-name-op": "background: linear-gradient(90deg, rgba(255,195,123,1) 1%, rgba(242,156,255,1) 100%);\n    z-index: -0;",
+      "stat-name": "font-family: Arial;\n    font-weight: bold;\n    color: white;",
+      "stats-value": "border-bottom: 1px solid #aaa;\n    z-index: -0;",
+      "stat-value": "top: 20%;\n    left: 26px;\n    margin-right: 24px;\n    font-family: Arial;\n    font-weight: normal;\n    font-size: 15px;\n    text-align: center;",
+      "weapons": "position: relative;\n    top: -.8in;\n    left: .1in;\n    width: 2.8in;\n    height: .3in;",
+      "psychic": "position: relative;\n    width: 2.8in;\n    height: .3in;",
+      "weapons-limited": " osition: relative;\n    top: .2in;\n    left: .1in;\n    width: 2.8in;\n    height: .3in;",
+      "weapons-name": "background: linear-gradient(90deg, rgba(157,157,157,1) 0%, rgba(67,67,67,1) 100%);\n    z-index: -0;",
+      "void-dancertroupe": {
+        "card": "position: relative;\n    margin-bottom: 20px;\n    width: 3in;\n    height: 4in;\n    border-width: 8px;\n    border-style: solid;\n    border-image: linear-gradient(152deg, rgba(255,164,0,1) 4%, rgba(0,247,218,1) 41%, rgba(245,0,255,1) 94%) 1;\n    background: radial-gradient(circle, rgba(255,255,255,1) 20%, rgba(234,234,234,1) 100%);\n    z-index: 0;",
+        "card-back": "position: relative;\n    margin-bottom: 20px;\n    width: 3in;\n    height: 4in;\n    border-width: 8px;\n    border-style: solid;\n    border-image: linear-gradient(180deg, rgba(0,0,0,1), rgba(0,0,0,1)) 1;\n    background: radial-gradient(circle, rgba(255,164,0,1) 4%, rgba(0,247,218,1) 41%, rgba(245,0,255,1) 94%);\n    z-index: 0;",
+        "card-image": "position: absolute;\n    margin: auto;\n    width: .8in;\n    height: .8in;\n    top: 3in;\n    left: 1.1in;\n    opacity: .2;\n    background-color: transparent;\n    background-image: url(http://eldar.arhicks.co.uk/graphics/runes/plain/masque_of_the_twisted_path_rune_1.png);\n    background-size: cover;\n    background-position: center center;\n    z-index: -1;",
+        "title": "height: .5in;\n    padding-top: 5px;\n    background: radial-gradient(circle, rgba(195,125,0,1) 4%, rgba(0,179,158,1) 41%, rgba(142,0,148,1) 94%);",
+        "stat-name": "font-family: Arial;\n    font-weight: bold;\n    text-align: center;\n    color: white;"
+      }
+    }
   }
 }

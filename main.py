@@ -48,7 +48,8 @@ if __name__ == '__main__':
 #  - Numero total de bichos muertos
 #  - Añadir auto publicaciones de twitter (e Insta?)
 #  - Hacer un Discord
-#  - Hacer un sistema de subscripción a tornemos
+#  - Hacer un sistema de subscripción a torneos
 #  - Integrar en css version movil
 #  - Eventualmente pasar a react...?
 #  - Hacer un generador de cartas
+#  - Web Scrapping de BCP para torneos
