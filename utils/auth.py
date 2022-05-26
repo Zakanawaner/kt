@@ -21,7 +21,7 @@ def userSignup(db, form):
             return 402, None
         ok = False
         while not ok:
-            publicId = str(random.randint(0, 9999999999999))
+            publicId = random.randint(0, 2147483647)
             if not Player.query.filter_by(publicId=publicId).first():
                 ok = True
         new_user = Player(
