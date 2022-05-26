@@ -1,0 +1,572 @@
+p {
+     margin: 0;
+     padding: 0;
+     position: relative;
+}
+
+body {
+    margin: 0px;
+}
+
+.page {
+    min-width: 297mm;
+    min-height: 210mm;
+    padding: .5cm;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.card-khorne {
+    position: relative;
+    margin-bottom: 20px;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(128deg, rgba(255,222,0,1) 6%, rgba(255,10,0,1) 41%, rgba(0,0,0,1) 100%) 1;
+    background: radial-gradient(circle, rgba(255,255,255,1) 20%, rgba(234,234,234,1) 100%);
+    z-index: 0;
+}
+
+.card-khorne-back {
+    position: relative;
+    margin-bottom: 20px;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(180deg, rgba(0,0,0,1), rgba(0,0,0,1)) 1;
+    background: radial-gradient(circle, rgba(255,222,0,1) 6%, rgba(255,10,0,1) 41%, rgba(0,0,0,1) 100%);
+    z-index: 0;
+}
+
+.background-image-khorne {
+    position: absolute;
+    margin: auto;
+    width: .8in;
+    height: .8in;
+    top: 3in;
+    left: 1.1in;
+    opacity: .2;
+    background-color: transparent;
+    background-image: url(https://image.emojipng.com/840/14398840.jpg);
+    background-size: cover;
+    background-position: center center;
+    z-index: -1;
+}
+
+.card-nurgle {
+    margin-bottom: 20px;
+    position: relative;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(128deg, rgba(255,227,0,1) 3%, rgba(0,215,26,1) 41%, rgba(0,0,0,1) 100%) 1;
+    background: radial-gradient(circle, rgba(255,255,255,1) 20%, rgba(234,234,234,1) 100%);
+    z-index: -0;
+}
+
+.card-nurgle-back {
+    position: relative;
+    margin-bottom: 20px;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(180deg, rgba(0,0,0,1), rgba(0,0,0,1)) 1;
+    background: radial-gradient(circle, rgba(255,227,0,1) 3%, rgba(0,215,26,1) 41%, rgba(0,0,0,1) 100%);
+    z-index: 0;
+}
+
+.background-image-nurgle {
+    position: absolute;
+    margin: auto;
+    width: .8in;
+    height: .8in;
+    top: 3in;
+    left: 1.1in;
+    opacity: .2;
+    background-color: transparent;
+    background-image: url(https://spng.pngfind.com/pngs/s/591-5916007_traditional-games-thread-warhammer-40k-nurgle-symbol.png);
+    background-size: cover;
+    background-position: center center;
+    z-index: -1;
+}
+
+.card-slaanesh {
+    margin-bottom: 20px;
+    position: relative;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(128deg, rgba(196,255,0,1) 3%, rgba(255,0,227,1) 41%, rgba(0,0,0,1) 100%) 1;
+    background: radial-gradient(circle, rgba(255,255,255,1) 20%, rgba(234,234,234,1) 100%);
+    z-index: -0;
+}
+
+.card-slaanesh-back {
+    position: relative;
+    margin-bottom: 20px;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(180deg, rgba(0,0,0,1), rgba(0,0,0,1)) 1;
+    background: radial-gradient(circle, rgba(196,255,0,1) 3%, rgba(255,0,227,1) 41%, rgba(0,0,0,1) 100%);
+    z-index: 0;
+}
+
+.background-image-slaanesh {
+    position: absolute;
+    margin: auto;
+    width: .8in;
+    height: .8in;
+    top: 3in;
+    left: 1.1in;
+    opacity: .2;
+    background-color: transparent;
+    background-image: url(https://www.seekpng.com/png/small/163-1636717_warhammer-40k-slaanesh-logo.png);
+    background-size: cover;
+    background-position: center center;
+    z-index: -1;
+}
+
+.card-tzeench {
+    margin-bottom: 20px;
+    position: relative;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(128deg, rgba(255,246,0,1) 2%, rgba(0,132,255,1) 46%, rgba(0,0,0,1) 100%) 1;
+    background: radial-gradient(circle, rgba(255,255,255,1) 20%, rgba(234,234,234,1) 100%);
+    z-index: -0;
+}
+
+.card-tzeench-back {
+    position: relative;
+    margin-bottom: 20px;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(180deg, rgba(0,0,0,1), rgba(0,0,0,1)) 1;
+    background-image: url(https://m.media-amazon.com/images/I/31ruvqv0G-L.jpg);
+    background: radial-gradient(circle, rgba(255,246,0,1) 2%, rgba(0,132,255,1) 46%, rgba(0,0,0,1) 100%);
+    z-index: 0;
+}
+
+.background-image-tzeench {
+    position: absolute;
+    margin: auto;
+    width: .8in;
+    height: .8in;
+    top: 3in;
+    left: 1.1in;
+    opacity: .2;
+    background-color: transparent;
+    background-image: url(data:image/jpeg;base64,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);
+    background-size: cover;
+    background-position: center center;
+    z-index: -1;
+}
+
+.card-undivided {
+    margin-bottom: 20px;
+    position: relative;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(128deg, rgba(101,48,0,1) 0%, rgba(255,217,0,1) 40%, rgba(208,95,0,1) 69%, rgba(0,0,0,1) 98%) 1;
+    background: radial-gradient(circle, rgba(255,255,255,1) 20%, rgba(234,234,234,1) 100%);
+    z-index: -0;
+}
+
+.card-undivided-back {
+    position: relative;
+    margin-bottom: 20px;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(180deg, rgba(0,0,0,1), rgba(0,0,0,1)) 1;
+    background: radial-gradient(circle, rgba(101,48,0,1) 0%, rgba(255,217,0,1) 40%, rgba(208,95,0,1) 69%, rgba(0,0,0,1) 98%);
+    z-index: 0;
+}
+
+.background-image-undivided {
+    position: absolute;
+    margin: auto;
+    width: .8in;
+    height: .8in;
+    top: 3in;
+    left: 1.1in;
+    opacity: .2;
+    background-color: transparent;
+    background-image: url(https://i.pinimg.com/474x/47/11/25/471125ec737d66960c8b0fffd0f2cea4--disorders-tattoo-ideas.jpg);
+    background-size: cover;
+    background-position: center center;
+    z-index: -1;
+}
+.background-image-mechanicum {
+    position: absolute;
+    margin: auto;
+    width: .8in;
+    height: .8in;
+    top: 3in;
+    left: 1.1in;
+    opacity: .2;
+    background-color: transparent;
+    background-image: url(https://m.media-amazon.com/images/I/41eZVpAFGyL._AC_.jpg);
+    background-size: cover;
+    background-position: center center;
+    z-index: -1;
+}
+
+.background-image-generic {
+    position: absolute;
+    margin: auto;
+    width: .8in;
+    height: .8in;
+    top: 3in;
+    left: 1.1in;
+    opacity: .2;
+    background-color: transparent;
+    background-image: url(https://64.media.tumblr.com/7b29de5faa9fb2d5905344e91f57f27e/tumblr_plp9ysx19Z1tdqkuno1_1280.png);
+    background-size: cover;
+    background-position: center center;
+    z-index: -1;
+}
+
+.card-void {
+    position: relative;
+    margin-bottom: 20px;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(152deg, rgba(255,164,0,1) 4%, rgba(0,247,218,1) 41%, rgba(245,0,255,1) 94%) 1;
+    background: radial-gradient(circle, rgba(255,255,255,1) 20%, rgba(234,234,234,1) 100%);
+    z-index: 0;
+}
+
+.card-void-back {
+    position: relative;
+    margin-bottom: 20px;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(180deg, rgba(0,0,0,1), rgba(0,0,0,1)) 1;
+    background: radial-gradient(circle, rgba(255,164,0,1) 4%, rgba(0,247,218,1) 41%, rgba(245,0,255,1) 94%);
+    z-index: 0;
+}
+
+.card-mech {
+    position: relative;
+    margin-bottom: 20px;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(152deg, rgba(255,0,0,1) 4%, rgba(0,0,0,1) 94%) 1;
+    background: radial-gradient(circle, rgba(255,255,255,1) 20%, rgba(234,234,234,1) 100%);
+    z-index: 0;
+}
+
+.card-mech-back {
+    position: relative;
+    margin-bottom: 20px;
+    width: 3in;
+    height: 4in;
+    border-width: 8px;
+    border-style: solid;
+    border-image: linear-gradient(180deg, rgba(0,0,0,1), rgba(0,0,0,1)) 1;
+    background: radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(0,0,0,1) 100%);
+    z-index: 0;
+}
+
+.back-image {
+    position: absolute;
+    margin: auto;
+    width: 1in;
+    height: 1in;
+    top: 1.5in;
+    left: 1in;
+    opacity: .2;
+    background-color: transparent;
+    background-image: url(https://64.media.tumblr.com/7b29de5faa9fb2d5905344e91f57f27e/tumblr_plp9ysx19Z1tdqkuno1_1280.png);
+    background-size: cover;
+    background-position: center center;
+    z-index: -1;
+}
+
+.background-image-void {
+    position: absolute;
+    margin: auto;
+    width: .8in;
+    height: .8in;
+    top: 3in;
+    left: 1.1in;
+    opacity: .2;
+    background-color: transparent;
+    background-image: url(http://eldar.arhicks.co.uk/graphics/runes/plain/masque_of_the_twisted_path_rune_1.png);
+    background-size: cover;
+    background-position: center center;
+    z-index: -1;
+}
+
+.title-khorne {
+    height: .5in;
+    padding-top: 5px;
+    background: radial-gradient(circle, rgba(193,168,0,1) 6%, rgba(194,8,0,1) 41%, rgba(0,0,0,1) 100%);
+}
+
+.title-nurgle {
+    height: .5in;
+    padding-top: 5px;
+    background: radial-gradient(circle, rgba(172,153,0,1) 3%, rgba(0,136,16,1) 41%, rgba(0,0,0,1) 100%);
+}
+
+.title-slaanesh {
+    height: .5in;
+    padding-top: 5px;
+    background: radial-gradient(circle, rgba(151,196,0,1) 3%, rgba(199,0,177,1) 41%, rgba(0,0,0,1) 100%);
+}
+
+.title-tzeench {
+    height: .5in;
+    padding-top: 5px;
+    background: radial-gradient(circle, rgba(186,180,0,1) 2%, rgba(2,101,193,1) 46%, rgba(0,0,0,1) 100%);
+}
+
+.title-undivided {
+    height: .5in;
+    padding-top: 5px;
+    background: radial-gradient(circle, rgba(101,48,0,1) 0%, rgba(180,153,0,1) 40%, rgba(166,76,0,1) 69%, rgba(0,0,0,1) 98%);
+}
+
+.title-void {
+    height: .5in;
+    padding-top: 5px;
+    background: radial-gradient(circle, rgba(195,125,0,1) 4%, rgba(0,179,158,1) 41%, rgba(142,0,148,1) 94%);
+}
+
+.title-mech {
+    height: .5in;
+    padding-top: 5px;
+    background: radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(0,0,0,1) 100%);
+}
+
+.name-ability {
+    margin: auto;
+    width: 90%;
+}
+
+.name{
+    position: relative;
+    left: 1in;
+}
+
+.name-name {
+    margin-right: 9px;
+    top: 20%;
+    font-family: Arial;
+    font-weight: bold;
+    color: white;
+}
+
+.type{
+    position: relative;
+    left: 1in;
+}
+
+.type-ability{
+    margin: auto;
+    width: 90%;
+}
+
+.picture {
+    position: relative;
+    width: 1in;
+    height: 1in;
+    top: -.5in;
+    border-radius: 50%;
+    background-image: url(https://i.pinimg.com/originals/ba/9b/60/ba9b609242bb29fe5cd1256cdede1295.jpg);
+    background-size: cover;
+    background-position: center center;
+    z-index: 1;
+}
+
+.stats {
+    position: relative;
+    top: -1in;
+    left: .9in;
+    width: 2.1in;
+    height: .3in;
+    padding-left: 10px;
+}
+
+.stats-name {
+    position: relative;
+    top: -1in;
+    left: .9in;
+    width: 2.1in;
+    height: .3in;
+    background: linear-gradient(90deg, rgba(255,195,123,1) 1%, rgba(242,156,255,1) 100%);
+    display: flex;
+    justify-content: flex-start;
+    z-index: -0;
+}
+
+.stats-name-op {
+    background: linear-gradient(90deg, rgba(255,195,123,1) 1%, rgba(242,156,255,1) 100%);
+    z-index: -0;
+}
+
+.stat-name {
+    font-family: Arial;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+}
+
+
+.type-name-op {
+    margin-right: 8px;
+    top: 20%;
+    font-family: Arial;
+    font-size: 10px;
+    font-style: italic;
+    color: white;
+}
+
+.stats-value {
+    border-bottom: 1px solid #aaa;
+    z-index: -0;
+}
+
+.stat-value {
+    top: 20%;
+    left: 26px;
+    margin-right: 24px;
+    font-family: Arial;
+    font-weight: normal;
+    font-size: 15px;
+    text-align: center;
+}
+
+.weapons {
+    position: relative;
+    top: -.8in;
+    left: .1in;
+    width: 2.8in;
+    height: .3in;
+}
+
+.psychic {
+    position: relative;
+    width: 2.8in;
+    height: .3in;
+}
+
+.weapons-limited {
+    position: relative;
+    top: .2in;
+    left: .1in;
+    width: 2.8in;
+    height: .3in;
+}
+
+.weapons-name {
+    background: linear-gradient(90deg, rgba(157,157,157,1) 0%, rgba(67,67,67,1) 100%);
+    z-index: -0;
+}
+
+.weapon-name {
+    margin-right: 10px;
+    top: 25%;
+    font-family: Arial;
+    color: white;
+    font-size: 12px;
+}
+
+.weapons-value {
+    border-bottom: 1px solid #aaa;
+    z-index: -0;
+}
+
+.weapon-value {
+    margin-right: 7px;
+    top: 25%;
+    font-family: Arial;
+    font-weight: normal;
+    font-size: 10px;
+    text-align: center;
+}
+
+
+
+.type-name {
+    font-family: Arial;
+    font-size: 10px;
+    text-align: center;
+    font-style: italic;
+    color: white;
+}
+
+.abilities {
+    margin: 15px;
+}
+
+.abilities-op {
+    position: relative;
+    top: -.7in;
+    left: .1in;
+    width: 2.8in;
+    height: .3in;
+    font-size: 9.5px;
+}
+
+.abilities-wp {
+    position: relative;
+    top: .2in;
+    left: .1in;
+    width: 2.8in;
+    height: .3in;
+    font-size: 9.5px;
+}
+
+.ability-name {
+    font-family: Arial;
+    font-size: 12px;
+    text-align: justify;
+    font-style: italic;
+}
+
+.ability-list {
+    font-family: Arial;
+    font-size: 12px;
+    text-align: justify;
+    font-style: italic;
+}
+
+@page {
+        margin: 0;
+    }
+    @media print {
+        .page {
+            margin: 0;
+            border: initial;
+            border-radius: initial;
+            width: initial;
+            min-height: initial;
+            box-shadow: initial;
+            background: initial;
+            page-break-after: always;
+        }
+    }

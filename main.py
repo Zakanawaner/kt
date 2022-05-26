@@ -53,3 +53,4 @@ if __name__ == '__main__':
 #  - Eventualmente pasar a react...?
 #  - Hacer un generador de cartas
 #  - Web Scrapping de BCP para torneos
+#  - Hacer sistema de tier list
