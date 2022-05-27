@@ -18,6 +18,7 @@ from utils.player import *
 from utils.games import *
 from utils.secondary import *
 from utils.general import *
+from utils.cardGenerator import *
 
 
 ################
@@ -55,6 +56,7 @@ def createApp(app):
     db.init_app(app)
     app.config["database"] = db
 
+    app.config["cardGenerator"] = CardGenerator()
     app.config["dataManager"] = json.load(open("hard/data.json"))
 
     return app
@@ -65,7 +67,7 @@ def createDatabase(app):
         if os.path.exists('database.txt'):
             pass
         else:
-            createTables(db)
+            createTables(app.config['database'])
             file = open('database.txt', 'w')
             file.write("Database Created")
             file.close()

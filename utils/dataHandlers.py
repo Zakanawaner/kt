@@ -376,7 +376,16 @@ def checkData(response):
                     response[response['winner']]['secondaries']['third'].keys()) and set(
                     template[response['loser']]['secondaries']['third'].keys()) <= set(
                     response[response['loser']]['secondaries']['third'].keys()):
-                    return True
+                    if (response[response['winner']]['secondaries']['first']['name'] != response[response['winner']]['secondaries']['second']['name']) \
+                            and (response[response['winner']]['secondaries']['first']['name'] != response[response['winner']]['secondaries']['third']['name'])\
+                                and (response[response['winner']]['secondaries']['second']['name'] != response[response['winner']]['secondaries']['third']['name']):
+                        if (response[response['loser']]['secondaries']['first']['name'] !=
+                            response[response['loser']]['secondaries']['second']['name']) \
+                                and (response[response['loser']]['secondaries']['first']['name'] !=
+                                     response[response['loser']]['secondaries']['third']['name']) \
+                                and (response[response['loser']]['secondaries']['second']['name'] !=
+                                     response[response['loser']]['secondaries']['third']['name']):
+                            return True
     return False
 
 

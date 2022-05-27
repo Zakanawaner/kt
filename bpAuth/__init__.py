@@ -48,6 +48,9 @@ def signup():
         if status == 403:
             flash("Password fields must coincide")
             return redirect(url_for('authBluePrint.signup'))
+        if status == 405:
+            flash("Username must not have special characters")
+            return redirect(url_for('authBluePrint.signup'))
     return render_template('signup.html', title="Signup")
 
 

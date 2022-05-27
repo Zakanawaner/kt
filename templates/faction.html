@@ -99,7 +99,7 @@
                                 <div class="header__item">Tie Rate</div>
                             </div>
                             <div class="table-content">
-                                {% for mission in faction['updates'][update.id|string]['missionRates'] %}
+                                {% for mission in faction['updates'][update.id|string][preferredGameType]['missionRates'] %}
                                     {% if mission['games'] > 0 %}
                                         <div class="table-row">
                                             <div onclick="location.href='/mission/{{ mission['id'] }}';" class="table-data table-link">{{ mission['name'] }}</div>
@@ -124,7 +124,7 @@
                                 <div class="header__item">Tie Rate</div>
                             </div>
                             <div class="table-content">
-                                {% for secondary in faction['updates'][update.id|string]['secondaryRates'] %}
+                                {% for secondary in faction['updates'][update.id|string][preferredGameType]['secondaryRates'] %}
                                     {% if secondary['games'] > 0 %}
                                         <div class="table-row">
                                             <div onclick="location.href='/secondary/{{ secondary['id'] }}';" class="table-data table-link">{{ secondary['name'] }}</div>

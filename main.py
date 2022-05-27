@@ -1,5 +1,5 @@
 from flask import Flask
-from utils import createApp, createDatabase
+from utils import createApp, createDatabase, CardGenerator
 
 from bpAuth import authBP
 from bpSched import schedulerBP
@@ -11,6 +11,7 @@ from bpSec import secondaryBP
 from bpGame import gameBP
 from bpAdmin import adminBP
 from bpMail import mailBP
+from bpCardGen import cardGenBP
 
 app = Flask(__name__)
 
@@ -24,6 +25,7 @@ app.register_blueprint(secondaryBP)
 app.register_blueprint(gameBP)
 app.register_blueprint(adminBP)
 app.register_blueprint(mailBP)
+app.register_blueprint(cardGenBP)
 
 app = createApp(app)
 createDatabase(app)
@@ -38,12 +40,12 @@ if __name__ == '__main__':
 #  - Si da tiempo, guardar tirdas por jugador?
 
 # TODO WEB
-#  - Mirar bien los mail y el estilo y tal
 #  - Mirar el tema de las preferred una vez haya hecho una bd nueva
-#  - Hacer una página informativa de rangos
+#  - Hacer un popup en eliminar cuenta para pedir "eliminar"
 
 # TODO Future
 #  - Posibilidad de añadir manualmente partidas
+#  - Hacer una página informativa de rangos
 #  - Añadir torneos a mano
 #  - Implementar tiers y ventajas por tier
 #  - Número de bichos muertos por player
@@ -56,3 +58,5 @@ if __name__ == '__main__':
 #  - Hacer un generador de cartas
 #  - Web Scrapping de BCP para torneos
 #  - Hacer sistema de tier list
+#  - Hacer un mathhammer
+#  - Añadir español
