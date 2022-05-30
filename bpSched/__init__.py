@@ -28,15 +28,14 @@ def updateData():
 @scheduler.task('cron', id='weeklyMail', week='*', day_of_week='sun')
 def weeklyMail():
     with scheduler.app.app_context():
-        sendWeeklyMail()
+        games, factions = sendWeeklyMail()
+        current_app.config['twitterClient'].weeklyTweet(games, factions)
 
 
 @schedulerBP.route("/startroutines", methods={"GET", "POST"})
 @login_required
 @only_admin
 def startRoutines():
-    with scheduler.app.app_context():
-        sendWeeklyMail()
     if scheduler.state == 0:
         scheduler.start()
     flash("Background routines started")

@@ -35,7 +35,6 @@ from flask_login import current_user
 # Left hand #
 #############
 #   Update information
-#   Add update
 
 # Right hand #
 ##############
