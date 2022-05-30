@@ -1,5 +1,5 @@
 from flask import Flask
-from utils import createApp, createDatabase, CardGenerator
+from utils import createApp, createDatabase
 
 from bpAuth import authBP
 from bpSched import schedulerBP
@@ -37,11 +37,10 @@ if __name__ == '__main__':
 # TODO TTS:
 #  - Texto de inicio que diga abrir el check list
 #  - Controlar que solo se añadan bichos con comand node en la estructura del juego
-#  - Si da tiempo, guardar tirdas por jugador?
 
 # TODO WEB
 #  - Mirar el tema de las preferred una vez haya hecho una bd nueva
-#  - Hacer un popup en eliminar cuenta para pedir "eliminar"
+#  - Hacer un popup en eliminar cuenta para pedir "eliminar" -> Problema del csrf token
 
 # TODO Future
 #  - Posibilidad de añadir manualmente partidas

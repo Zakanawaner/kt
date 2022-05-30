@@ -18,7 +18,8 @@ adminBP = Blueprint('adminBluePrint', __name__)
 @login_required
 @only_admin
 def randomize():
-    randomize_data()
+    gameData = randomize_data()
+    current_app.config['twitterClient'].newGame(gameData)
     return redirect(url_for('genericBluePrint.general'))
 
 

@@ -258,6 +258,8 @@ def handleGameData(response, db):
             db.session.add(response['gameType'])
             db.session.add(game)
             db.session.commit()
+            return game
+    return None
 
 
 def checkData(response):

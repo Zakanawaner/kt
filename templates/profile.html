@@ -181,9 +181,17 @@
                     {% if player['sql'].steamLink %}
                         <a href="/link/stop">Unlink</a>
                     {% endif %}
-                    <a href="/delete">Delete</a>
+                    <a onclick="onDeleteUser()" href="javascript:void(0);">Delete</a>
                     <a href="/logout">Logout</a>
                 </div>
+            </div>
+            <div class="popup-delete" style="display:none; flex-direction:column;">
+                <h2 style="margin:20px;text-align:center;color:rgba(255,101,0,1);">Are you sure you want to delete your account?</h2>
+                <h5 style="margin:20px;text-align:center;color:rgba(255,101,0,1);">Type "delete" and click OK</h5>
+                <form class="login-form" action="/delete" method="post">
+                    <input type="text" name="name" id="name">
+                    <button type="submit">OK</button>
+                </form>
             </div>
         {% endfor %}
     {% endif %}

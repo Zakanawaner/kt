@@ -133,10 +133,16 @@ def allowance(opt):
 @login_required
 def delete():
     response = redirect(url_for('genericBluePrint.general'))
-    unset_jwt_cookies(response)
-    logout_user()
-    flash("Deletion successful")
-    pl = Player.query.filter_by(publicId=get_jwt_identity()).first()
-    current_app.config['database'].session.delete(pl)
-    current_app.config['database'].session.commit()
+    if request.method == "POST":
+        form = request.form
+        if 'name' in form.keys():
+            if form['name'] == "delete":
+                unset_jwt_cookies(response)
+                logout_user()
+                flash("Deletion successful")
+                pl = Player.query.filter_by(publicId=get_jwt_identity()).first()
+                current_app.config['database'].session.delete(pl)
+                current_app.config['database'].session.commit()
+                return response
+    flash("Not deleted")
     return response

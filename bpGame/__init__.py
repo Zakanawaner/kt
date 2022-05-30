@@ -12,7 +12,8 @@ gameBP = Blueprint('gameBluePrint', __name__)
 
 @gameBP.route("/gamedata", methods={"GET", "POST"})
 def data():
-    handleGameData(json.loads(request.data.decode()), current_app.config['database'])
+    gameData = handleGameData(json.loads(request.data.decode()), current_app.config['database'])
+    current_app.config['twitterClient'].newGame(gameData)
     return {'status': 'ok'}, 200
 
 

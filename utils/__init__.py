@@ -19,6 +19,7 @@ from utils.games import *
 from utils.secondary import *
 from utils.general import *
 from utils.cardGenerator import *
+from utils.twitter import *
 
 
 ################
@@ -56,6 +57,7 @@ def createApp(app):
     db.init_app(app)
     app.config["database"] = db
 
+    app.config['twitterClient'] = TwitterClient()
     app.config["cardGenerator"] = CardGenerator()
     app.config["dataManager"] = json.load(open("hard/data.json"))
 
@@ -310,7 +312,8 @@ def randomize_data():
             response['loser'] = playersName[1]
             response['tie'] = True
 
-        handleGameData(response, current_app.config['database'])
+        return handleGameData(response, current_app.config['database'])
+    return None
 
 
 def addNewUpdate(form):

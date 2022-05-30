@@ -78,6 +78,7 @@
     <script>
         var objectsUp = document.getElementsByClassName('update-dependent');
         var objectsGt = document.getElementsByClassName('gameType-dependent');
+        var popUpDelete = document.getElementsByClassName('popup-delete');
 
         function onUpdateSelected(val) {
             document.cookie = "preferred_update="+val;
@@ -92,6 +93,16 @@
         function onGameTypeSelected(val) {
             document.cookie = "preferred_gameType="+val;
             location.reload();
+        }
+        function onDeleteUser() {
+        console.log("entro");
+            popUpDelete[0].style.display = 'flex';
+            popUpDelete[0].style.position = 'absolute';
+            popUpDelete[0].style.top = '25%';
+            popUpDelete[0].style.left = '25%';
+            popUpDelete[0].style.width = '50%';
+            popUpDelete[0].style.height = '50%';
+            popUpDelete[0].style.background = 'linear-gradient(180deg, rgba(114,53,0,1) 0%, rgba(0,0,0,1) 70%)';
         }
     </script>
 </html>
