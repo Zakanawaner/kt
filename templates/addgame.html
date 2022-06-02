@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="login" style="width:50%;">
+        <h2>Add Game</h2>
+        <form class="login-form" action="/game/add" method="post">
+            <select id="mission" name="mission" style="width:50%; align-self: center;">
+                {% for mission in missions %}
+                    <option value="{{ mission['sql'].id }}">{{ mission['sql'].name }}</option>
+                {% endfor %}
+            </select>
+            <input style="width:50%; align-self: center;" type="date" name="date" id="date">
+            <div style="display:flex; justify-content: space-evenly;">
+                <div style="width: 25%; display:flex; flex-direction: column;">
+                    <select id="pl1" name="pl1">
+                        {% for player in players %}
+                            <option value="{{ player['sql'].id }}">{{ player['sql'].username }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="faction1" name="faction1">
+                        {% for faction in factions %}
+                            <option value="{{ faction['sql'].id }}">{{ faction['sql'].name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="sec11" name="sec11">
+                        {% for secondary in secondaries %}
+                            <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="sec12" name="sec12">
+                        {% for secondary in secondaries %}
+                            <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="sec13" name="sec13">
+                        {% for secondary in secondaries %}
+                            <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="width: 25%; display:flex; flex-direction: column;">
+                    <select id="pl2" name="pl2">
+                        {% for player in players %}
+                            <option value="{{ player['sql'].id }}">{{ player['sql'].username }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="faction2" name="faction2">
+                        {% for faction in factions %}
+                            <option value="{{ faction['sql'].id }}">{{ faction['sql'].name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="sec21" name="sec21">
+                        {% for secondary in secondaries %}
+                            <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="sec22" name="sec22">
+                        {% for secondary in secondaries %}
+                            <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="sec23" name="sec23">
+                        {% for secondary in secondaries %}
+                            <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Add</button>
+        </form>
+    </div>
+{% endblock %}

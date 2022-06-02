@@ -42,4 +42,11 @@
             </div>
         {% endfor %}
     {% endif %}
+    {% if user %}
+        {% if user.permissions >= 4  %}
+            <div class="login">
+                <a href="/game/add">Add game manually</a>
+            </div>
+        {% endif %}
+    {% endif %}
 {% endblock %}

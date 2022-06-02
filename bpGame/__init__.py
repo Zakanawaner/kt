@@ -1,10 +1,15 @@
 import json
 
 from flask import Blueprint, request, render_template, current_app
-from flask_login import current_user
+from flask_login import current_user, login_required
 from utils import getUpdates
 from utils.games import getGames, getGame, getGameTypes
 from utils.dataHandlers import handleGameData
+from utils.decorators import only_adamantium
+from utils.faction import getFactions
+from utils.mission import getMissions
+from utils.secondary import getSecondaries
+from utils.player import getPlayers
 
 
 gameBP = Blueprint('gameBluePrint', __name__)
@@ -44,4 +49,20 @@ def game(gm):
         gt=getGameTypes(),
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
+    )
+
+
+@gameBP.route("/game/add", methods={"GET", "POST"})
+@login_required
+@only_adamantium
+def addGame():
+    return render_template(
+        'addgame.html',
+        title="New Game",
+        user=current_user if not current_user.is_anonymous else None,
+        factions=getFactions(),
+        missions=getMissions(),
+        secondaries=getSecondaries(),
+        players=getPlayers(),
+        gameTypes=getGameTypes()
     )
