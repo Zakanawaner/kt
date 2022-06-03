@@ -7,7 +7,7 @@ from utils.player import updatePlayers
 from utils.faction import updateFactions
 from utils.mission import updateMissions
 from utils.secondary import updateSecondaries
-from utils.mail import sendWeeklyMail
+from utils.mail import sendWeeklyMail, sendAccessLogMail
 from utils.log import logAccess
 
 
@@ -33,10 +33,17 @@ def weeklyMail():
         current_app.config['twitterClient'].weeklyTweet(games, factions)
 
 
+@scheduler.task('cron', id='accessLogMail', day='*')
+def accessLogMail():
+    with scheduler.app.app_context():
+        sendAccessLogMail()
+
+
 @schedulerBP.route("/startroutines", methods={"GET", "POST"})
 @login_required
 @only_admin
 def startRoutines():
+    sendAccessLogMail()
     if scheduler.state == 0:
         scheduler.start()
     logAccess('/startroutines', current_user, request)

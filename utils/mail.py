@@ -224,3 +224,14 @@ def sendUnSubConfirmation(pl, email):
 def checkEmail(email):
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
     return re.search(regex, email)
+
+
+def sendAccessLogMail():
+    msg = Message(
+        "Access",
+        sender=current_app.config['MAIL_USERNAME'],
+        recipients=[current_app.config['MAIL_USERNAME']]
+    )
+    fileName = 'log/' + datetime.today().strftime('%Y-%m-%d') + '.txt'
+    msg.body = open(fileName).read()
+    current_app.config['mailManager'].send(msg)
