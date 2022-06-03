@@ -57,7 +57,7 @@ def createApp(app):
     db.init_app(app)
     app.config["database"] = db
 
-    # app.config['twitterClient'] = TwitterClient()
+    app.config['twitterClient'] = TwitterClient()
     app.config["cardGenerator"] = CardGenerator()
     app.config["dataManager"] = json.load(open("hard/data.json"))
 

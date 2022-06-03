@@ -1,12 +1,14 @@
 import json
+from datetime import timedelta
 
 from flask import Blueprint, make_response, redirect, url_for, request, flash, render_template, current_app, jsonify
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, set_access_cookies, unset_jwt_cookies
+
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from utils.player import getPlayerById, updatePlayer
 from utils.auth import *
 from utils.mail import unSubscribeUser
-from datetime import timedelta
+from utils.log import logAccess
 
 
 authBP = Blueprint('authBluePrint', __name__)
@@ -29,6 +31,7 @@ def refreshToken(jwt_header, jwt_data):
 
 @authBP.route('/signup', methods=['GET', 'POST'])
 def signup():
+    logAccess('/signup', current_user, request)
     if request.method == 'POST':
         status, new_user = userSignup(current_app.config['database'], request.form)
         if status == 401:
@@ -56,6 +59,7 @@ def signup():
 
 @authBP.route('/login', methods=['GET', 'POST'])
 def login():
+    logAccess('/login', current_user, request)
     if request.method == 'POST':
         status, user = userLogin(request.form)
         if status == 200:
@@ -76,6 +80,7 @@ def login():
 @authBP.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
+    logAccess('/logout', current_user, request)
     response = redirect(url_for('genericBluePrint.general'))
     unset_jwt_cookies(response)
     logout_user()
@@ -85,6 +90,7 @@ def logout():
 
 @authBP.route("/link/<opt>", methods={"GET", "POST"})
 def link(opt):
+    logAccess('/link/{}'.format(opt), current_user, request)
     if opt == "stop":
         pl = Player.query.filter_by(id=current_user.id).first()
         pl.steamId = 0
@@ -115,6 +121,7 @@ def link(opt):
 @jwt_required()
 @login_required
 def allowance(opt):
+    logAccess('/allowance/{}'.format(opt), current_user, request)
     pl = Player.query.filter_by(publicId=get_jwt_identity()).first()
     if opt == "stop":
         pl.allowSharing = False
@@ -132,6 +139,7 @@ def allowance(opt):
 @jwt_required()
 @login_required
 def delete():
+    logAccess('/delete', current_user, request)
     response = redirect(url_for('genericBluePrint.general'))
     if request.method == "POST":
         form = request.form

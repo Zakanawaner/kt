@@ -1,6 +1,6 @@
-from flask import Blueprint, current_app, flash, redirect, url_for
+from flask import Blueprint, current_app, flash, redirect, url_for, request
 from flask_apscheduler import APScheduler
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from utils.decorators import only_admin
 from utils.player import updatePlayers
@@ -8,6 +8,7 @@ from utils.faction import updateFactions
 from utils.mission import updateMissions
 from utils.secondary import updateSecondaries
 from utils.mail import sendWeeklyMail
+from utils.log import logAccess
 
 
 schedulerBP = Blueprint('schedulerBluePrint', __name__)
@@ -38,6 +39,7 @@ def weeklyMail():
 def startRoutines():
     if scheduler.state == 0:
         scheduler.start()
+    logAccess('/startroutines', current_user, request)
     flash("Background routines started")
     return redirect(url_for('genericBluePrint.general'))
 
@@ -48,5 +50,6 @@ def startRoutines():
 def stopRoutines():
     if scheduler.state == 1:
         scheduler.shutdown()
+    logAccess('/stoproutines', current_user, request)
     flash("Background routines stopped")
     return redirect(url_for('genericBluePrint.general'))

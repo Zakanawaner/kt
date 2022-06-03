@@ -4,6 +4,7 @@ from flask_login import current_user
 from utils import getUpdates
 from utils.mission import getMission, getMissions
 from utils.games import getGameTypes
+from utils.log import logAccess
 
 
 missionBP = Blueprint('missionBluePrint', __name__)
@@ -12,6 +13,7 @@ missionBP = Blueprint('missionBluePrint', __name__)
 @missionBP.route("/missions", methods={"GET", "POST"})
 def missions():
     mss = getMissions()
+    logAccess('/missions', current_user, request)
     return render_template(
         'missions.html',
         title="Missions",
@@ -26,6 +28,7 @@ def missions():
 
 @missionBP.route("/mission/<ms>", methods={"GET", "POST"})
 def mission(ms):
+    logAccess('/player/{}'.format(ms), current_user, request)
     mss = getMission(ms)
     return render_template(
         'mission.html',

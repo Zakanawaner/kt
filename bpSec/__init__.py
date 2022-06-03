@@ -4,6 +4,7 @@ from flask_login import current_user
 from utils import getUpdates
 from utils.secondary import getSecondaries, getSecondary
 from utils.games import getGameTypes
+from utils.log import logAccess
 
 
 secondaryBP = Blueprint('secondaryBluePrint', __name__)
@@ -12,6 +13,7 @@ secondaryBP = Blueprint('secondaryBluePrint', __name__)
 @secondaryBP.route("/secondaries", methods={"GET", "POST"})
 def secondaries():
     scs = getSecondaries()
+    logAccess('/secondaries', current_user, request)
     return render_template(
         'secondaries.html',
         title="Secondaries",
@@ -26,6 +28,7 @@ def secondaries():
 
 @secondaryBP.route("/secondary/<sc>", methods={"GET", "POST"})
 def secondary(sc):
+    logAccess('/secondary/{}'.format(sc), current_user, request)
     sc = getSecondary(sc)
     return render_template(
         'secondary.html',

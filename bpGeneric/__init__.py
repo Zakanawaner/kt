@@ -3,6 +3,7 @@ from flask_login import current_user
 
 from utils import getUpdates, getGeneral
 from utils.games import getGameTypes
+from utils.log import logAccess
 
 
 genericBP = Blueprint('genericBluePrint', __name__)
@@ -11,6 +12,7 @@ genericBP = Blueprint('genericBluePrint', __name__)
 @genericBP.route("/", methods={"GET", "POST"})
 def general():
     gen = getGeneral()
+    logAccess('/', current_user, request)
     return render_template(
         'general.html',
         title="General",
@@ -25,6 +27,7 @@ def general():
 
 @genericBP.route("/about", methods={"GET", "POST"})
 def about():
+    logAccess('/about', current_user, request)
     return render_template(
         'about.html',
         title="About",
@@ -34,6 +37,7 @@ def about():
 
 @genericBP.route("/team", methods={"GET", "POST"})
 def team():
+    logAccess('/team', current_user, request)
     return render_template(
         'teamKTD.html',
         title="Team KTD",

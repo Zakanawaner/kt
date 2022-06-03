@@ -4,6 +4,7 @@ from flask_login import current_user
 from utils import getUpdates
 from utils.faction import getFactions, getFaction
 from utils.games import getGameTypes
+from utils.log import logAccess
 
 
 factionBP = Blueprint('factionBluePrint', __name__)
@@ -12,6 +13,7 @@ factionBP = Blueprint('factionBluePrint', __name__)
 @factionBP.route("/factions", methods={"GET", "POST"})
 def factions():
     fct = getFactions()
+    logAccess('/factions', current_user, request)
     return render_template(
         'factions.html',
         title="Factions",
@@ -27,6 +29,7 @@ def factions():
 @factionBP.route("/faction/<fact>", methods={"GET", "POST"})
 def faction(fact):
     fct = getFaction(fact)
+    logAccess('/faction/{}'.format(fact), current_user, request)
     return render_template(
         'faction.html',
         title=fct['sql'].name,

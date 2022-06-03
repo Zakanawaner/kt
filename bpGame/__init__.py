@@ -1,7 +1,8 @@
 import json
 
-from flask import Blueprint, request, render_template, current_app
+from flask import Blueprint, request, render_template, current_app, request
 from flask_login import current_user, login_required
+
 from utils import getUpdates
 from utils.games import getGames, getGame, getGameTypes
 from utils.dataHandlers import handleGameData
@@ -10,6 +11,7 @@ from utils.faction import getFactions
 from utils.mission import getMissions
 from utils.secondary import getSecondaries
 from utils.player import getPlayers
+from utils.log import logAccess
 
 
 gameBP = Blueprint('gameBluePrint', __name__)
@@ -17,6 +19,7 @@ gameBP = Blueprint('gameBluePrint', __name__)
 
 @gameBP.route("/gamedata", methods={"GET", "POST"})
 def data():
+    logAccess('/gamedata', current_user, request)
     gameData = handleGameData(json.loads(request.data.decode()), current_app.config['database'])
     current_app.config['twitterClient'].newGame(gameData)
     return {'status': 'ok'}, 200
@@ -25,6 +28,7 @@ def data():
 @gameBP.route("/games", methods={"GET", "POST"})
 def games():
     gms = getGames()
+    logAccess('/games', current_user, request)
     return render_template(
         'games.html',
         title="Games",
@@ -39,6 +43,7 @@ def games():
 
 @gameBP.route("/game/<gm>", methods={"GET", "POST"})
 def game(gm):
+    logAccess('/game/{}'.format(gm), current_user, request)
     gm = getGame(gm)
     return render_template(
         'game.html',
@@ -56,6 +61,7 @@ def game(gm):
 @login_required
 @only_adamantium
 def addGame():
+    logAccess('/game/add', current_user, request)
     return render_template(
         'addgame.html',
         title="New Game",

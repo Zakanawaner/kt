@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask_login import current_user
 from utils import getUpdates, getPlayers, getPlayer, getGameTypes
+from utils.log import logAccess
 
 
 playerBP = Blueprint('playerBluePrint', __name__)
@@ -9,6 +10,7 @@ playerBP = Blueprint('playerBluePrint', __name__)
 @playerBP.route("/players", methods={"GET", "POST"})
 def players():
     pls = getPlayers()
+    logAccess('/players', current_user, request)
     return render_template(
         'players.html',
         title="Players",
@@ -23,6 +25,7 @@ def players():
 
 @playerBP.route("/player/<pl>", methods={"GET", "POST"})
 def player(pl):
+    logAccess('/player/{}'.format(pl), current_user, request)
     pl = getPlayer(pl)
     if pl['sql'] == current_user:
         return render_template(
