@@ -43,7 +43,6 @@ def accessLogMail():
 @login_required
 @only_admin
 def startRoutines():
-    sendAccessLogMail()
     if scheduler.state == 0:
         scheduler.start()
     logAccess('/startroutines', current_user, request)
