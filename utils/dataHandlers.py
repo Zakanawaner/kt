@@ -139,7 +139,7 @@ def handleOperatives(db, response, pls):
                         faction=response[response[pl]]['faction'].id,
                         melee=','.join(melee),
                         ranged=','.join(ranged),
-                        # desc=response[response[pl]]['operatives'][op]['desc'] TODO add
+                        desc=response[response[pl]]['operatives'][op]['desc']
                     )
                     db.session.add(response[response[pl]]['operatives'][op]['sql'])
                     db.session.commit()

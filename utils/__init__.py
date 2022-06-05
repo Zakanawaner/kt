@@ -35,6 +35,7 @@ def createApp(app):
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 
     app.config["SQLALCHEMY_DATABASE_URI"] = config['db-uri']
+    app.config["SQLALCHEMY_BINDS"] = {'db_uri_2': config['db-uri-2']}
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 

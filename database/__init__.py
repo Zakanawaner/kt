@@ -5,6 +5,8 @@ from flask_login import UserMixin
 db = SQLAlchemy()
 
 
+#############
+# Global DB #
 player_game_tie = db.Table(
     'player_game_tie',
     db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True, unique=False),
@@ -475,3 +477,18 @@ class Operative(db.Model):
     melee = db.Column(db.String(200))
     ranged = db.Column(db.String(200))
     faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
+    desc = db.Column(db.String(1000))
+
+
+###############
+# Math Hammer #
+class MathOperative(db.Model):
+    __bind_key__ = 'db_uri_2'
+    __tablename__ = 'mathoperative'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    melee = db.Column(db.String(200))
+    ranged = db.Column(db.String(200))
+    faction = db.Column(db.Integer, db.ForeignKey('faction.id'))
+    desc = db.Column(db.String(1000))
+    # TODO configurar clases de mathhammer
