@@ -132,6 +132,13 @@ def getSecondary(sc):
         'sql': Secondary.query.filter_by(id=sc).first(),
         'updates': {},
     }
+    rates = SecondaryRates.query.filter_by(secondary=sc).order_by(desc(SecondaryRates.rate1)).all()
+    gameWinSec1 = Game.query.filter(Game.winSecondaryFirst.contains(secondaryGl['sql'])).all()
+    gameWinSec2 = Game.query.filter(Game.winSecondarySecond.contains(secondaryGl['sql'])).all()
+    gameWinSec3 = Game.query.filter(Game.winSecondaryThird.contains(secondaryGl['sql'])).all()
+    gameLosSec1 = Game.query.filter(Game.winSecondaryFirst.contains(secondaryGl['sql'])).all()
+    gameLosSec2 = Game.query.filter(Game.winSecondarySecond.contains(secondaryGl['sql'])).all()
+    gameLosSec3 = Game.query.filter(Game.winSecondaryThird.contains(secondaryGl['sql'])).all()
     for update in Update.query.all():
         secondary = {}
         for gameType in GameType.query.all():
@@ -142,88 +149,38 @@ def getSecondary(sc):
                 'games': {},
                 'maxGames': 0
             }
-            for rate in SecondaryRates.query.filter_by(fromUpdate=update.id).filter_by(fromGameType=gameType.id).filter_by(secondary=sc).order_by(desc(SecondaryRates.rate1)).all():
-                secondary[gameTypeId]['bestFactions'][Faction.query.filter_by(id=rate.faction).first().name] = {
+            for rate in rates:
+                faction = Faction.query.filter_by(id=rate.faction).first()
+                secondary[gameTypeId]['bestFactions'][faction.name] = {
                     'winRate': rate.rate1,
                     'loseRate': rate.rate2,
                     'tieRate': rate.rate3,
                     'games': rate.games,
                     'id': rate.faction,
-                    'shortName': Faction.query.filter_by(id=rate.faction).first().shortName
+                    'shortName': faction.shortName
                 }
             if gameType.id == 1:
-                popularity = len(Game.query.filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.winSecondaryFirst.contains(secondaryGl['sql'])).all())
-                popularity += len(Game.query.filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.winSecondarySecond.contains(secondaryGl['sql'])).all())
-                popularity += len(Game.query.filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.winSecondaryThird.contains(secondaryGl['sql'])).all())
-                popularity += len(Game.query.filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.losSecondaryFirst.contains(secondaryGl['sql'])).all())
-                popularity += len(Game.query.filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.losSecondarySecond.contains(secondaryGl['sql'])).all())
-                popularity += len(Game.query.filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.losSecondaryThird.contains(secondaryGl['sql'])).all())
+                popularity = len([i for i in gameWinSec1 if update.date < i.date <= update.dateEnd])
+                popularity += len([i for i in gameWinSec2 if update.date < i.date <= update.dateEnd])
+                popularity += len([i for i in gameWinSec3 if update.date < i.date <= update.dateEnd])
+                popularity += len([i for i in gameLosSec1 if update.date < i.date <= update.dateEnd])
+                popularity += len([i for i in gameLosSec2 if update.date < i.date <= update.dateEnd])
+                popularity += len([i for i in gameLosSec3 if update.date < i.date <= update.dateEnd])
                 try:
                     secondary[gameTypeId]['popularity'] = float("{:.2f}".format(popularity * 50 / len(Game.query.filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).all())))
                 except ZeroDivisionError:
                     secondary[gameTypeId]['popularity'] = 0
             else:
-                popularity = len(Game.query.filter_by(gameType=gameType.id).filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.winSecondaryFirst.contains(secondaryGl['sql'])).all())
-                popularity += len(Game.query.filter_by(gameType=gameType.id).filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.winSecondarySecond.contains(secondaryGl['sql'])).all())
-                popularity += len(Game.query.filter_by(gameType=gameType.id).filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.winSecondaryThird.contains(secondaryGl['sql'])).all())
-                popularity += len(Game.query.filter_by(gameType=gameType.id).filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.losSecondaryFirst.contains(secondaryGl['sql'])).all())
-                popularity += len(Game.query.filter_by(gameType=gameType.id).filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.losSecondarySecond.contains(secondaryGl['sql'])).all())
-                popularity += len(Game.query.filter_by(gameType=gameType.id).filter(
-                    Game.date >= update.date).filter(
-                    Game.date <= update.dateEnd).filter(
-                    Game.losSecondaryThird.contains(secondaryGl['sql'])).all())
+                popularity = len([i for i in gameWinSec1 if update.date < i.date <= update.dateEnd and i.gameType == gameType.id])
+                popularity += len([i for i in gameWinSec2 if update.date < i.date <= update.dateEnd and i.gameType == gameType.id])
+                popularity += len([i for i in gameWinSec3 if update.date < i.date <= update.dateEnd and i.gameType == gameType.id])
+                popularity += len([i for i in gameLosSec1 if update.date < i.date <= update.dateEnd and i.gameType == gameType.id])
+                popularity += len([i for i in gameLosSec2 if update.date < i.date <= update.dateEnd and i.gameType == gameType.id])
+                popularity += len([i for i in gameLosSec3 if update.date < i.date <= update.dateEnd and i.gameType == gameType.id])
                 try:
                     secondary[gameTypeId]['popularity'] = float("{:.2f}".format(popularity * 50 / len(Game.query.filter_by(gameType=gameType.id).filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).all())))
                 except ZeroDivisionError:
                     secondary[gameTypeId]['popularity'] = 0
             secondary[gameTypeId]['topFaction'] = Faction.query.filter_by(name=list(secondary[gameTypeId]['bestFactions'].keys())[0]).first() if secondary[gameTypeId]['bestFactions'] else None
-            for i in range(0, 12):
-                if datetime.now().month - i < 1:
-                    month = datetime.now().month - i + 12
-                    year = datetime.now().year - 1
-                else:
-                    month = datetime.now().month - i
-                    year = datetime.now().year
-                secondary[gameTypeId]['games'][str(month) + '-' + str(year)] = len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.winSecondaryFirst.contains(secondaryGl['sql'])).all())
-                secondary[gameTypeId]['games'][str(month) + '-' + str(year)] += len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.winSecondarySecond.contains(secondaryGl['sql'])).all())
-                secondary[gameTypeId]['games'][str(month) + '-' + str(year)] += len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.winSecondaryThird.contains(secondaryGl['sql'])).all())
-                secondary[gameTypeId]['games'][str(month) + '-' + str(year)] += len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.losSecondaryFirst.contains(secondaryGl['sql'])).all())
-                secondary[gameTypeId]['games'][str(month) + '-' + str(year)] += len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.losSecondarySecond.contains(secondaryGl['sql'])).all())
-                secondary[gameTypeId]['games'][str(month) + '-' + str(year)] += len(Game.query.filter(extract('month', Game.date) == month).filter(extract('year', Game.date) == year).filter(Game.losSecondaryThird.contains(secondaryGl['sql'])).all())
-                secondary[gameTypeId]['maxGames'] = secondary[gameTypeId]['games'][str(month) + '-' + str(year)] if secondary[gameTypeId]['maxGames'] < secondary[gameTypeId]['games'][str(month) + '-' + str(year)] else secondary[gameTypeId]['maxGames']
-            secondary[gameTypeId]['games'] = dict(OrderedDict(reversed(list(secondary[gameTypeId]['games'].items()))))
             secondaryGl['updates'][str(update.id)] = secondary
     return secondaryGl
