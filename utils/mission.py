@@ -72,6 +72,8 @@ def getMission(ms):
         'sql': Mission.query.filter_by(id=ms).first(),
         'updates': {},
     }
+    rates1 = MissionRates.query.filter_by(mission=ms).order_by(desc(MissionRates.rate1)).all()
+    rates2 = MissionRates.query.filter_by(mission=ms).order_by(desc(MissionRates.rate1)).all()
     for update in Update.query.all():
         mission = {}
         for gameType in GameType.query.all():
@@ -83,24 +85,28 @@ def getMission(ms):
                 'games': {},
                 'maxGames': 0
             }
-            for rate in MissionRates.query.filter_by(fromUpdate=update.id).filter_by(fromGameType=gameType.id).filter_by(mission=ms).order_by(desc(MissionRates.rate1)).all():
-                mission[gameTypeId]['bestFactions'][Faction.query.filter_by(id=rate.faction).first().name] = {
-                    'winRate': rate.rate1,
-                    'loseRate': rate.rate2,
-                    'tieRate': rate.rate3,
-                    'games': rate.games,
-                    'id': rate.faction,
-                    'shortName': Faction.query.filter_by(id=rate.faction).first().shortName
-                }
-            for rate in MissionRates.query.filter_by(fromUpdate=update.id).filter_by(fromGameType=gameType.id).filter_by(mission=ms).order_by(desc(MissionRates.rate2)).all():
-                mission[gameTypeId]['worstFactions'][Faction.query.filter_by(id=rate.faction).first().name] = {
-                    'winRate': rate.rate1,
-                    'loseRate': rate.rate2,
-                    'tieRate': rate.rate3,
-                    'games': rate.games,
-                    'id': rate.faction,
-                    'shortName': Faction.query.filter_by(id=rate.faction).first().shortName
-                }
+            for rate in rates1:
+                if rate.fromUpdate == update.id and rate.fromGameType == gameType.id:
+                    faction = Faction.query.filter_by(id=rate.faction).first()
+                    mission[gameTypeId]['bestFactions'][faction.name] = {
+                        'winRate': rate.rate1,
+                        'loseRate': rate.rate2,
+                        'tieRate': rate.rate3,
+                        'games': rate.games,
+                        'id': rate.faction,
+                        'shortName': faction.shortName
+                    }
+            for rate in rates2:
+                if rate.fromUpdate == update.id and rate.fromGameType == gameType.id:
+                    faction = Faction.query.filter_by(id=rate.faction).first()
+                    mission[gameTypeId]['worstFactions'][faction.name] = {
+                        'winRate': rate.rate1,
+                        'loseRate': rate.rate2,
+                        'tieRate': rate.rate3,
+                        'games': rate.games,
+                        'id': rate.faction,
+                        'shortName': faction.shortName
+                    }
             try:
                 if gameType.id == 1:
                     mission[gameTypeId]['popularity'] = float("{:.2f}".format(len(Game.query.filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).filter(Game.mission.contains(missionGl['sql'])).all()) * 100 / len(Game.query.filter(Game.date >= update.date).filter(Game.date <= update.dateEnd).all())))
@@ -110,19 +116,5 @@ def getMission(ms):
                 mission[gameTypeId]['popularity'] = 0
             mission[gameTypeId]['topFaction'] = Faction.query.filter_by(name=list(mission[gameTypeId]['bestFactions'].keys())[0]).first() if mission[gameTypeId]['bestFactions'] else None
             mission[gameTypeId]['worstFaction'] = Faction.query.filter_by(name=list(mission[gameTypeId]['worstFactions'].keys())[0]).first() if mission[gameTypeId]['worstFactions'] else None
-            for i in range(0, 12):
-                if datetime.now().month - i < 1:
-                    month = datetime.now().month - i + 12
-                    year = datetime.now().year - 1
-                else:
-                    month = datetime.now().month - i
-                    year = datetime.now().year
-                mission[gameTypeId]['games'][str(month) + '-' + str(year)] = 0
-                for j in range(0, len(Game.query.filter(extract('month', Game.date) == month).filter(
-                        extract('year', Game.date) == year).filter(Game.mission.contains(missionGl['sql'])).all())):
-                    mission[gameTypeId]['games'][str(month) + '-' + str(year)] += 1
-                mission[gameTypeId]['maxGames'] = mission[gameTypeId]['games'][str(month) + '-' + str(year)] if mission[gameTypeId]['maxGames'] < mission[gameTypeId]['games'][
-                    str(month) + '-' + str(year)] else mission[gameTypeId]['maxGames']
-            mission[gameTypeId]['games'] = dict(OrderedDict(reversed(list(mission[gameTypeId]['games'].items()))))
         missionGl['updates'][str(update.id)] = mission
     return missionGl

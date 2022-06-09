@@ -150,15 +150,16 @@ def getSecondary(sc):
                 'maxGames': 0
             }
             for rate in rates:
-                faction = Faction.query.filter_by(id=rate.faction).first()
-                secondary[gameTypeId]['bestFactions'][faction.name] = {
-                    'winRate': rate.rate1,
-                    'loseRate': rate.rate2,
-                    'tieRate': rate.rate3,
-                    'games': rate.games,
-                    'id': rate.faction,
-                    'shortName': faction.shortName
-                }
+                if rate.fromUpdate == update.id and rate.fromGameType == gameType.id:
+                    faction = Faction.query.filter_by(id=rate.faction).first()
+                    secondary[gameTypeId]['bestFactions'][faction.name] = {
+                        'winRate': rate.rate1,
+                        'loseRate': rate.rate2,
+                        'tieRate': rate.rate3,
+                        'games': rate.games,
+                        'id': rate.faction,
+                        'shortName': faction.shortName
+                    }
             if gameType.id == 1:
                 popularity = len([i for i in gameWinSec1 if update.date < i.date <= update.dateEnd])
                 popularity += len([i for i in gameWinSec2 if update.date < i.date <= update.dateEnd])

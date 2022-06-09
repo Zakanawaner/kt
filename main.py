@@ -41,7 +41,6 @@ if __name__ == '__main__':
 # TODO WEB
 #  - Mirar el tema de las preferred una vez haya hecho una bd nueva
 #  - Hacer un popup en eliminar cuenta para pedir "eliminar" -> Problema del csrf token
-#  - Optimizar secundarias porque tardan un montón
 
 # TODO Future
 #  - Posibilidad de añadir manualmente partidas
