@@ -20,7 +20,7 @@ from utils.secondary import *
 from utils.general import *
 from utils.cardGenerator import *
 from utils.twitter import *
-from utils.mathHammer import *
+# from utils.mathHammer import *
 
 
 ################
@@ -61,7 +61,7 @@ def createApp(app):
 
     app.config['twitterClient'] = TwitterClient()
     app.config["cardGenerator"] = CardGenerator()
-    app.config['mathHammer'] = MathHammer()
+    # app.config['mathHammer'] = MathHammer()
     app.config["dataManager"] = json.load(open("hard/data.json"))
 
     return app
