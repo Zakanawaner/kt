@@ -136,7 +136,6 @@ def allowance(opt):
 
 
 @authBP.route("/delete", methods={"GET", "POST"})
-@jwt_required()
 @login_required
 def delete():
     logAccess('/delete', current_user, request)
@@ -144,13 +143,16 @@ def delete():
     if request.method == "POST":
         form = request.form
         if 'name' in form.keys():
-            if form['name'] == "delete":
+            if form['conf'] == "delete":
+                pl = Player.query.filter_by(username=form['name']).first()
+                if not pl:
+                    flash("Not deleted")
+                    return response
                 unset_jwt_cookies(response)
                 logout_user()
-                flash("Deletion successful")
-                pl = Player.query.filter_by(publicId=get_jwt_identity()).first()
                 current_app.config['database'].session.delete(pl)
                 current_app.config['database'].session.commit()
+                flash("Deletion successful")
                 return response
     flash("Not deleted")
     return response

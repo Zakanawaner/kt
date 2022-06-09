@@ -39,8 +39,6 @@ if __name__ == '__main__':
 #  - Controlar que solo se añadan bichos con comand node en la estructura del juego
 
 # TODO WEB
-#  - Mirar el tema de las preferred una vez haya hecho una bd nueva
-#  - Hacer un popup en eliminar cuenta para pedir "eliminar" -> Problema del csrf token
 
 # TODO Future
 #  - Posibilidad de añadir manualmente partidas

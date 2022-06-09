@@ -185,13 +185,36 @@
                     <a href="/logout">Logout</a>
                 </div>
             </div>
-            <div class="popup-delete" style="display:none; flex-direction:column;">
+            <div class="popup-delete"
+                 style="display: none;
+                        flex-direction: column;
+                        box-shadow: 10px 20px rgba(0, 0, 0, .5);">
                 <h2 style="margin:20px;text-align:center;color:rgba(255,101,0,1);">Are you sure you want to delete your account?</h2>
-                <h5 style="margin:20px;text-align:center;color:rgba(255,101,0,1);">Type "delete" and click OK</h5>
-                <form class="login-form" action="/delete" method="post">
-                    <input type="text" name="name" id="name">
-                    <button type="submit">OK</button>
+                <h5 style="text-align:center;color:rgba(255,101,0,1);">Type "delete" and your username ({{ player['sql'].username }}), then click OK</h5>
+                <form style="
+                        margin: 20px;
+                        display: flex;
+                        flex-direction: column;"
+                        class="login-form" action="/delete" method="post">
+                    <input style="
+                            width: 20%;
+                            align-self: center;
+                            margin-bottom: 5px;"
+                           type="text" placeholder="Type 'delete'" name="conf" id="conf">
+                    <input style="
+                            width: 20%;
+                            align-self: center;
+                            margin-bottom: 5px;"
+                           type="text" placeholder="Your username" name="name" id="name">
+                    <button style="
+                            width: 10%;
+                            align-self: center;"
+                            type="submit">OK</button>
                 </form>
+                <button style="
+                        width: 10%;
+                        align-self: center;"
+                        onClick="onCancelDeleteUser()">Cancel</button>
             </div>
         {% endfor %}
     {% endif %}
