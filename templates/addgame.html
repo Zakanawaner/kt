@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="login" style="width:50%;">
-        <h2>Add Game</h2>
+        <h2>{{ _('Add Game') }}</h2>
         <form class="login-form" action="/game/add" method="post">
             <select id="mission" name="mission" style="width:50%; align-self: center;">
                 {% for mission in missions %}
@@ -65,7 +65,7 @@
                     </select>
                 </div>
             </div>
-            <button type="submit">Add</button>
+            <button type="submit">{{ _('Add') }}</button>
         </form>
     </div>
 {% endblock %}

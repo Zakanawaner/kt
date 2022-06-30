@@ -10,8 +10,8 @@
                 <h1>{{ faction['sql'].name }}</h1>
                 <img class="circular_image at-0-8" src="{{ url_for('static', filename='images/' + faction['sql'].shortName + '.png') }}"/>
                 <div class="player-ultra-container">
-                    <h3>Winrate: {{ faction['updates'][update.id|string][preferredGameType]['winRate'] }}</h3>
-                    <h3>Pick Rate: {{ faction['updates'][update.id|string][preferredGameType]['popularity'] }}%</h3>
+                    <h3>{{ _('Winrate') }}: {{ faction['updates'][update.id|string][preferredGameType]['winRate'] }}</h3>
+                    <h3>{{ _('Pick Rate') }}: {{ faction['updates'][update.id|string][preferredGameType]['popularity'] }}%</h3>
                 </div>
                 <!--<div class="graph-container">
                     <div class="year-stats">
@@ -36,7 +36,7 @@
                     <div class="pie-container at-0-8">
                         <div class="pie-inner">
                             {% if faction['updates'][update.id|string][preferredGameType]['factionRates']|length > 0 %}
-                                <h3>Best Faction</h3>
+                                <h3>{{ _('Best Faction') }}</h3>
                                 <div onclick="location.href='/faction/{{ faction['updates'][update.id|string][preferredGameType]['factionRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ faction['updates'][update.id|string][preferredGameType]['factionRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                     <img class="pie_image" src="{{ url_for('static', filename='images/' + faction['updates'][update.id|string][preferredGameType]['factionRates'][0]['shortName'] + '.png') }}"/>
                                 </div>
@@ -46,7 +46,7 @@
                         </div>
                         <div class="pie-inner">
                             {% if faction['updates'][update.id|string][preferredGameType]['missionRates']|length > 0 %}
-                                <h3>Best Mission</h3>
+                                <h3>{{ _('Best Mission') }}</h3>
                                 <div onclick="location.href='/mission/{{ faction['updates'][update.id|string][preferredGameType]['missionRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ faction['updates'][update.id|string][preferredGameType]['missionRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                 </div>
                                 <p>{{ faction['updates'][update.id|string][preferredGameType]['missionRates'][0]['name'] }}</p>
@@ -55,7 +55,7 @@
                         </div>
                         <div class="pie-inner">
                             {% if faction['updates'][update.id|string][preferredGameType]['secondaryRates']|length > 0 %}
-                                <h3>Best Secondary</h3>
+                                <h3>{{ _('Best Secondary') }}</h3>
                                 <div onclick="location.href='/secondary/{{ faction['updates'][update.id|string][preferredGameType]['secondaryRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ faction['updates'][update.id|string][preferredGameType]['secondaryRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                 </div>
                                 <p>{{ faction['updates'][update.id|string][preferredGameType]['secondaryRates'][0]['name'] }}</p>
@@ -63,15 +63,15 @@
                             {% endif %}
                         </div>
                     </div>
-                    <h2>Factions played with</h2>
+                    <h2>{{ _('Factions played with') }}</h2>
                     <div class="table-container">
                         <div class="table">
                             <div class="table-header">
-                                <div class="header__item">Name</div>
-                                <div class="header__item">Games</div>
-                                <div class="header__item">Win Rate</div>
-                                <div class="header__item">Lose Rate</div>
-                                <div class="header__item">Tie Rate</div>
+                                <div class="header__item">{{ _('Name') }}</div>
+                                <div class="header__item">{{ _('Games') }}</div>
+                                <div class="header__item">{{ _('Winrate') }}</div>
+                                <div class="header__item">{{ _('Loserate') }}</div>
+                                <div class="header__item">{{ _('Tierate') }}</div>
                             </div>
                             <div class="table-content">
                                 {% for fact in faction['updates'][update.id|string][preferredGameType]['factionRates'] %}
@@ -88,15 +88,15 @@
                             </div>
                         </div>
                     </div>
-                    <h2>Missions played</h2>
+                    <h2>{{ _('Missions played') }}</h2>
                     <div class="table-container">
                         <div class="table">
                             <div class="table-header">
-                                <div class="header__item">Name</div>
-                                <div class="header__item">Games</div>
-                                <div class="header__item">Win Rate</div>
-                                <div class="header__item">Lose Rate</div>
-                                <div class="header__item">Tie Rate</div>
+                                <div class="header__item">{{ _('Name') }}</div>
+                                <div class="header__item">{{ _('Games') }}</div>
+                                <div class="header__item">{{ _('Winrate') }}</div>
+                                <div class="header__item">{{ _('Loserate') }}</div>
+                                <div class="header__item">{{ _('Tierate') }}</div>
                             </div>
                             <div class="table-content">
                                 {% for mission in faction['updates'][update.id|string][preferredGameType]['missionRates'] %}
@@ -113,15 +113,15 @@
                             </div>
                         </div>
                     </div>
-                    <h2>Secondaries played</h2>
+                    <h2>{{ _('Secondaries played') }}</h2>
                     <div class="table-container">
                         <div class="table">
                             <div class="table-header">
-                                <div class="header__item">Name</div>
-                                <div class="header__item">Games</div>
-                                <div class="header__item">Win Rate</div>
-                                <div class="header__item">Lose Rate</div>
-                                <div class="header__item">Tie Rate</div>
+                                <div class="header__item">{{ _('Name') }}</div>
+                                <div class="header__item">{{ _('Games') }}</div>
+                                <div class="header__item">{{ _('Winrate') }}</div>
+                                <div class="header__item">{{ _('Loserate') }}</div>
+                                <div class="header__item">{{ _('Tierate') }}</div>
                             </div>
                             <div class="table-content">
                                 {% for secondary in faction['updates'][update.id|string][preferredGameType]['secondaryRates'] %}

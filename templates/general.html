@@ -3,56 +3,56 @@
     <div class="cards-list">
         <div onclick="location.href='/games';" class="card">
             <div class="card_title">
-                <h2>Games</h2>
+                <h2>{{ _('Games') }}</h2>
             </div>
             <div class="card_content">
-                <p>Total: {{ gen['totalGames'] }}</p>
-                <p>Avg Winner: {{ gen['avgWinner'] }}</p>
-                <p>Avg Loser: {{ gen['avgLoser'] }}</p>
+                <p>{{ _('Total') }}: {{ gen['totalGames'] }}</p>
+                <p>{{ _('Avg Winner') }}: {{ gen['avgWinner'] }}</p>
+                <p>{{ _('Avg Loser') }}: {{ gen['avgLoser'] }}</p>
             </div>
         </div>
         <div onclick="location.href='/players';" class="card">
             <div class="card_title">
-                <h2>Players</h2>
+                <h2>{{ _('Players') }}</h2>
             </div>
             <div class="card_content">
-                <p>Total players: {{ gen['totalPlayers'] }}</p>
-                <p>Top 1: {{ gen['top1Player'] }}</p>
-                <p>Top 2: {{ gen['top2Player'] }}</p>
-                <p>Top 3: {{ gen['top3Player'] }}</p>
+                <p>{{ _('Total players') }}: {{ gen['totalPlayers'] }}</p>
+                <p>{{ _('Top') }} 1: {{ gen['top1Player'] }}</p>
+                <p>{{ _('Top') }} 2: {{ gen['top2Player'] }}</p>
+                <p>{{ _('Top') }} 3: {{ gen['top3Player'] }}</p>
             </div>
         </div>
         <div onclick="location.href='/factions';" class="card">
             <div class="card_title">
-                <h2>Factions</h2>
+                <h2>{{ _('Factions') }}</h2>
             </div>
             <div class="card_content">
-                <p>Top: {{ gen['factionMostWinRate'] }}</p>
-                <p>Most played: {{ gen['factionMostPlayed'] }}</p>
-                <p>Less played: {{ gen['factionLessPlayed'] }}</p>
+                <p>{{ _('Top') }}: {{ gen['factionMostWinRate'] }}</p>
+                <p>{{ _('Most played') }}: {{ gen['factionMostPlayed'] }}</p>
+                <p>{{ _('Less played') }}: {{ gen['factionLessPlayed'] }}</p>
             </div>
         </div>
         <div onclick="location.href='/missions';" class="card">
             <div class="card_title">
-                <h2>Missions</h2>
+                <h2>{{ _('Missions') }}</h2>
             </div>
             <div class="card_content">
-                <p>Most played: {{ gen['missionMostPlayed'] }}</p>
-                <p>Less played: {{ gen['missionLessPlayed'] }}</p>
+                <p>{{ _('Most played') }}: {{ gen['missionMostPlayed'] }}</p>
+                <p>{{ _('Less played') }}: {{ gen['missionLessPlayed'] }}</p>
             </div>
         </div>
         <div onclick="location.href='/secondaries';" class="card">
             <div class="card_title">
-                <h2>Secondaries</h2>
+                <h2>{{ _('Secondaries') }}</h2>
             </div>
             <div class="card_content">
-                <p>Most played: {{ gen['secondaryMostPlayed'] }}</p>
-                <p>Less played: {{ gen['secondaryLessPlayed'] }}</p>
+                <p>{{ _('Most played') }}: {{ gen['secondaryMostPlayed'] }}</p>
+                <p>{{ _('Less played') }}: {{ gen['secondaryLessPlayed'] }}</p>
             </div>
         </div>
     </div>
     <div class="graph">
-        <h2>Games played last year</h2>
+        <h2>{{ _('Games played last year') }}</h2>
         <div class="graph-container">
             <div class="year-stats">
                 {% for month in gen['played'].keys() %}

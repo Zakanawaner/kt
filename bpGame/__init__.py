@@ -37,7 +37,8 @@ def games():
         upd=getUpdates(),
         gt=getGameTypes(),
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
-        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
+        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
+        language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
     )
 
 
@@ -53,7 +54,8 @@ def game(gm):
         upd=getUpdates(),
         gt=getGameTypes(),
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
-        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1'
+        preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
+        language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
     )
 
 

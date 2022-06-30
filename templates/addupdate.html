@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="login">
-        <h2>Add Update</h2>
+        <h2>{{ _('Add Update') }}</h2>
         <form class="login-form" action="/addupdate" method="post">
             <input type="text" name="name" id="name">
             <input type="date" name="date" id="date">
@@ -11,7 +11,7 @@
                     <option value="{{ faction.id }}">{{ faction.name }}</option>
                 {% endfor %}
             </select>
-            <button type="submit">Add</button>
+            <button type="submit">{{ _('Add') }}</button>
         </form>
     </div>
 {% endblock %}

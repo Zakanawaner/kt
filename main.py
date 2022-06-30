@@ -12,6 +12,7 @@ from bpGame import gameBP
 from bpAdmin import adminBP
 from bpMail import mailBP
 from bpCardGen import cardGenBP
+from bpI18n import i18nBP
 
 app = Flask(__name__)
 
@@ -26,6 +27,7 @@ app.register_blueprint(gameBP)
 app.register_blueprint(adminBP)
 app.register_blueprint(mailBP)
 app.register_blueprint(cardGenBP)
+app.register_blueprint(i18nBP)
 
 app = createApp(app)
 createDatabase(app)
@@ -39,6 +41,7 @@ if __name__ == '__main__':
 #  - Controlar que solo se añadan bichos con comand node en la estructura del juego
 
 # TODO WEB
+#  - Añadir selector de lenguaje
 
 # TODO Future
 #  - Posibilidad de añadir manualmente partidas
@@ -47,13 +50,9 @@ if __name__ == '__main__':
 #  - Implementar tiers y ventajas por tier
 #  - Número de bichos muertos por player
 #  - Numero total de bichos muertos
-#  - Añadir auto publicaciones de twitter (e Insta?)
-#  - Hacer un Discord
-#  - Hacer un sistema de subscripción a torneos
 #  - Integrar en css version movil
 #  - Eventualmente pasar a react...?
-#  - Hacer un generador de cartas
+#  - Hacer un generador de cartas -> En curso
 #  - Web Scrapping de BCP para torneos
 #  - Hacer sistema de tier list
-#  - Hacer un mathhammer
-#  - Añadir español
+#  - Hacer un mathhammer -> En curso

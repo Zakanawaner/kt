@@ -9,17 +9,17 @@
             {% endif %}
                 <div class="table">
                     <div class="table-header">
-                        <div class="header__item">Name</div>
-                        <div class="header__item">Rank</div>
-                        <div class="header__item">Win Rate</div>
-                        <div class="header__item">Games</div>
-                        <div class="header__item">Wins</div>
-                        <div class="header__item">Loses</div>
-                        <div class="header__item">Ties</div>
-                        <div class="header__item">Top faction</div>
-                        <div class="header__item">Top counter</div>
-                        <div class="header__item">Top Mission</div>
-                        <div class="header__item">Top Sec</div>
+                        <div class="header__item">{{ _('Name') }}</div>
+                        <div class="header__item">{{ _('Rank') }}</div>
+                        <div class="header__item">{{ _('Winrate') }}</div>
+                        <div class="header__item">{{ _('Games') }}</div>
+                        <div class="header__item">{{ _('Wins') }}</div>
+                        <div class="header__item">{{ _('Loses') }}</div>
+                        <div class="header__item">{{ _('Ties') }}</div>
+                        <div class="header__item">{{ _('Top faction') }}</div>
+                        <div class="header__item">{{ _('Top counter') }}</div>
+                        <div class="header__item">{{ _('Top Mission') }}</div>
+                        <div class="header__item">{{ _('Top Sec') }}</div>
                     </div>
                     <div class="table-content">
                         {% for player in players %}

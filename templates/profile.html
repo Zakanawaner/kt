@@ -10,17 +10,17 @@
                 <h1>{{ player['sql'].username }}</h1>
                 {% if player['sql'].allowSharing %}
                     {% if player['sql'].steamLink %}
-                        <h3>Winrate: {{ player['updates'][update.id|string][preferredGameType]['winRate'] }}</h3>
+                        <h3>{{ _('Winrate') }}: {{ player['updates'][update.id|string][preferredGameType]['winRate'] }}</h3>
                         <div class="player-ultra-container">
-                            <h3>Games won: {{ player['updates'][update.id|string][preferredGameType]['wins'] }}</h3>
-                            <h3>Games lost: {{ player['updates'][update.id|string][preferredGameType]['loses'] }}</h3>
-                            <h3>Games tied: {{ player['updates'][update.id|string][preferredGameType]['ties'] }}</h3>
+                            <h3>{{ _('Games won') }}: {{ player['updates'][update.id|string][preferredGameType]['wins'] }}</h3>
+                            <h3>{{ _('Games lost') }}: {{ player['updates'][update.id|string][preferredGameType]['loses'] }}</h3>
+                            <h3>{{ _('Games tied') }}: {{ player['updates'][update.id|string][preferredGameType]['ties'] }}</h3>
                         </div>
                         <div class="player-super-container">
                             <div class="pie-container at-0-8">
                                 <div class="pie-inner">
                                     {% if player['updates'][update.id|string][preferredGameType]['factionRates']|length > 0 %}
-                                        <h3>Best Faction</h3>
+                                        <h3>{{ _('Best Faction') }}</h3>
                                         <div onclick="location.href='/faction/{{ player['updates'][update.id|string][preferredGameType]['factionRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ player['updates'][update.id|string][preferredGameType]['factionRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                             <img class="pie_image" src="{{ url_for('static', filename='images/' + player['updates'][update.id|string][preferredGameType]['factionRates'][0]['shortName'] + '.png') }}"/>
                                         </div>
@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="pie-inner">
                                     {% if player['updates'][update.id|string][preferredGameType]['missionRates']|length > 0 %}
-                                        <h3>Best Mission</h3>
+                                        <h3>{{ _('Best Mission') }}</h3>
                                         <div onclick="location.href='/mission/{{ player['updates'][update.id|string][preferredGameType]['missionRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ player['updates'][update.id|string][preferredGameType]['missionRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                         </div>
                                         <p>{{ player['updates'][update.id|string][preferredGameType]['missionRates'][0]['name'] }}</p>
@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="pie-inner">
                                     {% if player['updates'][update.id|string][preferredGameType]['secondaryRates']|length > 0 %}
-                                        <h3>Best Secondary</h3>
+                                        <h3>{{ _('Best Secondary') }}</h3>
                                         <div onclick="location.href='/secondary/{{ player['updates'][update.id|string][preferredGameType]['secondaryRates'][0]['id'] }}';" class="pie animate no-round" style="--p:{{ player['updates'][update.id|string][preferredGameType]['secondaryRates'][0]['winRate'] }};--c:rgba(0,230,64,1);--b:5px">
                                         </div>
                                         <p>{{ player['updates'][update.id|string][preferredGameType]['secondaryRates'][0]['name'] }}</p>
@@ -47,14 +47,14 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            <h2>Factions played against</h2>
+                            <h2>{{ _('Factions played against') }}</h2>
                             <div class="table-container">
                                 <div class="table">
                                     <div class="table-header">
-                                        <div class="header__item">Name</div>
-                                        <div class="header__item">Win Rate</div>
-                                        <div class="header__item">Lose Rate</div>
-                                        <div class="header__item">Tie Rate</div>
+                                        <div class="header__item">{{ _('Name') }}</div>
+                                        <div class="header__item">{{ _('Winrate') }}</div>
+                                        <div class="header__item">{{ _('Lose Rate') }}</div>
+                                        <div class="header__item">{{ _('Tie Rate') }}</div>
                                     </div>
                                     <div class="table-content">
                                         {% for faction in player['updates'][update.id|string][preferredGameType]['factionRatesAgainst'] %}
@@ -68,14 +68,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <h2>Factions played with</h2>
+                            <h2>{{ _('Factions played with') }}</h2>
                             <div class="table-container">
                                 <div class="table">
                                     <div class="table-header">
-                                        <div class="header__item">Name</div>
-                                        <div class="header__item">Win Rate</div>
-                                        <div class="header__item">Lose Rate</div>
-                                        <div class="header__item">Tie Rate</div>
+                                        <div class="header__item">{{ _('Name') }}</div>
+                                        <div class="header__item">{{ _('Winrate') }}</div>
+                                        <div class="header__item">{{ _('Loserate') }}</div>
+                                        <div class="header__item">{{ _('Tierate') }}</div>
                                     </div>
                                     <div class="table-content">
                                         {% for faction in player['updates'][update.id|string][preferredGameType]['factionRates'] %}
@@ -89,14 +89,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <h2>Missions played</h2>
+                            <h2>{{ _('Missions played') }}</h2>
                             <div class="table-container">
                                 <div class="table">
                                     <div class="table-header">
-                                        <div class="header__item">Name</div>
-                                        <div class="header__item">Win Rate</div>
-                                        <div class="header__item">Lose Rate</div>
-                                        <div class="header__item">Tie Rate</div>
+                                        <div class="header__item">{{ _('Name') }}</div>
+                                        <div class="header__item">{{ _('Winrate') }}</div>
+                                        <div class="header__item">{{ _('Loserate') }}</div>
+                                        <div class="header__item">{{ _('Tierate') }}</div>
                                     </div>
                                     <div class="table-content">
                                         {% for mission in player['updates'][update.id|string][preferredGameType]['missionRates'] %}
@@ -110,14 +110,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <h2>Secondaries played</h2>
+                            <h2>{{ _('Secondaries played') }}</h2>
                             <div class="table-container">
                                 <div class="table">
                                     <div class="table-header">
-                                        <div class="header__item">Name</div>
-                                        <div class="header__item">Win Rate</div>
-                                        <div class="header__item">Lose Rate</div>
-                                        <div class="header__item">Tie Rate</div>
+                                        <div class="header__item">{{ _('Name') }}</div>
+                                        <div class="header__item">{{ _('Winrate') }}</div>
+                                        <div class="header__item">{{ _('Loserate') }}</div>
+                                        <div class="header__item">{{ _('Tierate') }}</div>
                                     </div>
                                     <div class="table-content">
                                         {% for secondary in player['updates'][update.id|string][preferredGameType]['secondaryRates'] %}
@@ -135,11 +135,11 @@
                     {% else %}
                     <div class="player-ultra-container">
                         <div class="player-super-container">
-                            <h3>Your account is not linked to Steam</h3>
-                            <p>You won't be able to see any of your game data unless you link your Steam account with this one.</p>
-                            <p>To do so, open TTS and download the following mod</p>
+                            <h3>{{ _('Your account is not linked to Steam') }}</h3>
+                            <p>{{ _("You won't be able to see any of your game data unless you link your Steam account with this one.") }}</p>
+                            <p>{{ _('To do so, open TTS and download the following mod') }}</p>
                             <a><u>https://steamcommunity.com/sharedfiles/filedetails/?id=2801351900</u></a>
-                            <p>Then copy the following code and paste on the text field on the TTS mod</p>
+                            <p>{{ _('Then copy the following code and paste on the text field on the TTS mod') }}</p>
                             <p>{{ player['sql'].publicId }}</p>
                         </div>
                     </div>
@@ -147,18 +147,18 @@
                 {% else %}
                     <div class="player-ultra-container">
                         <div class="player-super-container">
-                            <h3>You are not sharing your data</h3>
-                            <p>You won't be able to see any of your game data unless you allow sharing your data.</p>
+                            <h3>{{ _('You are not sharing your data') }}</h3>
+                            <p>{{ _("You won't be able to see any of your game data unless you allow sharing your data.") }}</p>
                         </div>
                     </div>
                 {% endif %}
                 {% if not player['sql'].subscribed %}
                     <div class="player-ultra-container">
                         <div class="login player-super-container">
-                            <h2>Subscribe to KTD news</h2>
+                            <h2>{{ _('Subscribe to KTD news') }}</h2>
                             <form class="login-form" action="/subscribe" method="post">
                                 <input placeholder="email" type="text" name="email" id="email">
-                                <button type="submit">Subscribe</button>
+                                <button type="submit">{{ _('Subscribe') }}</button>
                             </form>
                         </div>
                     </div>
@@ -167,30 +167,30 @@
                         <div class="login player-super-container">
                             <h3>You are subcribed to KTD news</h3>
                             <form class="login-form" action="/unsubscribe" method="post">
-                                <button type="submit">Unsubscribe</button>
+                                <button type="submit">{{ _('Unsubscribe') }}</button>
                             </form>
                         </div>
                     </div>
                 {% endif %}
                 <div class="player-ultra-container">
                     {% if player['sql'].allowSharing %}
-                        <a href="/allowance/stop">Stop sharing my data</a>
+                        <a href="/allowance/stop">{{ _('Stop sharing my data') }}</a>
                     {% else %}
-                        <a href="/allowance/start">Allow data sharing</a>
+                        <a href="/allowance/start">{{ _('Allow data sharing') }}</a>
                     {% endif %}
                     {% if player['sql'].steamLink %}
-                        <a href="/link/stop">Unlink</a>
+                        <a href="/link/stop">{{ _('Unlink') }}</a>
                     {% endif %}
-                    <a onclick="onDeleteUser()" href="javascript:void(0);">Delete</a>
-                    <a href="/logout">Logout</a>
+                    <a onclick="onDeleteUser()" href="javascript:void(0);">{{ _('Delete') }}</a>
+                    <a href="/logout">{{ _('Logout') }}</a>
                 </div>
             </div>
             <div class="popup-delete"
                  style="display: none;
                         flex-direction: column;
                         box-shadow: 10px 20px rgba(0, 0, 0, .5);">
-                <h2 style="margin:20px;text-align:center;color:rgba(255,101,0,1);">Are you sure you want to delete your account?</h2>
-                <h5 style="text-align:center;color:rgba(255,101,0,1);">Type "delete" and your username ({{ player['sql'].username }}), then click OK</h5>
+                <h2 style="margin:20px;text-align:center;color:rgba(255,101,0,1);">{{ _('Are you sure you want to delete your account?') }}</h2>
+                <h5 style="text-align:center;color:rgba(255,101,0,1);">{{ _("Type 'delete' and your username") }} ({{ player['sql'].username}}) {{ _("then click OK") }}</h5>
                 <form style="
                         margin: 20px;
                         display: flex;
@@ -214,7 +214,7 @@
                 <button style="
                         width: 10%;
                         align-self: center;"
-                        onClick="onCancelDeleteUser()">Cancel</button>
+                        onClick="onCancelDeleteUser()">{{ _('Cancel') }}</button>
             </div>
         {% endfor %}
     {% endif %}

@@ -1,0 +1,1015 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2022 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-06-29 11:36+0200\n"
+"PO-Revision-Date: 2022-06-29 08:59+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.3\n"
+
+#: bpAuth/__init__.py:40
+msgid "Your password must have 8 characters, 1 uppercase and 1 digit"
+msgstr "Tu contraseña debe tener 8 caracteres, almenos una mayúscula y un dígito"
+
+#: bpAuth/__init__.py:43
+msgid "The username already exists"
+msgstr "El nombre ya existe"
+
+# | msgid "Logout successfully"
+#: bpAuth/__init__.py:51
+#, fuzzy
+msgid "Registered successfully"
+msgstr "Desconectado"
+
+#: bpAuth/__init__.py:54
+msgid "Password fields must coincide"
+msgstr "La contraseña debe coincidir"
+
+#: bpAuth/__init__.py:57
+msgid "Username must not have special characters"
+msgstr "El nombre de usuario no debe tener caracteres especiales"
+
+# | msgid "Logout successfully"
+#: bpAuth/__init__.py:68
+#, fuzzy
+msgid "Login successful"
+msgstr "Desconectado"
+
+#: bpAuth/__init__.py:76
+msgid "Could not verify"
+msgstr "No se pudo verificar"
+
+#: bpAuth/__init__.py:89
+msgid "Logout successfully"
+msgstr "Desconectado"
+
+#: bpAuth/__init__.py:118
+msgid "Link successfully updated"
+msgstr "Link actualizado"
+
+#: bpAuth/__init__.py:136
+msgid "Selection successfully updated"
+msgstr "Selección actualizada"
+
+#: bpAuth/__init__.py:151 bpAuth/__init__.py:159
+msgid "Not deleted"
+msgstr "No eliminado"
+
+# | msgid "Logout successfully"
+#: bpAuth/__init__.py:157
+#, fuzzy
+msgid "Deletion successful"
+msgstr "Desconectado"
+
+#: bpMail/__init__.py:18
+msgid "Subscribed! Check your email"
+msgstr "Suscrito! Comprueba tu email"
+
+#: bpMail/__init__.py:21
+msgid "That's not a correct mail address"
+msgstr "Email incorrecto"
+
+#: bpMail/__init__.py:30
+msgid "Unsubscribed :("
+msgstr "Dado de baja :("
+
+#: bpPlayer/__init__.py:44
+msgid "Player hidden"
+msgstr "Jugador oculto"
+
+#: bpSched/__init__.py:50
+msgid "Background routines started"
+msgstr "Subrutinas arrancadas"
+
+#: bpSched/__init__.py:61
+msgid "Background routines stopped"
+msgstr "Subrutinas paradas"
+
+#: templates/about.html:4
+msgid "About Kill Team Data"
+msgstr "Sobre KIll Team Data"
+
+#: templates/about.html:7
+msgid "We just like Kill Team stats"
+msgstr "Nos gustan las estadísticas de Kill Team"
+
+#: templates/about.html:8
+msgid ""
+"This is a hobby project conceived with the hope of making the Kill Team "
+"community event better."
+msgstr ""
+"Este es un proyecto hecho con la voluntad de hacer la comunidad incluso "
+"más grande de lo que ya es."
+
+#: templates/about.html:9
+msgid "If you want to contact us, you can do it either on Discord"
+msgstr "Si quieres contactar con nosotros, hazlo a través de Discord"
+
+#: templates/about.html:11
+msgid "Or by sending an email to"
+msgstr "O envía un email a"
+
+#: templates/addgame.html:4
+msgid "Add Game"
+msgstr "Añadir partida"
+
+#: templates/addgame.html:68 templates/addupdate.html:14
+msgid "Add"
+msgstr "Añadir"
+
+#: templates/addupdate.html:4
+msgid "Add Update"
+msgstr "Añadir Actualización"
+
+#: templates/base.html:13
+msgid "General"
+msgstr "General"
+
+#: templates/base.html:14 templates/faction.html:71 templates/faction.html:96
+#: templates/faction.html:121 templates/general.html:6
+#: templates/players.html:15 templates/secondary.html:23
+msgid "Games"
+msgstr "Juegos"
+
+#: templates/base.html:15 templates/general.html:27
+msgid "Factions"
+msgstr "Facciones"
+
+#: templates/base.html:16 templates/general.html:16
+msgid "Players"
+msgstr "Jugadores"
+
+#: templates/base.html:17 templates/general.html:37
+msgid "Missions"
+msgstr "Misiones"
+
+#: templates/base.html:18 templates/general.html:46
+msgid "Secondaries"
+msgstr "Secundarias"
+
+#: templates/base.html:22
+msgid "Add Upd"
+msgstr "Añadir actualización"
+
+#: templates/base.html:25
+msgid "Update"
+msgstr "Actualizar"
+
+#: templates/base.html:26
+msgid "Start sch"
+msgstr ""
+
+#: templates/base.html:27
+msgid "Stop sch"
+msgstr ""
+
+#: templates/base.html:28
+msgid "Random"
+msgstr "Aleatorio"
+
+#: templates/base.html:61
+msgid "Login"
+msgstr "Entrar"
+
+#: templates/base.html:63
+msgid "About"
+msgstr "Saber más"
+
+#: templates/faction.html:13 templates/faction.html:72
+#: templates/faction.html:97 templates/faction.html:122
+#: templates/factions.html:13 templates/players.html:14
+#: templates/profile.html:13 templates/profile.html:55
+#: templates/profile.html:76 templates/profile.html:97
+#: templates/profile.html:118 templates/secondary.html:24
+#: templates/weeklyMailTemplate.html:54
+msgid "Winrate"
+msgstr "Ratio victoria"
+
+#: templates/faction.html:14
+msgid "Pick Rate"
+msgstr "Popularidad"
+
+#: templates/faction.html:39 templates/profile.html:23
+msgid "Best Faction"
+msgstr "Mejor facción"
+
+#: templates/faction.html:49 templates/profile.html:33
+msgid "Best Mission"
+msgstr "Mejor misión"
+
+#: templates/faction.html:58 templates/profile.html:42
+msgid "Best Secondary"
+msgstr "Mejor secundaria"
+
+#: templates/faction.html:66 templates/profile.html:71
+#: templates/secondary.html:18
+msgid "Factions played with"
+msgstr "Facciones jugadas"
+
+# | msgid "Games"
+#: templates/faction.html:70 templates/faction.html:95
+#: templates/faction.html:120 templates/factions.html:12
+#: templates/missions.html:12 templates/players.html:12
+#: templates/profile.html:54 templates/profile.html:75
+#: templates/profile.html:96 templates/profile.html:117
+#: templates/secondaries.html:12 templates/secondary.html:22
+msgid "Name"
+msgstr "Nombre"
+
+#: templates/faction.html:73 templates/faction.html:98
+#: templates/faction.html:123 templates/profile.html:77
+#: templates/profile.html:98 templates/profile.html:119
+#: templates/secondary.html:25 templates/weeklyMailTemplate.html:62
+msgid "Loserate"
+msgstr "Ratio derrota"
+
+#: templates/faction.html:74 templates/faction.html:99
+#: templates/faction.html:124 templates/profile.html:78
+#: templates/profile.html:99 templates/profile.html:120
+#: templates/secondary.html:26 templates/weeklyMailTemplate.html:70
+msgid "Tierate"
+msgstr "Ratio empate"
+
+#: templates/faction.html:91 templates/profile.html:92
+msgid "Missions played"
+msgstr "Misiones jugadas"
+
+#: templates/faction.html:116 templates/profile.html:113
+msgid "Secondaries played"
+msgstr "Secundarias jugadas"
+
+#: templates/factions.html:14
+msgid "Best Counter"
+msgstr "Mejor contra"
+
+#: templates/factions.html:15
+msgid "Worst Counter"
+msgstr "Peor contra"
+
+#: templates/factions.html:16 templates/missions.html:13
+#: templates/secondaries.html:13 templates/secondary.html:13
+msgid "Popularity"
+msgstr "Popularidad"
+
+#: templates/factions.html:17 templates/players.html:21
+msgid "Top Mission"
+msgstr "Mejor misión"
+
+#: templates/factions.html:18
+msgid "Top Secondaries"
+msgstr "Mejores secundarias"
+
+#: templates/game.html:29
+msgid "Roll Off"
+msgstr "Tirada inicial"
+
+#: templates/game.html:32 templates/game.html:40 templates/games.html:19
+msgid "Winner"
+msgstr "Ganador"
+
+#: templates/game.html:33
+msgid "Selection"
+msgstr "Selección"
+
+#: templates/game.html:36
+msgid "Scouting"
+msgstr "Exploración"
+
+#: templates/game.html:43
+msgid "Primaries"
+msgstr "Primarias"
+
+#: templates/game.html:47 templates/game.html:91 templates/game.html:92
+#: templates/game.html:93 templates/game.html:94
+msgid "Turn"
+msgstr "Turno"
+
+#: templates/game.html:48
+msgid "Initiative"
+msgstr "Iniciativa"
+
+#: templates/game.html:54
+msgid "First"
+msgstr "Primero"
+
+#: templates/game.html:60
+msgid "Second"
+msgstr "Segundo"
+
+#: templates/game.html:66
+msgid "Third"
+msgstr "Tercero"
+
+#: templates/game.html:72
+msgid "Fourth"
+msgstr "Cuarto"
+
+#: templates/game.html:78 templates/game.html:95 templates/general.html:9
+msgid "Total"
+msgstr "Total"
+
+#: templates/game.html:90
+msgid "Secondary"
+msgstr "Secundaria"
+
+#: templates/games.html:12
+msgid "Date"
+msgstr "Fecha"
+
+#: templates/games.html:13
+msgid "Mission"
+msgstr "Misión"
+
+#: templates/games.html:15
+msgid "Faction 1"
+msgstr "Facción 2"
+
+#: templates/games.html:17
+msgid "Faction 2"
+msgstr "Facción 2"
+
+#: templates/games.html:18
+msgid "Result"
+msgstr "Resultado"
+
+#: templates/games.html:35
+msgid "Tie"
+msgstr "Empate"
+
+#: templates/games.html:48
+msgid "Add game manually"
+msgstr "Añadir partida manualmente"
+
+#: templates/general.html:10
+msgid "Avg Winner"
+msgstr "Media victorias"
+
+#: templates/general.html:11
+msgid "Avg Loser"
+msgstr "Media Derrotas"
+
+#: templates/general.html:19
+msgid "Total players"
+msgstr "Jugadores"
+
+#: templates/general.html:20 templates/general.html:21
+#: templates/general.html:22 templates/general.html:30
+msgid "Top"
+msgstr "Top"
+
+#: templates/general.html:31 templates/general.html:40
+#: templates/general.html:49
+msgid "Most played"
+msgstr "Más jugadas"
+
+#: templates/general.html:32 templates/general.html:41
+#: templates/general.html:50
+msgid "Less played"
+msgstr "Menos jugadas"
+
+#: templates/general.html:55
+msgid "Games played last year"
+msgstr "Partidas jugadas el último año"
+
+#: templates/missions.html:14 templates/secondaries.html:14
+msgid "Avg Score"
+msgstr "Puntuación media"
+
+#: templates/missions.html:15 templates/secondaries.html:15
+msgid "Top Faction"
+msgstr "Mejor facción"
+
+#: templates/missions.html:16 templates/secondaries.html:16
+msgid "Worst Faction"
+msgstr "Peor facción"
+
+#: templates/players.html:13
+msgid "Rank"
+msgstr "Rango"
+
+#: templates/players.html:16
+msgid "Wins"
+msgstr "Victorias"
+
+#: templates/players.html:17
+msgid "Loses"
+msgstr "Derrotas"
+
+#: templates/players.html:18
+msgid "Ties"
+msgstr "Empates"
+
+#: templates/players.html:19
+msgid "Top faction"
+msgstr "Mejor facción"
+
+#: templates/players.html:20
+msgid "Top counter"
+msgstr "Mejor contra"
+
+#: templates/players.html:22
+msgid "Top Sec"
+msgstr "Mejor secundaria"
+
+#: templates/profile.html:15
+msgid "Games won"
+msgstr "Victorias"
+
+#: templates/profile.html:16
+msgid "Games lost"
+msgstr "Derrotas"
+
+#: templates/profile.html:17
+msgid "Games tied"
+msgstr "Empates"
+
+# | msgid "Factions played with"
+#: templates/profile.html:50
+#, fuzzy
+msgid "Factions played against"
+msgstr "Facciones jugadas"
+
+#: templates/profile.html:56 templates/weeklyMailTemplate.html:114
+#: templates/weeklyMailTemplate.html:166
+msgid "Lose Rate"
+msgstr "Ratio de derrota"
+
+#: templates/profile.html:57 templates/weeklyMailTemplate.html:122
+#: templates/weeklyMailTemplate.html:174
+msgid "Tie Rate"
+msgstr "Ratio de empate"
+
+#: templates/profile.html:138
+msgid "Your account is not linked to Steam"
+msgstr "Tu cuenta no está enlazada con Steam"
+
+#: templates/profile.html:139
+msgid ""
+"You won't be able to see any of your game data unless you link your Steam"
+" account with this one."
+msgstr "No podráas ver tus datos a menos que enlaces tu cuenta con Steam."
+
+#: templates/profile.html:140
+msgid "To do so, open TTS and download the following mod"
+msgstr "Para hacerlo, abre TTS y descarga el siguiente mod"
+
+#: templates/profile.html:142
+msgid "Then copy the following code and paste on the text field on the TTS mod"
+msgstr "Luego copia el siguiente código en el campo de texto del mod descargado"
+
+#: templates/profile.html:150
+msgid "You are not sharing your data"
+msgstr "No estás compartiendo tus datos"
+
+#: templates/profile.html:151
+msgid ""
+"You won't be able to see any of your game data unless you allow sharing "
+"your data."
+msgstr "No podrás ver tus datos a menos que permitas compartirlos."
+
+# | msgid "Unsubscribed :("
+#: templates/profile.html:158
+#, fuzzy
+msgid "Subscribe to KTD news"
+msgstr "Dado de baja :("
+
+# | msgid "Unsubscribed :("
+#: templates/profile.html:161
+#, fuzzy
+msgid "Subscribe"
+msgstr "Dado de baja :("
+
+# | msgid "Unsubscribed :("
+#: templates/profile.html:170
+#, fuzzy
+msgid "Unsubscribe"
+msgstr "Dado de baja :("
+
+#: templates/profile.html:177
+msgid "Stop sharing my data"
+msgstr "Parar de compartir mis datos"
+
+#: templates/profile.html:179
+msgid "Allow data sharing"
+msgstr "Compartir mis datos con la comunidad"
+
+#: templates/profile.html:182
+msgid "Unlink"
+msgstr "Desenlazar"
+
+# | msgid "Not deleted"
+#: templates/profile.html:184
+msgid "Delete"
+msgstr "Eliminar"
+
+#: templates/profile.html:185
+msgid "Logout"
+msgstr "Desconectarse"
+
+#: templates/profile.html:192
+msgid "Are you sure you want to delete your account?"
+msgstr "¿Estás seguro de que quieres eliminar tu cuenta?"
+
+#: templates/profile.html:193
+msgid "Type 'delete' and your username"
+msgstr "Escribe 'delete' y tu nombre de usuario"
+
+#: templates/profile.html:193
+msgid "then click OK"
+msgstr "luego click OK"
+
+#: templates/profile.html:217
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: templates/signup.html:4 templates/signup.html:9
+msgid "Signup"
+msgstr "Entra"
+
+#: templates/signup.html:11
+msgid "Already have account? Login here"
+msgstr "¿Ya tienes cuenta? Entra aquí"
+
+#: templates/subConfirmationMailTemplate.html:22
+msgid "Hi"
+msgstr "Hola"
+
+#: templates/subConfirmationMailTemplate.html:28
+msgid "Thanks for subscribing!"
+msgstr "¡Gracias por darte de alta!"
+
+#: templates/subConfirmationMailTemplate.html:34
+msgid "You will receive every week the information of the latest games and rates."
+msgstr ""
+"Recibirás todas las semanas informa de las últimas partidas y "
+"estadísticas."
+
+#: templates/teamKTD.html:5
+msgid "Join the KTD Team"
+msgstr "Únete al equipo KTD"
+
+#: templates/teamKTD.html:6 templates/teamKTD.html:23
+msgid "Exclusive Data"
+msgstr "Datos exclusivos"
+
+#: templates/teamKTD.html:7
+msgid "You will have access to exclusive information like ??"
+msgstr "Terndrás acceso a información exclusiva como ??"
+
+#: templates/teamKTD.html:8 templates/teamKTD.html:24
+msgid "Tournament Stats"
+msgstr "Estadísticas de torneos"
+
+#: templates/teamKTD.html:9
+msgid "Informations of the tournaments added by the community"
+msgstr "Informaciones de torneos añadidos por la comunidad"
+
+#: templates/teamKTD.html:10 templates/teamKTD.html:25
+msgid "Operative Data"
+msgstr "Estadísticas de operativos"
+
+#: templates/teamKTD.html:11
+msgid "Stats for the operatives used on the games"
+msgstr "Estadísticas de los operativos usados en las partidas"
+
+#: templates/teamKTD.html:12
+msgid "Personalised stats"
+msgstr "Estadísticas personalizadas"
+
+# | msgid "How many guardsmen you killed? What is your preferred ?"
+#: templates/teamKTD.html:13
+#, fuzzy
+msgid "How many guardsmen you killed? What is your preferred ??"
+msgstr "¿Cuantos guardias imperiales has matado?"
+
+#: templates/teamKTD.html:14
+msgid "Manual adding"
+msgstr "Añadir manualmente"
+
+#: templates/teamKTD.html:15
+msgid ""
+"You will be able to add games manually to keep track even for your games "
+"outside TTS"
+msgstr ""
+"Podrás añadir partidas manualmente y así poder controlar tus estadísticas"
+" incluso fuera de TTS"
+
+#: templates/teamKTD.html:16
+msgid "Tournament Adding"
+msgstr "Añadir torneos"
+
+#: templates/teamKTD.html:17
+msgid "You will be able to add tournaments manually"
+msgstr "Podrás añadir torneos manualmente"
+
+#: templates/teamKTD.html:21
+msgid "Level"
+msgstr "Nivel"
+
+#: templates/teamKTD.html:22
+msgid "Contribution"
+msgstr "Contribución"
+
+#: templates/teamKTD.html:26
+msgid "Personalised Stats"
+msgstr "Estadísticas personalizadas"
+
+#: templates/teamKTD.html:27
+msgid "Manual Adding"
+msgstr "Añadir manualmente"
+
+#: templates/teamKTD.html:31
+msgid "Plasteel"
+msgstr "Plastiacero"
+
+#: templates/teamKTD.html:40
+msgid "Ceramite"
+msgstr "Ceramita"
+
+#: templates/teamKTD.html:49
+msgid "Diamantite"
+msgstr "Diamantita"
+
+#: templates/teamKTD.html:58
+msgid "Adamantium"
+msgstr "Adamantium"
+
+#: templates/weeklyMailTemplate.html:20
+msgid "Your Weekly Kill Team Data"
+msgstr "Tus datos semanales de Kill Team"
+
+#: templates/weeklyMailTemplate.html:28
+msgid "Open Game"
+msgstr "Casual"
+
+#: templates/weeklyMailTemplate.html:80
+msgid "Matched Game"
+msgstr "Competitivo"
+
+#: templates/weeklyMailTemplate.html:106 templates/weeklyMailTemplate.html:158
+msgid "Win Rate"
+msgstr "Ratio de victoria"
+
+#: templates/weeklyMailTemplate.html:132
+msgid "Narrative Game"
+msgstr "Juego Narrativo"
+
+#: venv/lib/python3.9/site-packages/click/_termui_impl.py:496
+msgid "{editor}: Editing failed"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/_termui_impl.py:500
+msgid "{editor}: Editing failed: {e}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:1097
+msgid "Aborted!"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:1282
+#: venv/lib/python3.9/site-packages/click/decorators.py:495
+msgid "Show this message and exit."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:1313
+#: venv/lib/python3.9/site-packages/click/core.py:1339
+msgid "(Deprecated) {text}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:1357
+msgid "Options"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:1385
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:1398
+msgid "DeprecationWarning: The command {name!r} is deprecated."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:1605
+msgid "Commands"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:1637
+msgid "Missing command."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:1715
+msgid "No such command {name!r}."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:2271
+msgid "Value must be an iterable."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:2293
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:2731
+msgid "env var: {var}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:2761
+msgid "(dynamic)"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:2774
+msgid "default: {default}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/core.py:2787
+msgid "required"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/decorators.py:400
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/decorators.py:464
+msgid "Show the version and exit."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:43
+#: venv/lib/python3.9/site-packages/click/exceptions.py:79
+msgid "Error: {message}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:71
+msgid "Try '{command} {option}' for help."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:120
+msgid "Invalid value: {message}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:122
+msgid "Invalid value for {param_hint}: {message}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:178
+msgid "Missing argument"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:180
+msgid "Missing option"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:182
+msgid "Missing parameter"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:184
+msgid "Missing {param_type}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:191
+msgid "Missing parameter: {param_name}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:211
+msgid "No such option: {name}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:225
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:261
+msgid "unknown error"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/exceptions.py:268
+msgid "Could not open file {filename!r}: {message}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/parser.py:231
+msgid "Argument {name!r} takes {nargs} values."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/parser.py:413
+msgid "Option {name!r} does not take a value."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/parser.py:473
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.9/site-packages/click/shell_completion.py:315
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/shell_completion.py:322
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/termui.py:160
+msgid "Repeat for confirmation"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/termui.py:176
+msgid "Error: The value you entered was invalid."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/termui.py:178
+msgid "Error: {e.message}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/termui.py:189
+msgid "Error: The two entered values do not match."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/termui.py:245
+msgid "Error: invalid input"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/termui.py:776
+msgid "Press any key to continue..."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:265
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:299
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:389
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:409
+msgid "{value!r} is not a valid {number_type}."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:465
+msgid "{value} is not in the range {range}."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:606
+msgid "{value!r} is not a valid boolean."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:630
+msgid "{value!r} is not a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:811
+msgid "file"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:813
+msgid "directory"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:815
+msgid "path"
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:861
+msgid "{name} {filename!r} does not exist."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:870
+msgid "{name} {filename!r} is a file."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:878
+msgid "{name} '{filename}' is a directory."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:887
+msgid "{name} {filename!r} is not readable."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:896
+msgid "{name} {filename!r} is not writable."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:905
+msgid "{name} {filename!r} is not executable."
+msgstr ""
+
+#: venv/lib/python3.9/site-packages/click/types.py:971
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.9/site-packages/shortuuid/django_fields.py:8
+msgid "A short UUID field."
+msgstr ""
+
+#~ msgid ""
+#~ "Type 'delete' and your username ({{ "
+#~ "player['sql'].username }}), then click OK"
+#~ msgstr ""
+
+#~ msgid "Games won"
+#~ msgstr "Victorias"
+
+#~ msgid "Games lost"
+#~ msgstr "Derrotas"
+
+#~ msgid "Games tied"
+#~ msgstr "Empates"
+
+# | msgid "Factions played with"
+#~ msgid "Factions played against"
+#~ msgstr "Facciones jugadas"
+
+#~ msgid "Your account is not linked to Steam"
+#~ msgstr "Tu cienta no está enlazada con Steam"
+
+#~ msgid ""
+#~ "You won't be able to see any "
+#~ "of your game data unless you link"
+#~ " your Steam account with this one."
+#~ msgstr "No podrás der tus datos a menos que enlaces tu cuenta con Steam."
+
+#~ msgid "To do so, open TTS and download the following mod"
+#~ msgstr "Para hacerlo, abre TTS y descarga el siguiente mod"
+
+#~ msgid "Then copy the following code and paste on the text field on the TTS mod"
+#~ msgstr ""
+#~ "Luego copia el siguiente código y "
+#~ "pégalo en el campo de tes¡xto en"
+#~ " el mod descargado"
+
+#~ msgid "You are not sharing your data"
+#~ msgstr "No estás compartiendo los datos"
+
+#~ msgid ""
+#~ "You won't be able to see any "
+#~ "of your game data unless you allow"
+#~ " sharing your data."
+#~ msgstr ""
+#~ "No podrás ver tus datos a menor"
+#~ " que permitas que tus datos se "
+#~ "compartan."
+
+# | msgid "Unsubscribed :("
+#~ msgid "Subscribe to KTD news"
+#~ msgstr "Dado de baja :("
+
+# | msgid "Unsubscribed :("
+#~ msgid "Subscribe"
+#~ msgstr "Dado de baja :("
+
+# | msgid "Unsubscribed :("
+#~ msgid "Unsubscribe"
+#~ msgstr "Dado de baja :("
+
+#~ msgid "Stop sharing my data"
+#~ msgstr "Parar de compartir mis datos"
+
+#~ msgid "Allow data sharing"
+#~ msgstr "Permitir que mis datos sean visibles"
+
+#~ msgid "Unlink"
+#~ msgstr "Desenlazar"
+
+#~ msgid "Delete"
+#~ msgstr "Eliminar"
+
+#~ msgid "Logout"
+#~ msgstr "Desconectarse"
+
+#~ msgid "Are you sure you want to delete your account?"
+#~ msgstr "¿Estás seguro de que quieres eliminar tu cuenta?"
+
+#~ msgid "Type 'delete' and your username"
+#~ msgstr "Teclea 'delete' y tu nombre de usuario"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
+

@@ -8,6 +8,7 @@ from database import db
 from bpAuth import loginManager, jwt
 from bpSched import scheduler
 from bpMail import mailManager
+from bpI18n import babel
 
 from utils.dataHandlers import *
 from utils.decorators import *
@@ -20,7 +21,7 @@ from utils.secondary import *
 from utils.general import *
 from utils.cardGenerator import *
 from utils.twitter import *
-# from utils.mathHammer import *
+# from utils.mathHammer import * TODO
 
 
 ################
@@ -48,6 +49,8 @@ def createApp(app):
     app.config['MAIL_USE_SSL'] = True
     app.config['MAIL_ASCII_ATTACHMENTS'] = True
 
+    app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'languages'
+
     mailManager.init_app(app)
     app.config['mailManager'] = mailManager
     scheduler.init_app(app)
@@ -58,10 +61,12 @@ def createApp(app):
     app.config["jwt"] = jwt
     db.init_app(app)
     app.config["database"] = db
+    babel.init_app(app)
+    app.config["babel"] = babel
 
     app.config['twitterClient'] = TwitterClient()
     app.config["cardGenerator"] = CardGenerator()
-    # app.config['mathHammer'] = MathHammer()
+    # app.config['mathHammer'] = MathHammer() TODO
     app.config["dataManager"] = json.load(open("hard/data.json"))
 
     return app

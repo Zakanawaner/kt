@@ -9,14 +9,14 @@
                 {% endif %}
                 <div class="table">
                     <div class="table-header">
-                        <div class="header__item">Date</div>
-                        <div class="header__item">Mission</div>
+                        <div class="header__item">{{ _('Date') }}</div>
+                        <div class="header__item">{{ _('Mission') }}</div>
                         <!--<div class="header__item">Player 1</div>-->
-                        <div class="header__item">Faction 1</div>
+                        <div class="header__item">{{ _('Faction 1') }}</div>
                         <!--<div class="header__item">Player 2</div>-->
-                        <div class="header__item">Faction 2</div>
-                        <div class="header__item">Result</div>
-                        <div class="header__item">Winner</div>
+                        <div class="header__item">{{ _('Faction 2') }}</div>
+                        <div class="header__item">{{ _('Result') }}</div>
+                        <div class="header__item">{{ _('Winner') }}</div>
                     </div>
                     <div class="table-content">
                         {% for game in games['updates'][update.id|string] %}
@@ -32,7 +32,7 @@
                                     {% if not game.tie %}
                                         <div onclick="location.href='/faction/{{ game.winFaction[0].id }}';" class="table-data table-link">{{ game.winFaction[0].name }}</div>
                                     {% else %}
-                                        <div class="table-data">Tie</div>
+                                        <div class="table-data">{{ _('Tie') }}</div>
                                     {% endif %}
                                 </div>
                             {% endif %}
@@ -45,7 +45,7 @@
     {% if user %}
         {% if user.permissions >= 4  %}
             <div class="login">
-                <a href="/game/add">Add game manually</a>
+                <a href="/game/add">{{ _('Add game manually') }}</a>
             </div>
         {% endif %}
     {% endif %}

@@ -26,56 +26,56 @@
                     <h3>{{ game['sql'].losSecondaryThird[0].name }}</h3>
                 </div>
             </div>
-            <h2>Roll Off</h2>
+            <h2>{{ _('Roll Off') }}</h2>
             <div class="game-super-container">
                 <div class="graph">
-                    <h3>Winner: {{ game['sql'].rollOffWinner[0].name }}</h3>
-                    <h3>Selection: {{ game['sql'].rollOffSelection }}</h3>
+                    <h3>{{ _('Winner') }}: {{ game['sql'].rollOffWinner[0].name }}</h3>
+                    <h3>{{ _('Selection') }}: {{ game['sql'].rollOffSelection }}</h3>
                 </div>
             </div>
-            <h2>Scouting</h2>
+            <h2>{{ _('Scouting') }}</h2>
             <div class="game-super-container">
                 <div class="graph">
                     <h3>{{ game['sql'].winScouting }} / {{ game['sql'].losScouting }}</h3>
-                    <h3>Winner: {{ game['sql'].initFirst[0].name }}</h3>
+                    <h3>{{ _('Winner') }}: {{ game['sql'].initFirst[0].name }}</h3>
                 </div>
             </div>
-            <h2 onclick="location.href='/mission/{{ game['sql'].mission[0].id }}';">Primaries {{ game['sql'].mission[0].name }}</h2>
+            <h2 onclick="location.href='/mission/{{ game['sql'].mission[0].id }}';">{{ _('Primaries') }} {{ game['sql'].mission[0].name }}</h2>
             <div class="game-table-container">
                 <div class="table">
                     <div class="table-header">
-                        <div class="header__item">Turn</div>
-                        <div class="header__item">Initiative</div>
+                        <div class="header__item">{{ _('Turn') }}</div>
+                        <div class="header__item">{{ _('Initiative') }}</div>
                         <div class="header__item">{{ game['sql'].winFaction[0].name }}</div>
                         <div class="header__item">{{ game['sql'].losFaction[0].name }}</div>
                     </div>
                     <div class="table-content">
                         <div class="table-row">
-                            <div class="table-data">First</div>
+                            <div class="table-data">{{ _('First') }}</div>
                             <div class="table-data table-link" onclick="location.href='/faction/{{ game['sql'].initFirst[0].id }}';">{{ game['sql'].initFirst[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winPrimaryFirst }}</div>
                             <div class="table-data">{{ game['sql'].losPrimaryFirst }}</div>
                         </div>
                         <div class="table-row">
-                            <div class="table-data">Second</div>
+                            <div class="table-data">{{ _('Second') }}</div>
                             <div class="table-data table-link" onclick="location.href='/faction/{{ game['sql'].initSecond[0].id }}';">{{ game['sql'].initSecond[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winPrimarySecond }}</div>
                             <div class="table-data">{{ game['sql'].losPrimarySecond }}</div>
                         </div>
                         <div class="table-row">
-                            <div class="table-data">Third</div>
+                            <div class="table-data">{{ _('Third') }}</div>
                             <div class="table-data table-link" onclick="location.href='/faction/{{ game['sql'].initThird[0].id }}';">{{ game['sql'].initThird[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winPrimaryThird }}</div>
                             <div class="table-data">{{ game['sql'].losPrimaryThird }}</div>
                         </div>
                         <div class="table-row">
-                            <div class="table-data">Fourth</div>
+                            <div class="table-data">{{ _('Fourth') }}</div>
                             <div class="table-data table-link" onclick="location.href='/faction/{{ game['sql'].initFourth[0].id }}';">{{ game['sql'].initFourth[0].name }}</div>
                             <div class="table-data">{{ game['sql'].winPrimaryFourth }}</div>
                             <div class="table-data">{{ game['sql'].losPrimaryFourth }}</div>
                         </div>
                         <div class="table-row">
-                            <div class="table-data">Total</div>
+                            <div class="table-data">{{ _('Total') }}</div>
                             <div class="table-data">-</div>
                             <div class="table-data">{{ game['sql'].winPrimary }}</div>
                             <div class="table-data">{{ game['sql'].losPrimary }}</div>
@@ -87,12 +87,12 @@
             <div class="game-table-container">
                 <div class="table">
                     <div class="table-header">
-                        <div class="header__item">Secondary</div>
-                        <div class="header__item">Turn 1</div>
-                        <div class="header__item">Turn 2</div>
-                        <div class="header__item">Turn 3</div>
-                        <div class="header__item">Turn 4</div>
-                        <div class="header__item">Total</div>
+                        <div class="header__item">{{ _('Secondary') }}</div>
+                        <div class="header__item">{{ _('Turn') }} 1</div>
+                        <div class="header__item">{{ _('Turn') }} 2</div>
+                        <div class="header__item">{{ _('Turn') }} 3</div>
+                        <div class="header__item">{{ _('Turn') }} 4</div>
+                        <div class="header__item">{{ _('Total') }}</div>
                     </div>
                     <div class="table-content">
                         <div class="table-row">

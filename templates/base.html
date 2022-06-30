@@ -5,27 +5,27 @@
     <title>{{ title }}</title>
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/styles.css') }}">
 </head>
-<body>
+<body onload="parseDropdown()">
     <div class="super-menu">
         <details>
             <summary class="nav-link">Menu</summary>
             <nav class="menu1">
-              <a class="nav-link" href="/">General</a>
-              <a class="nav-link" href="/games">Games</a>
-              <a class="nav-link" href="/factions">Factions</a>
-              <a class="nav-link" href="/players">Players</a>
-              <a class="nav-link" href="/missions">Missions</a>
-              <a class="nav-link" href="/secondaries">Secondaries</a>
+              <a class="nav-link" href="/">{{ _('General') }}</a>
+              <a class="nav-link" href="/games">{{ _('Games') }}</a>
+              <a class="nav-link" href="/factions">{{ _('Factions') }}</a>
+              <a class="nav-link" href="/players">{{ _('Players') }}</a>
+              <a class="nav-link" href="/missions">{{ _('Missions') }}</a>
+              <a class="nav-link" href="/secondaries">{{ _('Secondaries') }}</a>
               <!--<a class="nav-link" href="/team">Team KTD</a>-->
               {% if user %}
                   {% if user.permissions >= 7 %}
-                      <a class="nav-link" href="/addupdate">Add Upd</a>
+                      <a class="nav-link" href="/addupdate">{{ _('Add Upd') }}</a>
                   {% endif %}
                   {% if user.permissions >= 8 %}
-                      <a class="nav-link" href="/update">Update</a>
-                      <a class="nav-link" href="/startroutines">Start sch</a>
-                      <a class="nav-link" href="/stoproutines">Stop sch</a>
-                      <a class="nav-link" href="/randomize">Random</a>
+                      <a class="nav-link" href="/update">{{ _('Update') }}</a>
+                      <a class="nav-link" href="/startroutines">{{ _('Start sch') }}</a>
+                      <a class="nav-link" href="/stoproutines">{{ _('Stop sch') }}</a>
+                      <a class="nav-link" href="/randomize">{{ _('Random') }}</a>
                   {% endif %}
               {% endif %}
             </nav>
@@ -55,12 +55,16 @@
             {% endif %}
         </div>
         <div class="menu">
+            <select style="margin-top: 20px;" id="language" name="language" onchange="if (this.value) window.location.href=this.value">
+                <option value="/lang/en">EN</option>
+                <option value="/lang/es">ES</option>
+            </select>
             {% if user %}
                 <a class="nav-link" href="/player/{{ user.id }}">{{ user.username }}</a>
             {% else %}
-                <a class="nav-link" href="/login">Login</a>
+                <a class="nav-link" href="/login">{{ _('Login') }}</a>
             {% endif %}
-            <a class="nav-link" href="/about">About</a>
+            <a class="nav-link" href="/about">{{ _('About') }}</a>
         </div>
     </div>
     {% with messages = get_flashed_messages() %}
@@ -105,6 +109,22 @@
         }
         function onCancelDeleteUser() {
             popUpDelete[0].style.display = 'none';
+        }
+        function getLang() {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${"preferred_language"}=`);
+          if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function parseDropdown() {
+        console.log("entro");
+          var values = ["en", "es"];
+          var valueFromCookie = values.indexOf(getLang());
+          if (valueFromCookie != "") {
+            document.getElementById("language").options.selectedIndex = valueFromCookie;
+          } else {
+            document.getElementById("language").options.selectedIndex = 0;
+          }
         }
     </script>
 </html>

@@ -9,11 +9,11 @@
             {% endif %}
                 <div class="table">
                     <div class="table-header">
-                        <div class="header__item">Name</div>
-                        <div class="header__item">Popularity</div>
-                        <div class="header__item">Avg Score</div>
-                        <div class="header__item">Top Faction</div>
-                        <div class="header__item">Worst Faction</div>
+                        <div class="header__item">{{ _('Name') }}</div>
+                        <div class="header__item">{{ _('Popularity') }}</div>
+                        <div class="header__item">{{ _('Avg Score') }}</div>
+                        <div class="header__item">{{ _('Top Faction') }}</div>
+                        <div class="header__item">{{ _('Worst Faction') }}</div>
                     </div>
                     <div class="table-content">
                         {% for mission in missions %}
