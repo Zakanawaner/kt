@@ -37,11 +37,9 @@ if __name__ == '__main__':
     app.run(host=app.config['HOST'], port=app.config['PORT'])
 
 # TODO TTS:
-#  - Texto de inicio que diga abrir el check list
-#  - Controlar que solo se añadan bichos con comand node en la estructura del juego
 
 # TODO WEB
-#  - Añadir selector de lenguaje
+#  - Meter equipos en la base de datos antes de salir publico
 
 # TODO Future
 #  - Posibilidad de añadir manualmente partidas
