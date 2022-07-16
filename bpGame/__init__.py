@@ -21,6 +21,10 @@ gameBP = Blueprint('gameBluePrint', __name__)
 def data():
     logAccess('/gamedata', current_user, request)
     gameData = handleGameData(json.loads(request.data.decode()), current_app.config['database'])
+    if gameData == "Already saved":
+        return {'status': gameData}, 200
+    if gameData == "Bad game data":
+        return {'status': gameData}, 200
     current_app.config['twitterClient'].newGame(gameData)
     return {'status': 'ok'}, 200
 

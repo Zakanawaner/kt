@@ -139,7 +139,7 @@ def handleOperatives(db, response, pls):
                         faction=response[response[pl]]['faction'].id,
                         melee=','.join(melee),
                         ranged=','.join(ranged),
-                        desc=response[response[pl]]['operatives'][op]['desc']
+                        desc=response[response[pl]]['operatives'][op]['desc'].split("Owned")[0]
                     )
                     db.session.add(response[response[pl]]['operatives'][op]['sql'])
                     db.session.commit()
@@ -260,7 +260,8 @@ def handleGameData(response, db):
             db.session.add(game)
             db.session.commit()
             return game
-    return None
+        return "Already saved"
+    return "Bad game data"
 
 
 def checkData(response):

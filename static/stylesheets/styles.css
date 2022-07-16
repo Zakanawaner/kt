@@ -175,7 +175,26 @@ html{
 .table-link:hover {
 	color: rgba(255,101,0,.2);
 }
-
+.game-timeline-container {
+    margin: 10px 50px 50px 50px;
+	display:flex;
+    flex-direction: column;
+	justify-content:center;
+	border-radius: 10px;
+	align-items:center;
+}
+.timeline-row {
+    display:flex;
+    flex-direction: column;
+	width:50%;
+	background: rgba(0,0,0,.2);
+}
+timeline-line {
+    border-left: 10px;
+    border-color: rgba(255,101,0,.5);
+    width: 10px;
+    height: 200px;
+}
 .header__item {
 	text-transform:uppercase;
 }
