@@ -42,6 +42,7 @@ if __name__ == '__main__':
 #  - Meter equipos en la base de datos antes de salir publico
 #  - Checkear desc de operativos
 #  - Hacer el timeline de la partida como me mostró GoodPerson
+#  - BackUp de la base de datos regularmente
 
 # TODO Future
 #  - Posibilidad de añadir manualmente partidas

@@ -34,12 +34,25 @@ class TwitterClient:
         )
 
     def weeklyTweet(self, games, factions):
-        topOpenKey = next(iter(factions['open']))
-        topMatchedKey = next(iter(factions['matched']))
-        topNarrativeKey = next(iter(factions['narrative']))
-        topOpen = self.twitterApi.media_upload(f"static/images/{topOpenKey}.png")
-        topMatched = self.twitterApi.media_upload(f"static/images/{topMatchedKey}.png")
-        topNarrative = self.twitterApi.media_upload(f"static/images/{topNarrativeKey}.png")
+        mediaIds = [self.twitterApi.media_upload(f"static/images/ktd.png").media_id]
+        try:
+            topOpenKey = next(iter(factions['open']))
+            topOpen = self.twitterApi.media_upload(f"static/images/{topOpenKey}.png")
+            mediaIds.append(topOpen.media_id)
+        except StopIteration:
+            topOpenKey = None
+        try:
+            topMatchedKey = next(iter(factions['matched']))
+            topMatched = self.twitterApi.media_upload(f"static/images/{topMatchedKey}.png")
+            mediaIds.append(topMatched.media_id)
+        except StopIteration:
+            topMatchedKey = None
+        try:
+            topNarrativeKey = next(iter(factions['narrative']))
+            topNarrative = self.twitterApi.media_upload(f"static/images/{topNarrativeKey}.png")
+            mediaIds.append(topNarrative.media_id)
+        except StopIteration:
+            topNarrativeKey = None
         self.twitterClient.create_tweet(
             text=f"Last week activity on killteamdata.com "
                  f"\n\n"
@@ -47,21 +60,21 @@ class TwitterClient:
                  f"\n"
                  f"Games: {len(games['open'])}"
                  f"\n"
-                 f"Top faction: {factions['open'][topOpenKey]['name']} ({factions['open'][topOpenKey]['winRate']}% Win rate)"
+                 f"Top faction: {factions['open'][topOpenKey]['name'] if topOpenKey else '-'} ({factions['open'][topOpenKey]['winRate'] if topOpenKey else '-'}% Win rate)"
                  f"\n\n"
                  f"Matched: "
                  f"\n"
                  f"Games: {len(games['matched'])}"
                  f"\n"
-                 f"Top faction: {factions['matched'][topMatchedKey]['name']} ({factions['matched'][topMatchedKey]['winRate']}% Win rate)"
+                 f"Top faction: {factions['matched'][topMatchedKey]['name'] if topMatchedKey else '-'} ({factions['matched'][topMatchedKey]['winRate'] if topMatchedKey else '-'}% Win rate)"
                  f"\n\n"
                  f"Narrative: "
                  f"\n"
                  f"Games: {len(games['narrative'])}"
                  f"\n"
-                 f"Top faction: {factions['narrative'][topNarrativeKey]['name']} ({factions['narrative'][topNarrativeKey]['winRate']}% Win rate)"
+                 f"Top faction: {factions['narrative'][topNarrativeKey]['name'] if topNarrativeKey else '-'} ({factions['narrative'][topNarrativeKey]['winRate'] if topNarrativeKey else '-'}% Win rate)"
                  f"\n\n"
                  f"For more information, visit killteamdata.com",
-            media_ids=[topOpen.media_id, topMatched.media_id, topNarrative.media_id]
+            media_ids=mediaIds
         )
 

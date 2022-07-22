@@ -26,7 +26,7 @@ def data():
     if gameData == "Bad game data":
         return {'status': gameData}, 200
     current_app.config['twitterClient'].newGame(gameData)
-    return {'status': 'ok'}, 200
+    return {'status': 'ok. check https://killteamdata/games'}, 200
 
 
 @gameBP.route("/games", methods={"GET", "POST"})

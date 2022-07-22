@@ -27,7 +27,7 @@ def updateData():
         updatePlayers(current_app.config['database'])
 
 
-@scheduler.task('cron', id='weeklyMail', week='*', day_of_week='sun')
+@scheduler.task('cron', id='weeklyMail', week='*')
 def weeklyMail():
     with scheduler.app.app_context():
         games, factions = sendWeeklyMail()
@@ -38,6 +38,12 @@ def weeklyMail():
 def accessLogMail():
     with scheduler.app.app_context():
         sendAccessLogMail()
+
+
+@scheduler.task('cron', id='backUpSQL', day='*')
+def accessLogMail():
+    with scheduler.app.app_context():
+        pass  # TODO BackUp Sched
 
 
 @schedulerBP.route("/startroutines", methods={"GET", "POST"})
