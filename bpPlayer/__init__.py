@@ -1,9 +1,10 @@
-from flask import Blueprint, request, render_template, flash, redirect, url_for
-from flask_login import current_user
+from flask import Blueprint, request, render_template, flash, redirect, url_for, current_app
+from flask_login import current_user, login_required
 from flask_babel import gettext
 
-from utils import getUpdates, getPlayers, getPlayer, getGameTypes
+from utils import getUpdates, getPlayers, getPlayer, getGameTypes, setPlayerPermission
 from utils.log import logAccess
+from utils.decorators import only_left_hand
 
 
 playerBP = Blueprint('playerBluePrint', __name__)
@@ -54,5 +55,19 @@ def player(pl):
         gt=getGameTypes(),
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
-        language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
+        language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en',
+        permissions=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
     )
+
+
+@playerBP.route("/player/<pl>/permission", methods={"GET", "POST"})
+@login_required
+@only_left_hand
+def changePlayerPermissions(pl):
+    logAccess('/player/{}/permission'.format(pl), current_user, request)
+    if setPlayerPermission(current_app.config["database"], pl, request.form):
+        flash("OK")
+    else:
+        flash("No OK")
+    pl = getPlayer(pl)
+    return redirect(url_for('playerBluePrint.player', pl=pl['sql'].id))

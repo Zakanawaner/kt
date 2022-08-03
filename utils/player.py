@@ -555,3 +555,14 @@ def getPlayer(pl):
 
 def getPlayerById(userId):
     return Player.query.filter_by(id=userId).first()
+
+
+def setPlayerPermission(db, userId, form):
+    try:
+        lvl = form['permission']
+        usr = Player.query.filter_by(id=userId).first()
+        usr.permissions = int(lvl)
+        db.session.commit()
+    except:
+        return False
+    return True

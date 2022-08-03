@@ -30,7 +30,7 @@ def userSignup(db, form):
                 username=form['username'],
                 password=hashed_password,
                 shortName=form['username'].lower().replace(" ", ""),
-                permissions=8 if form['username'] == 'Zakanawaner' else 0,
+                permissions=15 if form['username'] == 'Zakanawaner' else 0,
                 steamLink=False,
                 allowSharing=True,
                 rank=[Rank.query.filter(Rank.score <= 0).first()],
