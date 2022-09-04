@@ -3,7 +3,7 @@ from flask_login import current_user
 
 from utils import getUpdates
 from utils.faction import getFactions, getFaction
-from utils.games import getGameTypes
+from utils.games import getGameTypes, getEditions
 from utils.log import logAccess
 
 
@@ -21,7 +21,9 @@ def factions():
         factions=fct,
         upd=getUpdates(),
         gt=getGameTypes(),
+        ed=getEditions(),
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
+        preferredEdition=request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1',
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
         language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
     )
@@ -38,7 +40,9 @@ def faction(fact):
         faction=fct,
         upd=getUpdates(),
         gt=getGameTypes(),
+        ed=getEditions(),
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
+        preferredEdition=request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1',
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
         language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
     )

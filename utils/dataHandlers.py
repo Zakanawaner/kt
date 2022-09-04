@@ -4,7 +4,7 @@ from datetime import datetime
 from database import (
     Game, Player, Mission, Rank, Secondary,
     Faction, Tournament, Operative, Update,
-    GameType
+    GameType, Edition
 )
 
 
@@ -98,6 +98,16 @@ def handleTournament(db, response):
     return response
 
 
+def handleEdition(db, ed):
+    if not Edition.query.filter_by(shortName=ed).first():
+        edition = Edition(shortName=ed)
+        db.session.add(edition)
+    else:
+        edition = Edition.query.filter_by(shortName=ed).first()
+    db.session.commit()
+    return edition
+
+
 def handleGameType(db, response):
     if 'gameType' in response.keys():
         if not GameType.query.filter_by(name=response['gameType']).first():
@@ -148,8 +158,9 @@ def handleOperatives(db, response, pls):
     return response
 
 
-def handleGameData(response, db):
-    if checkData(response):
+def handleGameData(response, db, ed):
+    resultCheck = checkData(response)
+    if resultCheck == "ok":
         if not Game.query.filter_by(timestamp=response['timestamp']).first():
             response = handleFactions(db, response, 'winner')
             response = handleFactions(db, response, 'loser')
@@ -159,12 +170,14 @@ def handleGameData(response, db):
             response = handleTournament(db, response)
             response = handleGameType(db, response)
             response = handleOperatives(db, response, ['winner', 'loser'])
+            edition = handleEdition(db, ed)
 
             game = Game(
                 date=datetime.now(),
                 timestamp=response['timestamp'],
                 tournament=response['tournament'].id,
                 gameType=response['gameType'].id,
+                edition=edition.id,
                 mission=[response['mission']] if response['mission'] else [],
                 initFirst=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][
                     0] else [response[response['loser']]['faction']],
@@ -255,13 +268,15 @@ def handleGameData(response, db):
             db.session.add(response[response['loser']]['faction'])
             response['tournament'].games.append(game)
             response['gameType'].games.append(game)
+            edition.games.append(game)
             db.session.add(response['tournament'])
             db.session.add(response['gameType'])
+            db.session.add(edition)
             db.session.add(game)
             db.session.commit()
             return game
         return "Already saved"
-    return "Bad game data"
+    return resultCheck
 
 
 def checkData(response):
@@ -389,8 +404,8 @@ def checkData(response):
                                      response[response['loser']]['secondaries']['third']['name']) \
                                 and (response[response['loser']]['secondaries']['second']['name'] !=
                                      response[response['loser']]['secondaries']['third']['name']):
-                            return True
-    return False
+                            return "ok"
+    return "Bad Game Data"
 
 
 ############
@@ -421,9 +436,20 @@ def createTables(db):
     db.session.add(GameType(name="All plays",
                             shortName="allplays",
                             id=1))
+    db.session.add(Edition(name="All editions",
+                            shortName="alleditions",
+                            id=1))
     db.session.commit()
     db.session.add(Update(name="First APP launch",
                           date=datetime.fromtimestamp(int(time.time())),
                           dateEnd=datetime.fromtimestamp(int(time.time()) + 31556926),
                           description="First update dated on the web launch day"))
+    db.session.add(Edition(name="KT 2021 - Open",
+                           shortName="open",
+                           date=datetime.fromtimestamp(0),
+                           description="Open environments"))
+    db.session.add(Edition(name="KT 2022 - Into the Dark",
+                           shortName="itd",
+                           date=datetime.fromtimestamp(0),
+                           description="Closed environments"))
     db.session.commit()

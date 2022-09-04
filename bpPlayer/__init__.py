@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, flash, redirect, url_for,
 from flask_login import current_user, login_required
 from flask_babel import gettext
 
-from utils import getUpdates, getPlayers, getPlayer, getGameTypes, setPlayerPermission
+from utils import getUpdates, getPlayers, getPlayer, getGameTypes, setPlayerPermission, getEditions
 from utils.log import logAccess
 from utils.decorators import only_left_hand
 
@@ -21,6 +21,8 @@ def players():
         players=pls,
         upd=getUpdates(),
         gt=getGameTypes(),
+        ed=getEditions(),
+        preferredEdition=request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1',
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
         language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
@@ -39,6 +41,8 @@ def player(pl):
             player=pl,
             upd=getUpdates(),
             gt=getGameTypes(),
+            ed=getEditions(),
+            preferredEdition=request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1',
             preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
             preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
             language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
@@ -53,6 +57,8 @@ def player(pl):
         player=pl,
         upd=getUpdates(),
         gt=getGameTypes(),
+        ed=getEditions(),
+        preferredEdition=request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1',
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
         language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en',

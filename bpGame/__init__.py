@@ -4,7 +4,7 @@ from flask import Blueprint, request, render_template, current_app, request
 from flask_login import current_user, login_required
 
 from utils import getUpdates
-from utils.games import getGames, getGame, getGameTypes
+from utils.games import getGames, getGame, getGameTypes, getEditions
 from utils.dataHandlers import handleGameData
 from utils.decorators import only_adamantium
 from utils.faction import getFactions
@@ -17,10 +17,10 @@ from utils.log import logAccess
 gameBP = Blueprint('gameBluePrint', __name__)
 
 
-@gameBP.route("/gamedata", methods={"GET", "POST"})
-def data():
+@gameBP.route("/gamedata/<ed>", methods={"GET", "POST"})
+def data(ed):
     logAccess('/gamedata', current_user, request)
-    gameData = handleGameData(json.loads(request.data.decode()), current_app.config['database'])
+    gameData = handleGameData(json.loads(request.data.decode()), current_app.config['database'], ed)
     if gameData == "Already saved":
         return {'status': gameData}, 200
     if gameData == "Bad game data":
@@ -40,6 +40,8 @@ def games():
         games=gms,
         upd=getUpdates(),
         gt=getGameTypes(),
+        ed=getEditions(),
+        preferredEdition=request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1',
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
         language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
@@ -57,6 +59,8 @@ def game(gm):
         game=gm,
         upd=getUpdates(),
         gt=getGameTypes(),
+        ed=getEditions(),
+        preferredEdition=request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1',
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
         language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
@@ -76,5 +80,6 @@ def addGame():
         missions=getMissions(),
         secondaries=getSecondaries(),
         players=getPlayers(),
-        gameTypes=getGameTypes()
+        gameTypes=getGameTypes(),
+        editions=getEditions()
     )

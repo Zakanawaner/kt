@@ -320,7 +320,7 @@ def randomize_data():
             response['loser'] = playersName[1]
             response['tie'] = True
 
-        return handleGameData(response, current_app.config['database'])
+        return handleGameData(response, current_app.config['database'], random.choice(["open", "itd"]))
     return None
 
 

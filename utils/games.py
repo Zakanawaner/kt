@@ -1,4 +1,4 @@
-from database import Game, Player, Tournament, Update, GameType
+from database import Game, Player, Tournament, Update, GameType, Edition
 from sqlalchemy import desc
 
 
@@ -28,3 +28,7 @@ def getGame(gm):
 
 def getGameTypes():
     return GameType.query.all()
+
+
+def getEditions():
+    return Edition.query.all()

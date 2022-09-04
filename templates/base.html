@@ -14,6 +14,7 @@
               <a class="nav-link" href="/games">{{ _('Games') }}</a>
               <a class="nav-link" href="/factions">{{ _('Factions') }}</a>
               <a class="nav-link" href="/players">{{ _('Players') }}</a>
+              <a class="nav-link" href="/teams">{{ _('Teams') }}</a>
               <a class="nav-link" href="/missions">{{ _('Missions') }}</a>
               <a class="nav-link" href="/secondaries">{{ _('Secondaries') }}</a>
               <!--<a class="nav-link" href="/team">Team KTD</a>-->
@@ -32,7 +33,7 @@
         </details>
         <div class="menu">
             {% if upd|length > 0 %}
-                <select id="update" name="update" onchange="onUpdateSelected(this.value);">
+                <select style="margin-top: 20px;" id="update" name="update" onchange="onUpdateSelected(this.value);">
                     {% for update in upd %}
                         {% if preferred == update.id|string %}
                             <option value="{{ update.id }}" selected>{{ update.name }} ({{ update.date.strftime('%Y-%m-%d') }})</option>
@@ -43,7 +44,7 @@
                 </select>
             {% endif %}
             {% if gt|length > 0 %}
-                <select id="gameType" name="gameType" onchange="onGameTypeSelected(this.value);">
+                <select style="margin-top: 20px;" id="gameType" name="gameType" onchange="onGameTypeSelected(this.value);">
                     {% for gameType in gt %}
                         {% if preferredGameType == gameType.id|string %}
                             <option value="{{ gameType.id }}" selected>{{ gameType.name }}</option>
@@ -53,8 +54,17 @@
                     {% endfor %}
                 </select>
             {% endif %}
-        </div>
-        <div class="menu">
+            {% if ed|length > 0 %}
+                <select style="margin-top: 20px;" id="edition" name="edition" onchange="onEditionSelected(this.value);">
+                    {% for edition in ed %}
+                        {% if preferredEdition == edition.id|string %}
+                            <option value="{{ edition.id }}" selected>{{ edition.name }}</option>
+                        {% else %}
+                            <option value="{{ edition.id }}">{{ edition.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            {% endif %}
             <select style="margin-top: 20px;" id="language" name="language" onchange="if (this.value) window.location.href=this.value">
                 <option value="/lang/en">EN</option>
                 <option value="/lang/es">ES</option>
@@ -96,6 +106,10 @@
         }
         function onGameTypeSelected(val) {
             document.cookie = "preferred_gameType="+val;
+            location.reload();
+        }
+        function onEditionSelected(val) {
+            document.cookie = "preferred_edition="+val;
             location.reload();
         }
         function onDeleteUser() {

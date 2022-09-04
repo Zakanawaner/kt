@@ -3,7 +3,7 @@ from flask_login import current_user
 
 from utils import getUpdates
 from utils.secondary import getSecondaries, getSecondary
-from utils.games import getGameTypes
+from utils.games import getGameTypes, getEditions
 from utils.log import logAccess
 
 
@@ -21,6 +21,8 @@ def secondaries():
         secondaries=scs,
         upd=getUpdates(),
         gt=getGameTypes(),
+        ed=getEditions(),
+        preferredEdition=request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1',
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
         language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
@@ -38,6 +40,8 @@ def secondary(sc):
         secondary=sc,
         upd=getUpdates(),
         gt=getGameTypes(),
+        ed=getEditions(),
+        preferredEdition=request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1',
         preferredGameType=request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1',
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
         language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
