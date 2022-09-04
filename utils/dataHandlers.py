@@ -411,6 +411,7 @@ def checkData(response):
 ############
 # Database #
 def createTables(db):
+    print("entro")
     db.create_all()
 
     db.session.add(Rank(name="Guardsman", shortName="guardsman", score=0))
@@ -431,11 +432,14 @@ def createTables(db):
     db.session.add(Update(name="All Time",
                           date=datetime.fromtimestamp(0),
                           dateEnd=datetime.fromtimestamp(9999999999),
-                          description="All time data"))
+                          description="All time data",
+                          id=1))
     db.session.add(GameType(name="All plays",
-                            shortName="allplays"))
+                            shortName="allplays",
+                            id=1))
     db.session.add(Edition(name="All editions",
-                            shortName="alleditions"))
+                            shortName="alleditions",
+                            id=1))
     db.session.commit()
     db.session.add(Update(name="First APP launch",
                           date=datetime.fromtimestamp(int(time.time())),
