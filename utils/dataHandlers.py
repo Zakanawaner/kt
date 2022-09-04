@@ -434,11 +434,9 @@ def createTables(db):
                           description="All time data",
                           id=1))
     db.session.add(GameType(name="All plays",
-                            shortName="allplays",
-                            id=1))
+                            shortName="allplays"))
     db.session.add(Edition(name="All editions",
-                            shortName="alleditions",
-                            id=1))
+                            shortName="alleditions"))
     db.session.commit()
     db.session.add(Update(name="First APP launch",
                           date=datetime.fromtimestamp(int(time.time())),
