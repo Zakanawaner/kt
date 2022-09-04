@@ -431,8 +431,7 @@ def createTables(db):
     db.session.add(Update(name="All Time",
                           date=datetime.fromtimestamp(0),
                           dateEnd=datetime.fromtimestamp(9999999999),
-                          description="All time data",
-                          id=1))
+                          description="All time data"))
     db.session.add(GameType(name="All plays",
                             shortName="allplays"))
     db.session.add(Edition(name="All editions",
