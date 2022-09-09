@@ -142,7 +142,7 @@ def randomize_data():
     ]
     players = [names.get_full_name() for i in range(0, 3)]
     players.append('mariofelectronica')
-    for i in range(0, 1):
+    for i in range(0, 10):
         d = random.randint(int(time.time()) - 31556926, int(time.time()) + 31556926)
         datetime.fromtimestamp(d)
         ok = False

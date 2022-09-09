@@ -108,6 +108,13 @@ def handleEdition(db, ed):
     return edition
 
 
+def handleUpdate(dt):
+    if not Update.query.filter(Update.id > 1).filter(Update.date <= dt).filter(Update.dateEnd > dt).first():
+        return Update.query.filter_by(id=1).first()
+    else:
+        return Update.query.filter(Update.id > 1).filter(Update.date <= dt).filter(Update.dateEnd > dt).first()
+
+
 def handleGameType(db, response):
     if 'gameType' in response.keys():
         if not GameType.query.filter_by(name=response['gameType']).first():
@@ -171,6 +178,7 @@ def handleGameData(response, db, ed):
             response = handleGameType(db, response)
             response = handleOperatives(db, response, ['winner', 'loser'])
             edition = handleEdition(db, ed)
+            update = handleUpdate(datetime.now())
 
             game = Game(
                 date=datetime.now(),
@@ -178,6 +186,7 @@ def handleGameData(response, db, ed):
                 tournament=response['tournament'].id,
                 gameType=response['gameType'].id,
                 edition=edition.id,
+                update=update.id,
                 mission=[response['mission']] if response['mission'] else [],
                 initFirst=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][
                     0] else [response[response['loser']]['faction']],
@@ -411,7 +420,6 @@ def checkData(response):
 ############
 # Database #
 def createTables(db):
-    print("entro")
     db.create_all()
 
     db.session.add(Rank(name="Guardsman", shortName="guardsman", score=0))

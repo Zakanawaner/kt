@@ -1,47 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% if upd|length > 0 %}
-            {% for update in upd %}
-                {% if preferred == update.id|string %}
-                    <div class="table-container update-dependent" id="update{{ update.id }}" style="display: flex;">
-                {% else %}
-                    <div class="table-container update-dependent" id="update{{ update.id }}">
-                {% endif %}
-                <div class="table">
-                    <div class="table-header">
-                        <div class="header__item">{{ _('Date') }}</div>
-                        <div class="header__item">{{ _('Mission') }}</div>
-                        <!--<div class="header__item">Player 1</div>-->
-                        <div class="header__item">{{ _('Faction 1') }}</div>
-                        <!--<div class="header__item">Player 2</div>-->
-                        <div class="header__item">{{ _('Faction 2') }}</div>
-                        <div class="header__item">{{ _('Result') }}</div>
-                        <div class="header__item">{{ _('Winner') }}</div>
-                    </div>
-                    <div class="table-content">
-                        {% for game in games['updates'][update.id|string] %}
-                            {% if game.gameType|string == preferredGameType or preferredGameType == '1' %}
-                                <div class="table-row">
-                                    <div onclick="location.href='/game/{{ game.id }}';" class="table-data table-link">{{ game.date.strftime("%Y-%m-%d") }}</div>
-                                    <div onclick="location.href='/mission/{{ game.mission[0].id }}';" class="table-data table-link">{{ game.mission[0].name }}</div>
-                                    <!--<div onclick="location.href='/player/{{ game.winner[0].id }}';" class="table-data table-link">{{ game.winner[0].username }}</div>-->
-                                    <div onclick="location.href='/faction/{{ game.winFaction[0].id }}';" class="table-data table-link">{{ game.winFaction[0].name }}</div>
-                                    <!--<div onclick="location.href='/player/{{ game.loser[0].id }}';" class="table-data table-link">{{ game.loser[0].username }}</div>-->
-                                    <div onclick="location.href='/faction/{{ game.losFaction[0].id }}';" class="table-data table-link">{{ game.losFaction[0].name }}</div>
-                                    <div class="table-data">{{ game.winTotal }} - {{ game.losTotal }}</div>
-                                    {% if not game.tie %}
-                                        <div onclick="location.href='/faction/{{ game.winFaction[0].id }}';" class="table-data table-link">{{ game.winFaction[0].name }}</div>
-                                    {% else %}
-                                        <div class="table-data">{{ _('Tie') }}</div>
-                                    {% endif %}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
+    <div class="table-container update-dependent" style="display: flex;">
+        <div class="table">
+            <div class="table-header">
+                <div class="header__item">{{ _('Date') }}</div>
+                <div class="header__item">{{ _('Mission') }}</div>
+                <!--<div class="header__item">Player 1</div>-->
+                <div class="header__item">{{ _('Faction 1') }}</div>
+                <!--<div class="header__item">Player 2</div>-->
+                <div class="header__item">{{ _('Faction 2') }}</div>
+                <div class="header__item">{{ _('Result') }}</div>
+                <div class="header__item">{{ _('Winner') }}</div>
             </div>
-        {% endfor %}
-    {% endif %}
+            <div class="table-content">
+                {% for game in games %}
+                    <div class="table-row">
+                        <div onclick="location.href='/game/{{ game.id }}';" class="table-data table-link">{{ game.date.strftime("%Y-%m-%d") }}</div>
+                        <div onclick="location.href='/mission/{{ game.mission[0].id }}';" class="table-data table-link">{{ game.mission[0].name }}</div>
+                        <!--<div onclick="location.href='/player/{{ game.winner[0].id }}';" class="table-data table-link">{{ game.winner[0].username }}</div>-->
+                        <div onclick="location.href='/faction/{{ game.winFaction[0].id }}';" class="table-data table-link">{{ game.winFaction[0].name }}</div>
+                        <!--<div onclick="location.href='/player/{{ game.loser[0].id }}';" class="table-data table-link">{{ game.loser[0].username }}</div>-->
+                        <div onclick="location.href='/faction/{{ game.losFaction[0].id }}';" class="table-data table-link">{{ game.losFaction[0].name }}</div>
+                        <div class="table-data">{{ game.winTotal }} - {{ game.losTotal }}</div>
+                        {% if not game.tie %}
+                            <div onclick="location.href='/faction/{{ game.winFaction[0].id }}';" class="table-data table-link">{{ game.winFaction[0].name }}</div>
+                        {% else %}
+                            <div class="table-data">{{ _('Tie') }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
     {% if user %}
         {% if user.permissions >= 4  %}
             <div class="login">

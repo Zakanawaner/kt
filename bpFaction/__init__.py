@@ -12,7 +12,9 @@ factionBP = Blueprint('factionBluePrint', __name__)
 
 @factionBP.route("/factions", methods={"GET", "POST"})
 def factions():
-    fct = getFactions()
+    fct = getFactions(int(request.cookies['preferred_update']),
+                      int(request.cookies['preferred_gameType']),
+                      int(request.cookies['preferred_edition']))
     logAccess('/factions', current_user, request)
     return render_template(
         'factions.html',
@@ -31,7 +33,10 @@ def factions():
 
 @factionBP.route("/faction/<fact>", methods={"GET", "POST"})
 def faction(fact):
-    fct = getFaction(fact)
+    fct = getFaction(fact,
+                     int(request.cookies['preferred_update']),
+                     int(request.cookies['preferred_gameType']),
+                     int(request.cookies['preferred_edition']))
     logAccess('/faction/{}'.format(fact), current_user, request)
     return render_template(
         'faction.html',

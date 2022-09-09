@@ -4,13 +4,8 @@ from sqlalchemy import desc
 
 #########
 # Games #
-def getGames():
-    games = {
-        'updates': {}
-    }
-    for upd in Update.query.order_by(desc(Update.date)).all():
-        games['updates'][str(upd.id)] = Game.query.filter(Game.date >= upd.date).filter(Game.date < upd.dateEnd).order_by(desc(Game.date)).all()
-    return games
+def getGames(up, tp, ed):
+    return Game.query.filter(Game.update == up if up > 1 else Game.update).filter(Game.gameType == tp if tp > 1 else Game.gameType).filter(Game.edition == ed if ed > 1 else Game.edition).order_by(desc(Game.date)).all()
 
 
 def getGame(gm):

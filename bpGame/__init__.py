@@ -31,7 +31,9 @@ def data(ed):
 
 @gameBP.route("/games", methods={"GET", "POST"})
 def games():
-    gms = getGames()
+    gms = getGames(int(request.cookies['preferred_update']),
+                   int(request.cookies['preferred_gameType']),
+                   int(request.cookies['preferred_edition']))
     logAccess('/games', current_user, request)
     return render_template(
         'games.html',
@@ -76,7 +78,7 @@ def addGame():
         'addgame.html',
         title="New Game",
         user=current_user if not current_user.is_anonymous else None,
-        factions=getFactions(),
+        factions=getFactions(1, 1, 1),
         missions=getMissions(),
         secondaries=getSecondaries(),
         players=getPlayers(),

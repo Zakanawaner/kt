@@ -194,6 +194,7 @@ class Game(db.Model):
     tournament = db.Column(db.Integer, db.ForeignKey('tournament.id'))
     gameType = db.Column(db.Integer, db.ForeignKey('gametype.id'))
     edition = db.Column(db.Integer, db.ForeignKey('edition.id'))
+    update = db.Column(db.Integer, db.ForeignKey('update.id'))
     timestamp = db.Column(db.Integer)
     mission = db.relationship("Mission", secondary=game_mission)
     initFirst = db.relationship("Faction", secondary=faction_game_init_1)
