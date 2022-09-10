@@ -1,41 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% if upd|length > 0 %}
-        {% for update in upd %}
-            {% if preferred == update.id|string %}
-                <div class="table-container update-dependent" id="update{{ update.id }}" style="display: flex;">
-            {% else %}
-                <div class="table-container update-dependent" id="update{{ update.id }}">
-            {% endif %}
-                <div class="table">
-                    <div class="table-header">
-                        <div class="header__item">{{ _('Name') }}</div>
-                        <div class="header__item">{{ _('Popularity') }}</div>
-                        <div class="header__item">{{ _('Avg Score') }}</div>
-                        <div class="header__item">{{ _('Top Faction') }}</div>
-                        <div class="header__item">{{ _('Worst Faction') }}</div>
-                    </div>
-                    <div class="table-content">
-                        {% for mission in missions %}
-                            <div class="table-row">
-                                <div onclick="location.href='/mission/{{ mission['sql'].id }}';" class="table-data table-link">{{ mission['sql'].name }}</div>
-                                <div class="table-data">{{ mission['updates'][update.id|string][preferredGameType]['popularity'] }}%</div>
-                                <div class="table-data">{{ mission['sql'].avgScore }}</div>
-                                {% if mission['updates'][update.id|string][preferredGameType]['topFaction'] %}
-                                    <div onclick="location.href='/faction/{{ mission['updates'][update.id|string][preferredGameType]['topFaction'].id }}';" class="table-data table-link">{{ mission['updates'][update.id|string][preferredGameType]['topFaction'].name }}</div>
-                                {% else %}
-                                    <div class="table-data table-link">-</div>
-                                {% endif %}
-                                {% if mission['updates'][update.id|string][preferredGameType]['worstFaction'] %}
-                                    <div onclick="location.href='/faction/{{ mission['updates'][update.id|string][preferredGameType]['worstFaction'].id }}';" class="table-data table-link">{{ mission['updates'][update.id|string][preferredGameType]['worstFaction'].name }}</div>
-                                {% else %}
-                                    <div class="table-data table-link">-</div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
+    <div class="table-container update-dependent" style="display: flex;">
+        <div class="table">
+            <div class="table-header">
+                <div class="header__item">{{ _('Name') }}</div>
+                <div class="header__item">{{ _('Popularity') }}</div>
+                <div class="header__item">{{ _('Avg Score') }}</div>
+                <div class="header__item">{{ _('Top Faction') }}</div>
+                <div class="header__item">{{ _('Worst Faction') }}</div>
             </div>
-        {% endfor %}
-    {% endif %}
+            <div class="table-content">
+                {% for mission in missions %}
+                    <div class="table-row">
+                        <div onclick="location.href='/mission/{{ mission['sql'].id }}';" class="table-data table-link">{{ mission['sql'].name }}</div>
+                        <div class="table-data">{{ mission['rates']['popularity'] }}%</div>
+                        <div class="table-data">{{ mission['sql'].avgScore }}</div>
+                        {% if mission['rates']['topFaction'] %}
+                            <div onclick="location.href='/faction/{{ mission['rates']['topFaction'].id }}';" class="table-data table-link">{{ mission['rates']['topFaction'].name }}</div>
+                        {% else %}
+                            <div class="table-data table-link">-</div>
+                        {% endif %}
+                        {% if mission['rates']['worstFaction'] %}
+                            <div onclick="location.href='/faction/{{ mission['rates']['worstFaction'].id }}';" class="table-data table-link">{{ mission['rates']['worstFaction'].name }}</div>
+                        {% else %}
+                            <div class="table-data table-link">-</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

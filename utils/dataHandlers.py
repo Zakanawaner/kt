@@ -98,14 +98,18 @@ def handleTournament(db, response):
     return response
 
 
-def handleEdition(db, ed):
-    if not Edition.query.filter_by(shortName=ed).first():
-        edition = Edition(shortName=ed)
-        db.session.add(edition)
+def handleEdition(db, response):
+    if 'edition' in response.keys():
+        if not Edition.query.filter_by(name=response['edition']).first():
+            response['edition'] = GameType(name=response['edition'],
+                                            shortName=response['edition'].lower().replace(' ', ''), )
+            db.session.add(response['edition'])
+        else:
+            response['edition'] = GameType.query.filter_by(name=response['edition']).first()
     else:
-        edition = Edition.query.filter_by(shortName=ed).first()
+        response['edition'] = None
     db.session.commit()
-    return edition
+    return response
 
 
 def handleUpdate(dt):
@@ -165,7 +169,7 @@ def handleOperatives(db, response, pls):
     return response
 
 
-def handleGameData(response, db, ed):
+def handleGameData(response, db):
     resultCheck = checkData(response)
     if resultCheck == "ok":
         if not Game.query.filter_by(timestamp=response['timestamp']).first():
@@ -176,8 +180,8 @@ def handleGameData(response, db, ed):
             response = handleMission(db, response)
             response = handleTournament(db, response)
             response = handleGameType(db, response)
+            response = handleEdition(db, response)
             response = handleOperatives(db, response, ['winner', 'loser'])
-            edition = handleEdition(db, ed)
             update = handleUpdate(datetime.now())
 
             game = Game(
@@ -185,7 +189,7 @@ def handleGameData(response, db, ed):
                 timestamp=response['timestamp'],
                 tournament=response['tournament'].id,
                 gameType=response['gameType'].id,
-                edition=edition.id,
+                edition=response['edition'].id,
                 update=update.id,
                 mission=[response['mission']] if response['mission'] else [],
                 initFirst=[response[response['winner']]['faction']] if response[response['winner']]['initiative'][
@@ -277,10 +281,10 @@ def handleGameData(response, db, ed):
             db.session.add(response[response['loser']]['faction'])
             response['tournament'].games.append(game)
             response['gameType'].games.append(game)
-            edition.games.append(game)
+            response['edition'].games.append(game)
             db.session.add(response['tournament'])
             db.session.add(response['gameType'])
-            db.session.add(edition)
+            db.session.add(response['edition'])
             db.session.add(game)
             db.session.commit()
             return game
@@ -296,6 +300,7 @@ def checkData(response):
         },
         'timestamp': "",
         'tournament': "",
+        'edition': "",
         'gameType': "",
         'rollOffWinner': "",
         'rollOffWinnerSelection': "",
@@ -309,6 +314,7 @@ def checkData(response):
                 'second': 0,
                 'third': 0,
                 'fourth': 0,
+                'end': 0,
                 'total': 0,
             },
             'secondaries': {
@@ -349,6 +355,7 @@ def checkData(response):
                 'second': 0,
                 'third': 0,
                 'fourth': 0,
+                'end': 0,
                 'total': 0,
             },
             'secondaries': {

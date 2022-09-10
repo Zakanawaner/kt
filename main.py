@@ -37,7 +37,7 @@ if __name__ == '__main__':
     app.run(host=app.config['HOST'], port=app.config['PORT'])
 
 # TODO TTS:
-#  - Añadir la parte ITD / open
+#  - Testear tooodo
 
 # TODO WEB
 #  - Añadir imagenes de nuevas facciones
@@ -46,9 +46,11 @@ if __name__ == '__main__':
 #  - Ediciones (gordo) {
 #       games ok
 #       factions ok
-#       missions
+#       missions ok
 #       players
 #       secondaries
+#       general
+#       mail
 #  }
 
 # TODO Future

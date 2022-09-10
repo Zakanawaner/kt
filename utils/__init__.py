@@ -163,6 +163,7 @@ def randomize_data():
         response = {
             'tournament': random.choice(tournaments),
             'gameType': random.choice(tournaments),
+            'edition': random.choice(["KT 2021 - Open", "KT 2022 - Into the Dark"]),
             'timestamp': int(time.time()) - 31556926 + i,
             'mission': random.choice([
                 {
@@ -320,7 +321,7 @@ def randomize_data():
             response['loser'] = playersName[1]
             response['tie'] = True
 
-        return handleGameData(response, current_app.config['database'], random.choice(["open", "itd"]))
+        return handleGameData(response, current_app.config['database'])
     return None
 
 

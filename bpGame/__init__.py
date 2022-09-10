@@ -17,10 +17,10 @@ from utils.log import logAccess
 gameBP = Blueprint('gameBluePrint', __name__)
 
 
-@gameBP.route("/gamedata/<ed>", methods={"GET", "POST"})
-def data(ed):
+@gameBP.route("/gamedata", methods={"GET", "POST"})
+def data():
     logAccess('/gamedata', current_user, request)
-    gameData = handleGameData(json.loads(request.data.decode()), current_app.config['database'], ed)
+    gameData = handleGameData(json.loads(request.data.decode()), current_app.config['database'])
     if gameData == "Already saved":
         return {'status': gameData}, 200
     if gameData == "Bad game data":
@@ -79,7 +79,7 @@ def addGame():
         title="New Game",
         user=current_user if not current_user.is_anonymous else None,
         factions=getFactions(1, 1, 1),
-        missions=getMissions(),
+        missions=getMissions(1, 1, 1),
         secondaries=getSecondaries(),
         players=getPlayers(),
         gameTypes=getGameTypes(),

@@ -12,7 +12,9 @@ missionBP = Blueprint('missionBluePrint', __name__)
 
 @missionBP.route("/missions", methods={"GET", "POST"})
 def missions():
-    mss = getMissions()
+    mss = getMissions(int(request.cookies['preferred_update']),
+                      int(request.cookies['preferred_gameType']),
+                      int(request.cookies['preferred_edition']))
     logAccess('/missions', current_user, request)
     return render_template(
         'missions.html',
@@ -32,7 +34,10 @@ def missions():
 @missionBP.route("/mission/<ms>", methods={"GET", "POST"})
 def mission(ms):
     logAccess('/player/{}'.format(ms), current_user, request)
-    mss = getMission(ms)
+    mss = getMission(ms,
+                     int(request.cookies['preferred_update']),
+                     int(request.cookies['preferred_gameType']),
+                     int(request.cookies['preferred_edition']))
     return render_template(
         'mission.html',
         title=mss['sql'].name,
