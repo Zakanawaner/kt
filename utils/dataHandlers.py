@@ -101,11 +101,11 @@ def handleTournament(db, response):
 def handleEdition(db, response):
     if 'edition' in response.keys():
         if not Edition.query.filter_by(name=response['edition']).first():
-            response['edition'] = GameType(name=response['edition'],
-                                            shortName=response['edition'].lower().replace(' ', ''), )
+            response['edition'] = Edition(name=response['edition'],
+                                          shortName=response['edition'].lower().replace(' ', ''), )
             db.session.add(response['edition'])
         else:
-            response['edition'] = GameType.query.filter_by(name=response['edition']).first()
+            response['edition'] = Edition.query.filter_by(name=response['edition']).first()
     else:
         response['edition'] = None
     db.session.commit()
@@ -212,6 +212,7 @@ def handleGameData(response, db):
                 winPrimarySecond=response[response['winner']]['primaries']['second'],
                 winPrimaryThird=response[response['winner']]['primaries']['third'],
                 winPrimaryFourth=response[response['winner']]['primaries']['fourth'],
+                winPrimaryFifth=response[response['winner']]['primaries']['end'],
                 winSecondary=response[response['winner']]['secondaries']['total'],
                 winSecondaryFirst=[response[response['winner']]['secondaries']['first']['name']],
                 winSecondaryFirstScoreTurn1=response[response['winner']]['secondaries']['first']['first'],
@@ -243,6 +244,7 @@ def handleGameData(response, db):
                 losPrimarySecond=response[response['loser']]['primaries']['second'],
                 losPrimaryThird=response[response['loser']]['primaries']['third'],
                 losPrimaryFourth=response[response['loser']]['primaries']['fourth'],
+                losPrimaryFifth=response[response['loser']]['primaries']['end'],
                 losSecondary=response[response['loser']]['secondaries']['total'],
                 losSecondaryFirst=[response[response['loser']]['secondaries']['first']['name']],
                 losSecondaryFirstScoreTurn1=response[response['loser']]['secondaries']['first']['first'],
