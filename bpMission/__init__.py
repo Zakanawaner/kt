@@ -12,9 +12,9 @@ missionBP = Blueprint('missionBluePrint', __name__)
 
 @missionBP.route("/missions", methods={"GET", "POST"})
 def missions():
-    mss = getMissions(int(request.cookies['preferred_update']),
-                      int(request.cookies['preferred_gameType']),
-                      int(request.cookies['preferred_edition']))
+    mss = getMissions(int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else '1',
+                      int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1'),
+                      int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1'))
     logAccess('/missions', current_user, request)
     return render_template(
         'missions.html',
@@ -35,9 +35,9 @@ def missions():
 def mission(ms):
     logAccess('/player/{}'.format(ms), current_user, request)
     mss = getMission(ms,
-                     int(request.cookies['preferred_update']),
-                     int(request.cookies['preferred_gameType']),
-                     int(request.cookies['preferred_edition']))
+                     int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else '1',
+                     int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1'),
+                     int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1'))
     return render_template(
         'mission.html',
         title=mss['sql'].name,
