@@ -456,7 +456,7 @@ class Tournament(db.Model):
     shortName = db.Column(db.String(100))
     dateInit = db.Column(db.DateTime)
     dateEnd = db.Column(db.DateTime)
-    teamFormat = db.column(db.Boolean)
+    teamFormat = db.Column(db.Boolean)
     players = db.relationship("Player", secondary=player_tournament)
     teams = db.relationship("Team", secondary=team_tournament)
     games = db.relationship("Game", secondary=game_tournament)
