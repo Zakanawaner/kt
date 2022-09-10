@@ -36,7 +36,7 @@ def updateMission(db, fact):
                     'totalScoreFourth': 0,
                     'totalGames': 0
                 }
-                for game in Game.query.filter(Game.mission.contains(missionGl['sql'])).filter(Game.update == update.id if update.id > 1 else Game.update).filter(Game.gameType == gameType.id if gameType > 1 else Game.gameType).filter(Game.edition == edition.id if edition.id > 1 else Game.edition).all():
+                for game in Game.query.filter(Game.mission.contains(missionGl['sql'])).filter(Game.update == update.id if update.id > 1 else Game.update).filter(Game.gameType == gameType.id if gameType.id > 1 else Game.gameType).filter(Game.edition == edition.id if edition.id > 1 else Game.edition).all():
                     mission[editionId][gameTypeId]['totalGames'] += 2
                     mission[editionId][gameTypeId]['totalScore'] += game.winPrimary + game.losPrimary
                     mission[editionId][gameTypeId]['totalScoreFirst'] += game.winPrimaryFirst + game.losPrimaryFirst
