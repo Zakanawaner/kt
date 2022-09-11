@@ -12,9 +12,9 @@ factionBP = Blueprint('factionBluePrint', __name__)
 
 @factionBP.route("/factions", methods={"GET", "POST"})
 def factions():
-    fct = getFactions(int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else '1',
-                      int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1'),
-                      int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1'))
+    fct = getFactions(int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else 1,
+                      int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else 1),
+                      int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else 1))
     logAccess('/factions', current_user, request)
     return render_template(
         'factions.html',
@@ -34,9 +34,9 @@ def factions():
 @factionBP.route("/faction/<fact>", methods={"GET", "POST"})
 def faction(fact):
     fct = getFaction(fact,
-                     int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else '1',
-                     int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1'),
-                     int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1'))
+                     int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else 1,
+                     int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else 1),
+                     int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else 1))
     logAccess('/faction/{}'.format(fact), current_user, request)
     return render_template(
         'faction.html',

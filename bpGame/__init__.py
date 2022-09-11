@@ -31,9 +31,9 @@ def data():
 
 @gameBP.route("/games", methods={"GET", "POST"})
 def games():
-    gms = getGames(int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else '1',
-                   int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else '1'),
-                   int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else '1'))
+    gms = getGames(int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else 1,
+                   int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else 1),
+                   int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else 1))
     logAccess('/games', current_user, request)
     return render_template(
         'games.html',
