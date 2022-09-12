@@ -80,8 +80,8 @@ def addGame():
         user=current_user if not current_user.is_anonymous else None,
         factions=getFactions(1, 1, 1),
         missions=getMissions(1, 1, 1),
-        secondaries=getSecondaries(),
-        players=getPlayers(),
+        secondaries=getSecondaries(1, 1, 1),
+        players=getPlayers(1, 1, 1),
         gameTypes=getGameTypes(),
         editions=getEditions()
     )

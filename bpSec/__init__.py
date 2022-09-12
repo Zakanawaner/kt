@@ -12,7 +12,9 @@ secondaryBP = Blueprint('secondaryBluePrint', __name__)
 
 @secondaryBP.route("/secondaries", methods={"GET", "POST"})
 def secondaries():
-    scs = getSecondaries()
+    scs = getSecondaries(int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else 1,
+                         int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else 1),
+                         int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else 1))
     logAccess('/secondaries', current_user, request)
     return render_template(
         'secondaries.html',
@@ -32,7 +34,10 @@ def secondaries():
 @secondaryBP.route("/secondary/<sc>", methods={"GET", "POST"})
 def secondary(sc):
     logAccess('/secondary/{}'.format(sc), current_user, request)
-    sc = getSecondary(sc)
+    sc = getSecondary(sc,
+                      int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else 1,
+                      int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else 1),
+                      int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else 1))
     return render_template(
         'secondary.html',
         title=sc['sql'].name,

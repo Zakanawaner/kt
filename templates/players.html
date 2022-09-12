@@ -1,61 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% if upd|length > 0 %}
-        {% for update in upd %}
-            {% if preferred == update.id|string %}
-                <div class="table-container update-dependent" id="update{{ update.id }}" style="display: flex;">
-            {% else %}
-                <div class="table-container update-dependent" id="update{{ update.id }}">
-            {% endif %}
-                <div class="table">
-                    <div class="table-header">
-                        <div class="header__item">{{ _('Name') }}</div>
-                        <div class="header__item">{{ _('Rank') }}</div>
-                        <div class="header__item">{{ _('Winrate') }}</div>
-                        <div class="header__item">{{ _('Games') }}</div>
-                        <div class="header__item">{{ _('Wins') }}</div>
-                        <div class="header__item">{{ _('Loses') }}</div>
-                        <div class="header__item">{{ _('Ties') }}</div>
-                        <div class="header__item">{{ _('Top faction') }}</div>
-                        <div class="header__item">{{ _('Top counter') }}</div>
-                        <div class="header__item">{{ _('Top Mission') }}</div>
-                        <div class="header__item">{{ _('Top Sec') }}</div>
-                    </div>
-                    <div class="table-content">
-                        {% for player in players %}
-                            <div class="table-row">
-                                <div onclick="location.href='/player/{{ player['sql'].id }}';" class="table-data table-link">{{ player['name'] }}</div>
-                                <div onclick="location.href='/rank/{{ player['sql'].rank[0].id }}';" class="table-data table-link">{{ player['sql'].rank[0].name }}</div>
-                                <div class="table-data">{{ player['updates'][update.id|string][preferredGameType]['winRate'] }}%</div>
-                                <div class="table-data">{{ player['updates'][update.id|string][preferredGameType]['totalGames'] }}</div>
-                                <div class="table-data">{{ player['updates'][update.id|string][preferredGameType]['wins'] }}</div>
-                                <div class="table-data">{{ player['updates'][update.id|string][preferredGameType]['loses'] }}</div>
-                                <div class="table-data">{{ player['updates'][update.id|string][preferredGameType]['ties'] }}</div>
-                                {% if player['updates'][update.id|string][preferredGameType]['factionRates']|length > 0 %}
-                                    <div onclick="location.href='/faction/{{ player['updates'][update.id|string][preferredGameType]['factionRates'][0].id }}';" class="table-data table-link">{{ player['updates'][update.id|string][preferredGameType]['factionRates'][0].name }}</div>
-                                {% else %}
-                                    <div class="table-data">-</div>
-                                {% endif %}
-                                {% if player['updates'][update.id|string][preferredGameType]['factionRatesAgainst']|length > 0 %}
-                                    <div onclick="location.href='/faction/{{ player['updates'][update.id|string][preferredGameType]['factionRatesAgainst'][0].id }}';" class="table-data table-link">{{ player['updates'][update.id|string][preferredGameType]['factionRatesAgainst'][0].name }}</div>
-                                {% else %}
-                                    <div class="table-data">-</div>
-                                {% endif %}
-                                {% if player['updates'][update.id|string][preferredGameType]['missionRates']|length > 0 %}
-                                    <div onclick="location.href='/mission/{{ player['updates'][update.id|string][preferredGameType]['missionRates'][0].id }}';" class="table-data table-link">{{ player['updates'][update.id|string][preferredGameType]['missionRates'][0].name }}</div>
-                                {% else %}
-                                    <div class="table-data">-</div>
-                                {% endif %}
-                                {% if player['updates'][update.id|string][preferredGameType]['secondaryRates']|length > 0 %}
-                                    <div onclick="location.href='/secondary/{{ player['updates'][update.id|string][preferredGameType]['secondaryRates'][0].id }}';" class="table-data table-link">{{ player['updates'][update.id|string][preferredGameType]['secondaryRates'][0].name }}</div>
-                                {% else %}
-                                    <div class="table-data">-</div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
+<div class="table-container update-dependent" style="display: flex;">
+        <div class="table">
+            <div class="table-header">
+                <div class="header__item">{{ _('Name') }}</div>
+                <div class="header__item">{{ _('Rank') }}</div>
+                <div class="header__item">{{ _('Winrate') }}</div>
+                <div class="header__item">{{ _('Games') }}</div>
+                <div class="header__item">{{ _('Wins') }}</div>
+                <div class="header__item">{{ _('Loses') }}</div>
+                <div class="header__item">{{ _('Ties') }}</div>
+                <div class="header__item">{{ _('Top faction') }}</div>
+                <div class="header__item">{{ _('Top counter') }}</div>
+                <div class="header__item">{{ _('Top Mission') }}</div>
+                <div class="header__item">{{ _('Top Sec') }}</div>
             </div>
-        {% endfor %}
-    {% endif %}
+            <div class="table-content">
+                {% for player in players %}
+                    <div class="table-row">
+                        <div onclick="location.href='/player/{{ player['sql'].id }}';" class="table-data table-link">{{ player['name'] }}</div>
+                        <div onclick="location.href='/rank/{{ player['sql'].rank[0].id }}';" class="table-data table-link">{{ player['sql'].rank[0].name }}</div>
+                        <div class="table-data">{{ player['rates']['winRate'] }}%</div>
+                        <div class="table-data">{{ player['rates']['totalGames'] }}</div>
+                        <div class="table-data">{{ player['rates']['wins'] }}</div>
+                        <div class="table-data">{{ player['rates']['loses'] }}</div>
+                        <div class="table-data">{{ player['rates']['ties'] }}</div>
+                        {% if player['rates']['factionRates']|length > 0 %}
+                            <div onclick="location.href='/faction/{{ player['rates']['factionRates'][0].id }}';" class="table-data table-link">{{ player['rates']['factionRates'][0].name }}</div>
+                        {% else %}
+                            <div class="table-data">-</div>
+                        {% endif %}
+                        {% if player['rates']['factionRatesAgainst']|length > 0 %}
+                            <div onclick="location.href='/faction/{{ player['rates']['factionRatesAgainst'][0].id }}';" class="table-data table-link">{{ player['rates']['factionRatesAgainst'][0].name }}</div>
+                        {% else %}
+                            <div class="table-data">-</div>
+                        {% endif %}
+                        {% if player['rates']['missionRates']|length > 0 %}
+                            <div onclick="location.href='/mission/{{ player['rates']['missionRates'][0].id }}';" class="table-data table-link">{{ player['rates']['missionRates'][0].name }}</div>
+                        {% else %}
+                            <div class="table-data">-</div>
+                        {% endif %}
+                        {% if player['rates']['secondaryRates']|length > 0 %}
+                            <div onclick="location.href='/secondary/{{ player['rates']['secondaryRates'][0].id }}';" class="table-data table-link">{{ player['rates']['secondaryRates'][0].name }}</div>
+                        {% else %}
+                            <div class="table-data">-</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

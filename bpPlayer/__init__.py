@@ -12,7 +12,9 @@ playerBP = Blueprint('playerBluePrint', __name__)
 
 @playerBP.route("/players", methods={"GET", "POST"})
 def players():
-    pls = getPlayers()
+    pls = getPlayers(int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else 1,
+                     int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else 1),
+                     int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else 1))
     logAccess('/players', current_user, request)
     return render_template(
         'players.html',
@@ -32,7 +34,10 @@ def players():
 @playerBP.route("/player/<pl>", methods={"GET", "POST"})
 def player(pl):
     logAccess('/player/{}'.format(pl), current_user, request)
-    pl = getPlayer(pl)
+    pl = getPlayer(pl,
+                   int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else 1,
+                   int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else 1),
+                   int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else 1))
     if pl['sql'] == current_user:
         return render_template(
             'profile.html',
@@ -75,5 +80,5 @@ def changePlayerPermissions(pl):
         flash("OK")
     else:
         flash("No OK")
-    pl = getPlayer(pl)
+    pl = getPlayer(pl, 1, 1, 1)
     return redirect(url_for('playerBluePrint.player', pl=pl['sql'].id))

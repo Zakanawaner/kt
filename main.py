@@ -37,21 +37,10 @@ if __name__ == '__main__':
     app.run(host=app.config['HOST'], port=app.config['PORT'])
 
 # TODO TTS:
-#  - Testear tooodo
 
 # TODO WEB
-#  - Añadir imagenes de nuevas facciones
 #  - Toda la parte de equipos y torneos
 #  - Gestionar respuestas de checkData
-#  - Ediciones (gordo) {
-#       games ok
-#       factions ok
-#       missions ok
-#       players
-#       secondaries
-#       general
-#       mail
-#  }
 
 # TODO Future
 #  - Hacer el timeline de la partida como me mostró GoodPerson

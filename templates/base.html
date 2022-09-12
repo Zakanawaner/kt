@@ -36,7 +36,11 @@
                 <select style="margin-top: 20px;" id="update" name="update" onchange="onUpdateSelected(this.value);">
                     {% for update in upd %}
                         {% if preferred == update.id|string %}
-                            <option value="{{ update.id }}" selected>{{ update.name }} ({{ update.date.strftime('%Y-%m-%d') }})</option>
+                            {% if preferred == '1' %}
+                                <option value="{{ update.id }}" selected>{{ update.name }}</option>
+                            {% else %}
+                                <option value="{{ update.id }}" selected>{{ update.name }} ({{ update.date.strftime('%Y-%m-%d') }})</option>
+                            {% endif %}
                         {% else %}
                             <option value="{{ update.id }}">{{ update.name }} ({{ update.date.strftime('%Y-%m-%d') }})</option>
                         {% endif %}
