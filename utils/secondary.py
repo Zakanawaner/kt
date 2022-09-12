@@ -85,7 +85,7 @@ def updateSecondary(db, sc):
         secondaryGl['updates'][str(update.id)] = secondary
     try:
         secondaryGl['sql'].avgScore = float("{:.2f}".format(secondaryGl['updates']['1']['1']['1']['totalScore'] / secondaryGl['updates']['1']['1']['1']['totalGames']))
-        secondaryGl['sql'].avgScoreFirst = float("{:.2f}".format(secondaryGl['updates']['1']['1']['1']['totalScoreFirst'] / secondaryGl['updates']['1']['1']['totalGames']))
+        secondaryGl['sql'].avgScoreFirst = float("{:.2f}".format(secondaryGl['updates']['1']['1']['1']['totalScoreFirst'] / secondaryGl['updates']['1']['1']['1']['totalGames']))
         secondaryGl['sql'].avgScoreSecond = float("{:.2f}".format(secondaryGl['updates']['1']['1']['1']['totalScoreSecond'] / secondaryGl['updates']['1']['1']['1']['totalGames']))
         secondaryGl['sql'].avgScoreThird = float("{:.2f}".format(secondaryGl['updates']['1']['1']['1']['totalScoreThird'] / secondaryGl['updates']['1']['1']['1']['totalGames']))
         secondaryGl['sql'].avgScoreFourth = float("{:.2f}".format(secondaryGl['updates']['1']['1']['1']['totalScoreFourth'] / secondaryGl['updates']['1']['1']['1']['totalGames']))
