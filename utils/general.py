@@ -10,7 +10,7 @@ from collections import OrderedDict
 # General #
 def getGeneral():
     players = Player.query.filter_by(allowSharing=True).filter_by(steamLink=True).order_by(desc(Player.score)).all()
-    tournaments = Tournament.query.order_by(desc(Tournament.dateInit)).all()
+    tournaments = Tournament.query.filter(Tournament.name != "").order_by(desc(Tournament.dateInit)).all()
     factions = {}
     auxTop = 0
     auxBot = 0
