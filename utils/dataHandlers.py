@@ -282,6 +282,14 @@ def handleGameData(response, db):
             db.session.add(response[response['winner']]['faction'])
             db.session.add(response[response['loser']]['faction'])
             response['tournament'].games.append(game)
+            winner = Player.query.filter_by(steamId=game.winnerId).filter_by(allowSharing=True).first()
+            if winner:
+                if winner not in response['tournament'].players:
+                    response['tournament'].players.append(winner)
+            loser = Player.query.filter_by(steamId=game.loserId).filter_by(allowSharing=True).first()
+            if loser:
+                if loser not in response['tournament'].players:
+                    response['tournament'].players.append(loser)
             response['gameType'].games.append(game)
             response['edition'].games.append(game)
             db.session.add(response['tournament'])

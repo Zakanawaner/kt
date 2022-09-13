@@ -1,12 +1,12 @@
 import json
 
-from flask import Blueprint, request, render_template, current_app, request
+from flask import Blueprint, request, render_template, current_app, request, url_for, redirect, flash
 from flask_login import current_user, login_required
 
 from utils import getUpdates
 from utils.games import getGames, getGame, getGameTypes, getEditions
-from utils.dataHandlers import handleGameData
-from utils.decorators import only_adamantium
+from utils.tournament import getTournaments, addNewTournament, getTournament
+from utils.decorators import only_tournament_organizer
 from utils.faction import getFactions
 from utils.mission import getMissions
 from utils.secondary import getSecondaries
@@ -14,32 +14,20 @@ from utils.player import getPlayers
 from utils.log import logAccess
 
 
-gameBP = Blueprint('gameBluePrint', __name__)
+tournamentBP = Blueprint('tournamentBluePrint', __name__)
 
 
-@gameBP.route("/gamedata", methods={"GET", "POST"})
-def data():
-    logAccess('/gamedata', current_user, request)
-    gameData = handleGameData(json.loads(request.data.decode()), current_app.config['database'])
-    if gameData == "Already saved":
-        return {'status': gameData}, 200
-    if gameData == "Bad Game Data":
-        return {'status': gameData + " Did you show all your Tac Ops?"}, 200
-    current_app.config['twitterClient'].newGame(gameData)
-    return {'status': 'ok. check https://killteamdata.com/games'}, 200
-
-
-@gameBP.route("/games", methods={"GET", "POST"})
-def games():
-    gms = getGames(int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else 1,
-                   int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else 1),
-                   int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else 1))
-    logAccess('/games', current_user, request)
+@tournamentBP.route("/tournaments", methods={"GET", "POST"})
+def tournaments():
+    tours = getTournaments(int(request.cookies['preferred_update']) if 'preferred_update' in request.cookies.keys() else 1,
+                           int(request.cookies['preferred_gameType'] if 'preferred_gameType' in request.cookies.keys() else 1),
+                           int(request.cookies['preferred_edition'] if 'preferred_edition' in request.cookies.keys() else 1))
+    logAccess('/tournaments', current_user, request)
     return render_template(
-        'games.html',
-        title="Games",
+        'tournaments.html',
+        title="Tournaments",
         user=current_user if not current_user.is_anonymous else None,
-        games=gms,
+        tournaments=tours,
         upd=getUpdates(),
         gt=getGameTypes(),
         ed=getEditions(),
@@ -50,15 +38,15 @@ def games():
     )
 
 
-@gameBP.route("/game/<gm>", methods={"GET", "POST"})
-def game(gm):
-    logAccess('/game/{}'.format(gm), current_user, request)
-    gm = getGame(gm)
+@tournamentBP.route("/tournament/<tr>", methods={"GET", "POST"})
+def tournament(tr):
+    logAccess('/tournament/{}'.format(tr), current_user, request)
+    tr = getTournament(tr, 1, 1, 1)
     return render_template(
-        'game.html',
-        title="Game",
+        'tournament.html',
+        title="Tournament",
         user=current_user if not current_user.is_anonymous else None,
-        game=gm,
+        tournament=tr,
         upd=getUpdates(),
         gt=getGameTypes(),
         ed=getEditions(),
@@ -69,14 +57,18 @@ def game(gm):
     )
 
 
-@gameBP.route("/game/add", methods={"GET", "POST"})
+@tournamentBP.route("/tournament/add", methods={"GET", "POST"})
 @login_required
-@only_adamantium
-def addGame():
-    logAccess('/game/add', current_user, request)
+@only_tournament_organizer
+def addTournament():
+    logAccess('/tournament/add', current_user, request)
+    if request.method == "POST":
+        resp = addNewTournament(request.form, current_app.config['database'])
+        flash(resp)
+        return redirect(url_for('tournamentBluePrint.tournaments'))
     return render_template(
-        'addgame.html',
-        title="New Game",
+        'addtournament.html',
+        title="New Tournament",
         user=current_user if not current_user.is_anonymous else None,
         factions=getFactions(1, 1, 1),
         missions=getMissions(1, 1, 1),

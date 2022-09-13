@@ -9,6 +9,7 @@ from bpMission import missionBP
 from bpFaction import factionBP
 from bpSec import secondaryBP
 from bpGame import gameBP
+from bpTournament import tournamentBP
 from bpAdmin import adminBP
 from bpMail import mailBP
 from bpCardGen import cardGenBP
@@ -24,6 +25,7 @@ app.register_blueprint(missionBP)
 app.register_blueprint(factionBP)
 app.register_blueprint(secondaryBP)
 app.register_blueprint(gameBP)
+app.register_blueprint(tournamentBP)
 app.register_blueprint(adminBP)
 app.register_blueprint(mailBP)
 app.register_blueprint(cardGenBP)
@@ -39,7 +41,9 @@ if __name__ == '__main__':
 # TODO TTS:
 
 # TODO WEB
-#  - Toda la parte de equipos y torneos
+#  - Toda la parte de equipos y torneos {
+#       Falta tournament detail
+#       Chequear tudo
 #  - Gestionar respuestas de checkData
 
 # TODO Future

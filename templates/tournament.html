@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="player update-dependent" style="display: flex;">
+        <h1>{{ tournament['sql'].name }}</h1>
+        <div class="pie-container at-0-8">
+            <div class="pie animate no-round" style="--p:{{ tournament['rates']['popularity'] }};--c:rgba(255,101,0,1);--b:15px">
+                <p>{{ _('Popularity') }}</p>
+                <p>{{ tournament['rates']['popularity'] }}%</p>
+            </div>
+        </div>
+        <div class="player-super-container">
+            <h2>{{ _('Factions played with') }}</h2>
+            <div class="table-container">
+                <div class="table">
+                    <div class="table-header">
+                        <div class="header__item">{{ _('Name') }}</div>
+                        <div class="header__item">{{ _('Games') }}</div>
+                        <div class="header__item">{{ _('Winrate') }}</div>
+                        <div class="header__item">{{ _('Loserate') }}</div>
+                        <div class="header__item">{{ _('Tierate') }}</div>
+                    </div>
+                    <div class="table-content">
+                        {% for key, fact in tournament['rates']['bestFactions'].items() %}
+                            {% if fact['games'] > 0 %}
+                                <div class="table-row">
+                                    <div onclick="location.href='/faction/{{ fact['id'] }}';" class="table-data table-link">{{ key }}</div>
+                                    <div class="table-data">{{ fact['games'] }}</div>
+                                    <div class="table-data">{{ fact['winRate'] }}%</div>
+                                    <div class="table-data">{{ fact['loseRate'] }}%</div>
+                                    <div class="table-data">{{ fact['tieRate'] }}%</div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

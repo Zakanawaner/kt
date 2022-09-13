@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="login">
+        <h2>{{ _('Add Tournament') }}</h2>
+        <form class="login-form" action="/tournament/add" method="post">
+            <input type="text" name="name" id="name">
+            <input type="date" name="dateInit" id="dateInit">
+            <input type="date" name="dateEnd" id="dateEnd">
+            <input type="checkbox" id="isTeams" name="isTeams" value="isTeams">
+            <label for="isTeams">{{ _('Is it a team tournament?') }}</label>
+            <button type="submit">{{ _('Add') }}</button>
+        </form>
+    </div>
+{% endblock %}

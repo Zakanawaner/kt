@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="table-container update-dependent" style="display: flex;">
+        <div class="table">
+            <div class="table-header">
+                <div class="header__item">{{ _('Name') }}</div>
+                <div class="header__item">{{ _('Date Init') }}</div>
+                <div class="header__item">{{ _('Date End') }}</div>
+                <div class="header__item">{{ _('Players') }}</div>
+                <div class="header__item">{{ _('Games') }}</div>
+                <div class="header__item">{{ _('Winner') }}</div>
+                <div class="header__item">{{ _('Winner Faction') }}</div>
+            </div>
+            <div class="table-content">
+                {% for tournament in tournaments %}
+                    <div class="table-row">
+                        <div onclick="location.href='/tournament/{{ tournament['sql'].id }}';" class="table-data table-link">{{ tournament['sql'].name }}</div>
+                        <div class="table-data">{{ tournament['sql'].dateInit.strftime("%Y-%m-%d") }}</div>
+                        <div class="table-data">{{ tournament['sql'].dateEnd.strftime("%Y-%m-%d") }}</div>
+                        <div class="table-data">{{ tournament['rates']['totalPlayers'] }}</div>
+                        <div class="table-data">{{ tournament['rates']['totalGames'] }}</div>
+                        {% if tournament['rates']['winner'] %}
+                            <div onclick="location.href='/player/{{ tournament['rates']['winner'].id }}';" class="table-data table-link">{{ tournament['rates']['winner'].name }}</div>
+                        {% else %}
+                            <div class="table-data table-link">-</div>
+                        {% endif %}
+                        {% if tournament['rates']['factionWinner'] %}
+                            <div onclick="location.href='/faction/{{ tournament['rates']['factionWinner'].id }}';" class="table-data table-link">{{ tournament['rates']['factionWinner'].name }}</div>
+                        {% else %}
+                            <div class="table-data table-link">-</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% if user %}
+        {% if user.permissions >= 11  %}
+            <div class="login">
+                <a href="/tournament/add">{{ _('Add tournament manually') }}</a>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
