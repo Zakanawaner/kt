@@ -22,11 +22,16 @@
                 <p>{{ _('Top') }} 3: {{ gen['top3Player'] }}</p>
             </div>
         </div>
-        <!--<div onclick="location.href='/tournaments';" class="card">
+        <div onclick="location.href='/tournaments';" class="card">
             <div class="card_title">
                 <h2>{{ _('Tournaments') }}</h2>
             </div>
-        </div>-->
+            <div class="card_content">
+                <p>1: {{ gen['top1Tournament'] }}</p>
+                <p>2: {{ gen['top2Tournament'] }}</p>
+                <p>3: {{ gen['top3Tournament'] }}</p>
+            </div>
+        </div>
         <div onclick="location.href='/factions';" class="card">
             <div class="card_title">
                 <h2>{{ _('Factions') }}</h2>

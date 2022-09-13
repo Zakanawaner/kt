@@ -1,6 +1,6 @@
 import operator
 
-from database import Game, Player, Faction, Mission, Secondary
+from database import Game, Player, Faction, Mission, Secondary, Tournament
 from sqlalchemy import extract, desc
 from datetime import datetime
 from collections import OrderedDict
@@ -10,6 +10,7 @@ from collections import OrderedDict
 # General #
 def getGeneral():
     players = Player.query.filter_by(allowSharing=True).filter_by(steamLink=True).order_by(desc(Player.score)).all()
+    tournaments = Tournament.query.order_by(desc(Tournament.dateInit)).all()
     factions = {}
     auxTop = 0
     auxBot = 0
@@ -81,6 +82,9 @@ def getGeneral():
         'top1Player': players[0].username if players else None,
         'top2Player': players[1].username if len(players) > 1 else None,
         'top3Player': players[2].username if len(players) > 2 else None,
+        'top1Tournament': tournaments[0].name if players else None,
+        'top2Tournament': tournaments[1].name if len(players) > 1 else None,
+        'top3Tournament': tournaments[2].name if len(players) > 2 else None,
         'played': {},
         'maxPlayed': 0
     }
