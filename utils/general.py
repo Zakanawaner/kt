@@ -82,9 +82,9 @@ def getGeneral():
         'top1Player': players[0].username if players else None,
         'top2Player': players[1].username if len(players) > 1 else None,
         'top3Player': players[2].username if len(players) > 2 else None,
-        'top1Tournament': tournaments[0].name if players else None,
-        'top2Tournament': tournaments[1].name if len(players) > 1 else None,
-        'top3Tournament': tournaments[2].name if len(players) > 2 else None,
+        'top1Tournament': tournaments[0].name if tournaments else None,
+        'top2Tournament': tournaments[1].name if len(tournaments) > 1 else None,
+        'top3Tournament': tournaments[2].name if len(tournaments) > 2 else None,
         'played': {},
         'maxPlayed': 0
     }
