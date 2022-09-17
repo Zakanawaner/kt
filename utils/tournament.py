@@ -2,13 +2,13 @@ from sqlalchemy import extract, desc
 from datetime import datetime
 from collections import OrderedDict
 from database import (
-    Tournament, Player, Faction
+    Tournament, Player, Faction, TournamentOrganizers
 )
 
 
 ###############
 # Tournaments #
-def addNewTournament(info, db):
+def addNewTournament(info, sender, db):
     if not Tournament.query.filter_by(shortName=info['name'].lower().replace(" ", "")).first():
         tournament = Tournament(
             name=info['name'],
@@ -17,6 +17,12 @@ def addNewTournament(info, db):
             dateEnd=datetime.strptime(info['dateEnd'], '%Y-%m-%d'),
         )
         db.session.add(tournament)
+        db.session.commit()
+        organizer = TournamentOrganizers(
+            tournament=tournament.id,
+            organizer=sender.id,
+        )
+        db.session.add(organizer)
         db.session.commit()
         return "Tournament added"
     else:

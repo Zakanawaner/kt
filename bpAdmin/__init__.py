@@ -34,6 +34,15 @@ def update():
     return redirect(url_for('genericBluePrint.general'))
 
 
+@adminBP.route("/newdbtable", methods={"GET", "POST"})
+@login_required
+@only_admin
+def newDBTable():
+    with current_app.app_context():
+        current_app.config["database"].create_all()
+    return redirect(url_for('genericBluePrint.general'))
+
+
 @adminBP.route("/addupdate", methods={"GET", "POST"})
 @login_required
 @only_collaborator

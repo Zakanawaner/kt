@@ -63,7 +63,7 @@ def tournament(tr):
 def addTournament():
     logAccess('/tournament/add', current_user, request)
     if request.method == "POST":
-        resp = addNewTournament(request.form, current_app.config['database'])
+        resp = addNewTournament(request.form, current_user, current_app.config['database'])
         flash(resp)
         return redirect(url_for('tournamentBluePrint.tournaments'))
     return render_template(

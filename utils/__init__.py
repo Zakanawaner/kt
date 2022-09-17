@@ -135,10 +135,13 @@ def randomize_data():
         "Retrieval",
         "Overrun"
     ]
-    tournaments = [
+    gameTypes = [
         'Open play',
         'Matched play',
         'Narrative play'
+    ]
+    tournaments = [
+        'III Liga Mercenaria',
     ]
     players = [names.get_full_name() for i in range(0, 3)]
     players.append('mariofelectronica')
@@ -162,7 +165,7 @@ def randomize_data():
                 ok = True
         response = {
             'tournament': random.choice(tournaments),
-            'gameType': random.choice(tournaments),
+            'gameType': random.choice(gameTypes),
             'edition': random.choice(["KT 2021 - Open", "KT 2022 - Into the Dark"]),
             'timestamp': int(time.time()) - 31556926 + i,
             'mission': random.choice([
@@ -219,6 +222,7 @@ def randomize_data():
                     'second': random.randint(0, 4),
                     'third': random.randint(0, 4),
                     'fourth': random.randint(0, 4),
+                    'end': random.randint(0, 4),
                 },
                 'secondaries': {
                     'first': {
@@ -261,6 +265,7 @@ def randomize_data():
                     'second': random.randint(0, 4),
                     'third': random.randint(0, 4),
                     'fourth': random.randint(0, 4),
+                    'end': random.randint(0, 4),
                 },
                 'secondaries': {
                     'first': {

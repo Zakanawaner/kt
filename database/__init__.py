@@ -532,3 +532,11 @@ class Team(db.Model):
     score = db.Column(db.Integer)
     leader = db.Column(db.Integer, db.ForeignKey('player.id'))
     players = db.relationship("Player", secondary=player_team)
+
+
+# ADDED after deploy
+class TournamentOrganizers(db.Model):
+    __tablename__ = 'tournamentorganozers'
+    id = db.Column(db.Integer, primary_key=True)
+    tournament = db.Column(db.Integer, db.ForeignKey('tournament.id'))
+    organizer = db.Column(db.Integer, db.ForeignKey('player.id'))

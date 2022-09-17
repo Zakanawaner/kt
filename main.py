@@ -44,7 +44,9 @@ if __name__ == '__main__':
 #  - Toda la parte de equipos y torneos {
 #       Falta tournament detail
 #       Chequear tudo
-#  - Gestionar respuestas de checkData
+#    }
+#  - Añadir juego manual
+#  - Tabla tournament organizer -> Ojo llamar al endpoint correspondiente!
 
 # TODO Future
 #  - Hacer el timeline de la partida como me mostró GoodPerson

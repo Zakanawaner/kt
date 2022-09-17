@@ -2,67 +2,204 @@
 {% block content %}
     <div class="login" style="width:50%;">
         <h2>{{ _('Add Game') }}</h2>
+        <h5 style="align-self: center;">{{ _('The Dark Gods like you, so you can add games manually') }}</h5>
         <form class="login-form" action="/game/add" method="post">
+            <label style="color: rgba(255,101,0,1); align-self: center;" for="edition">Edition</label>
+            <select id="edition" name="edition" style="width:50%; align-self: center;">
+                {% for edition in editions %}
+                    {% if edition.id > 1 %}
+                        <option value="{{ edition.id }}">{{ edition.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <label style="color: rgba(255,101,0,1); align-self: center;" for="gameType">Game Type</label>
+            <select id="gameType" name="gameType" style="width:50%; align-self: center;">
+                {% for gameType in gameTypes %}
+                    {% if gameType.id > 1 %}
+                        <option value="{{ gameType.id }}">{{ gameType.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <label style="color: rgba(255,101,0,1); align-self: center;" for="tournament">Tournament</label>
+            <select id="tournament" name="tournament" style="width:50%; align-self: center;">
+                {% for tournament in tournaments %}
+                    {% if tournament['sql'].id > 1 %}
+                        <option value="{{ tournament['sql'].id }}">{{ tournament['sql'].name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <label style="color: rgba(255,101,0,1); align-self: center;" for="mission">Mission</label>
             <select id="mission" name="mission" style="width:50%; align-self: center;">
                 {% for mission in missions %}
                     <option value="{{ mission['sql'].id }}">{{ mission['sql'].name }}</option>
                 {% endfor %}
             </select>
+            <label style="color: rgba(255,101,0,1); align-self: center;" for="date">Date</label>
             <input style="width:50%; align-self: center;" type="date" name="date" id="date">
+            <label style="color: rgba(255,101,0,1); align-self: center;" for="rollOffWinner">Roll Off winner</label>
+            <select style="width:50%; align-self: center;" id="rollOffWinner" name="rollOffWinner">
+                <option value="p1">Player 1</option>
+                <option value="p2">Player 2</option>
+            </select>
+            <label style="color: rgba(255,101,0,1); align-self: center;" for="rollOffSelection">Roll Off selection</label>
+            <select style="width:50%; align-self: center;" id="rollOffSelection" name="rollOffSelection">
+                <option value="attacker">Attacker</option>
+                <option value="defender">Defender</option>
+            </select>
             <div style="display:flex; justify-content: space-evenly;">
                 <div style="width: 25%; display:flex; flex-direction: column;">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="pl1">Player 1</label>
                     <select id="pl1" name="pl1">
                         {% for player in players %}
                             <option value="{{ player['sql'].id }}">{{ player['sql'].username }}</option>
                         {% endfor %}
                     </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="faction1">Faction</label>
                     <select id="faction1" name="faction1">
                         {% for faction in factions %}
                             <option value="{{ faction['sql'].id }}">{{ faction['sql'].name }}</option>
                         {% endfor %}
                     </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="scouting1">Scouting selection</label>
+                    <select id="scouting1" name="scouting1">
+                        <option value="fortify">Fortify</option>
+                        <option value="infiltrate">Infiltrate</option>
+                        <option value="recon">Recon</option>
+                    </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1InitTp1">Initiative TP1</label>
+                    <input style="accent-color: rgba(255,101,0,1); width:25%; align-self: center;" type="checkbox" name="p1InitTp1" id="p1InitTp1">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1primaryScoreTp1">Primary Score TP1</label>
+                    <input style="width:25%; align-self: center;" min="0" max="12" type="number" name="p1primaryScoreTp1" id="p1primaryScoreTp1">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1InitTp2">Initiative TP1</label>
+                    <input style="accent-color: rgba(255,101,0,1);width:25%; align-self: center;" type="checkbox" name="p1InitTp2" id="p1InitTp2">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1primaryScoreTp2">Primary Score TP2</label>
+                    <input style="width:25%; align-self: center;" min="0" max="12" type="number" name="p1primaryScoreTp2" id="p1primaryScoreTp2">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1InitTp3">Initiative TP1</label>
+                    <input style="accent-color: rgba(255,101,0,1);width:25%; align-self: center;" type="checkbox" name="p1InitTp3" id="p1InitTp3">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1primaryScoreTp3">Primary Score TP3</label>
+                    <input style="width:25%; align-self: center;" min="0" max="12" type="number" name="p1primaryScoreTp3" id="p1primaryScoreTp3">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1InitTp4">Initiative TP1</label>
+                    <input style="accent-color: rgba(255,101,0,1);width:25%; align-self: center;" type="checkbox" name="p1InitTp4" id="p1InitTp4">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1primaryScoreTp4">Primary Score TP4</label>
+                    <input style="width:25%; align-self: center;" min="0" max="12" type="number" name="p1primaryScoreTp4" id="p1primaryScoreTp4">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1primaryScoreEnd">Primary Score End</label>
+                    <input style="width:25%; align-self: center;" min="0" max="12" type="number" name="p1primaryScoreEnd" id="p1primaryScoreEnd">
                     <select id="sec11" name="sec11">
                         {% for secondary in secondaries %}
                             <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
                         {% endfor %}
                     </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary1ScoreTp1">Score TP1</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary1ScoreTp1" id="p1secondary1ScoreTp1">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary1ScoreTp2">Score TP2</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary1ScoreTp2" id="p1secondary1ScoreTp2">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary1ScoreTp3">Score TP3</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary1ScoreTp3" id="p1secondary1ScoreTp3">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary1ScoreTp4">Score TP4</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary1ScoreTp4" id="p1secondary1ScoreTp4">
                     <select id="sec12" name="sec12">
                         {% for secondary in secondaries %}
                             <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
                         {% endfor %}
                     </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary2ScoreTp1">Score TP1</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary2ScoreTp1" id="p1secondary2ScoreTp1">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary2ScoreTp2">Score TP2</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary2ScoreTp2" id="p1secondary2ScoreTp2">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary2ScoreTp3">Score TP3</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary2ScoreTp3" id="p1secondary2ScoreTp3">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary2ScoreTp4">Score TP4</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary2ScoreTp4" id="p1secondary2ScoreTp4">
                     <select id="sec13" name="sec13">
                         {% for secondary in secondaries %}
                             <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
                         {% endfor %}
                     </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary3ScoreTp1">Score TP1</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary3ScoreTp1" id="p1secondary3ScoreTp1">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary3ScoreTp2">Score TP2</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary3ScoreTp2" id="p1secondary3ScoreTp2">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary3ScoreTp3">Score TP3</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary3ScoreTp3" id="p1secondary3ScoreTp3">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p1secondary3ScoreTp4">Score TP4</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p1secondary3ScoreTp4" id="p1secondary3ScoreTp4">
                 </div>
                 <div style="width: 25%; display:flex; flex-direction: column;">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="pl2">Player 2</label>
                     <select id="pl2" name="pl2">
                         {% for player in players %}
                             <option value="{{ player['sql'].id }}">{{ player['sql'].username }}</option>
                         {% endfor %}
                     </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="faction2">Faction</label>
                     <select id="faction2" name="faction2">
                         {% for faction in factions %}
                             <option value="{{ faction['sql'].id }}">{{ faction['sql'].name }}</option>
                         {% endfor %}
                     </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="scouting2">Scouting selection</label>
+                    <select id="scouting2" name="scouting2">
+                        <option value="fortify">Fortify</option>
+                        <option value="infiltrate">Infiltrate</option>
+                        <option value="recon">Recon</option>
+                    </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2InitTp1">Initiative TP1</label>
+                    <input style="accent-color: rgba(255,101,0,1); width:25%; align-self: center;" type="checkbox" name="p2InitTp1" id="p2InitTp1">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2primaryScoreTp1">Primary Score TP1</label>
+                    <input style="width:25%; align-self: center;" min="0" max="12" type="number" name="p2primaryScoreTp1" id="p2primaryScoreTp1">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2InitTp2">Initiative TP1</label>
+                    <input style="accent-color: rgba(255,101,0,1);width:25%; align-self: center;" type="checkbox" name="p2InitTp2" id="p2InitTp2">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2primaryScoreTp2">Primary Score TP2</label>
+                    <input style="width:25%; align-self: center;" min="0" max="12" type="number" name="p2primaryScoreTp2" id="p2primaryScoreTp2">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2InitTp3">Initiative TP1</label>
+                    <input style="accent-color: rgba(255,101,0,1);width:25%; align-self: center;" type="checkbox" name="p2InitTp3" id="p2InitTp3">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2primaryScoreTp3">Primary Score TP3</label>
+                    <input style="width:25%; align-self: center;" min="0" max="12" type="number" name="p2primaryScoreTp3" id="p2primaryScoreTp3">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2InitTp4">Initiative TP1</label>
+                    <input style="accent-color: rgba(255,101,0,1);width:25%; align-self: center;" type="checkbox" name="p2InitTp4" id="p2InitTp4">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2primaryScoreTp4">Primary Score TP4</label>
+                    <input style="width:25%; align-self: center;" min="0" max="12" type="number" name="p2primaryScoreTp4" id="p2primaryScoreTp4">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2primaryScoreEnd">Primary Score End</label>
+                    <input style="width:25%; align-self: center;" min="0" max="12" type="number" name="p2primaryScoreEnd" id="p2primaryScoreEnd">
                     <select id="sec21" name="sec21">
                         {% for secondary in secondaries %}
                             <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
                         {% endfor %}
                     </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary1ScoreTp1">Score TP1</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary1ScoreTp1" id="p2secondary1ScoreTp1">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary1ScoreTp2">Score TP2</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary1ScoreTp2" id="p2secondary1ScoreTp2">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary1ScoreTp3">Score TP3</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary1ScoreTp3" id="p2secondary1ScoreTp3">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary1ScoreTp4">Score TP4</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary1ScoreTp4" id="p2secondary1ScoreTp4">
                     <select id="sec22" name="sec22">
                         {% for secondary in secondaries %}
                             <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
                         {% endfor %}
                     </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary2ScoreTp1">Score TP1</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary2ScoreTp1" id="p2secondary2ScoreTp1">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary2ScoreTp2">Score TP2</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary2ScoreTp2" id="p2secondary2ScoreTp2">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary2ScoreTp3">Score TP3</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary2ScoreTp3" id="p2secondary2ScoreTp3">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary2ScoreTp4">Score TP4</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary2ScoreTp4" id="p2secondary2ScoreTp4">
                     <select id="sec23" name="sec23">
                         {% for secondary in secondaries %}
                             <option value="{{ secondary['sql'].id }}">{{ secondary['sql'].name }}</option>
                         {% endfor %}
                     </select>
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary3ScoreTp1">Score TP1</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary3ScoreTp1" id="p2secondary3ScoreTp1">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary3ScoreTp2">Score TP2</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary3ScoreTp2" id="p2secondary3ScoreTp2">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary3ScoreTp3">Score TP3</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary3ScoreTp3" id="p2secondary3ScoreTp3">
+                    <label style="color: rgba(255,101,0,1); align-self: center;" for="p2secondary3ScoreTp4">Score TP4</label>
+                    <input style="width:25%; align-self: center;" min="0" max="2" type="number" name="p2secondary3ScoreTp4" id="p2secondary3ScoreTp4">
                 </div>
             </div>
             <button type="submit">{{ _('Add') }}</button>

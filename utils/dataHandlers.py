@@ -4,7 +4,7 @@ from datetime import datetime
 from database import (
     Game, Player, Mission, Rank, Secondary,
     Faction, Tournament, Operative, Update,
-    GameType, Edition
+    GameType, Edition, TournamentOrganizers
 )
 
 
@@ -302,6 +302,181 @@ def handleGameData(response, db):
     return resultCheck
 
 
+def handleManualGameData(response, sender, db):
+    tournament = Tournament.query.filter_by(id=int(response['tournament'])).first()
+    mission = Mission.query.filter_by(id=int(response['mission'])).first()
+    edition = Edition.query.filter_by(id=int(response['edition'])).first()
+    gameType = GameType.query.filter_by(id=int(response['gameType'])).first()
+    player1 = Player.query.filter_by(id=int(response['pl1'])).first()
+    faction1 = Faction.query.filter_by(id=int(response['faction1'])).first()
+    faction2 = Faction.query.filter_by(id=int(response['faction2'])).first()
+    sec11 = Secondary.query.filter_by(id=int(response['sec11'])).first()
+    sec12 = Secondary.query.filter_by(id=int(response['sec12'])).first()
+    sec13 = Secondary.query.filter_by(id=int(response['sec13'])).first()
+    player2 = Player.query.filter_by(id=int(response['pl2'])).first()
+    sec21 = Secondary.query.filter_by(id=int(response['sec21'])).first()
+    sec22 = Secondary.query.filter_by(id=int(response['sec22'])).first()
+    sec23 = Secondary.query.filter_by(id=int(response['sec23'])).first()
+    if TournamentOrganizers.query.filter_by(tournament=tournament.id).filter_by(organizer=sender.id).first():
+        structure = {
+            'mission': {
+                'code': mission.code,
+                'name': mission.name,
+            },
+            'timestamp': datetime.now().timestamp(),
+            'tournament': tournament.name,
+            'edition': edition.name,
+            'gameType': gameType.name,
+            'rollOffWinner': player1.username if '1' in response['rollOffWinner'] else player2.username,
+            'rollOffWinnerSelection': response['rollOffSelection'],
+            player1.username: {
+                'steamId': player1.steamId,
+                'initiative': [
+                    True if 'p1InitTp1' in response.keys() else False,
+                    True if 'p1InitTp2' in response.keys() else False,
+                    True if 'p1InitTp3' in response.keys() else False,
+                    True if 'p1InitTp4' in response.keys() else False,
+                ],
+                'scouting': response['scouting1'],
+                'faction': faction1.name,
+                'primaries': {
+                    'first': int(response['p1primaryScoreTp1']) if response['p1primaryScoreTp1'] else 0,
+                    'second': int(response['p1primaryScoreTp2']) if response['p1primaryScoreTp2'] else 0,
+                    'third': int(response['p1primaryScoreTp3']) if response['p1primaryScoreTp3'] else 0,
+                    'fourth': int(response['p1primaryScoreTp4']) if response['p1primaryScoreTp4'] else 0,
+                    'end': int(response['p1primaryScoreEnd']) if response['p1primaryScoreEnd'] else 0,
+                },
+                'secondaries': {
+                    'first': {
+                        'name': sec11.name,
+                        'first': int(response['p1secondary1ScoreTp1']) if response['p1secondary1ScoreTp1'] else 0,
+                        'second': int(response['p1secondary1ScoreTp2']) if response['p1secondary1ScoreTp2'] else 0,
+                        'third': int(response['p1secondary1ScoreTp3']) if response['p1secondary1ScoreTp3'] else 0,
+                        'fourth': int(response['p1secondary1ScoreTp4']) if response['p1secondary1ScoreTp4'] else 0,
+                    },
+                    'second': {
+                        'name': sec12.name,
+                        'first': int(response['p1secondary2ScoreTp1']) if response['p1secondary2ScoreTp1'] else 0,
+                        'second': int(response['p1secondary2ScoreTp2']) if response['p1secondary2ScoreTp2'] else 0,
+                        'third': int(response['p1secondary2ScoreTp3']) if response['p1secondary2ScoreTp3'] else 0,
+                        'fourth': int(response['p1secondary2ScoreTp4']) if response['p1secondary2ScoreTp4'] else 0,
+                    },
+                    'third': {
+                        'name': sec13.name,
+                        'first': int(response['p1secondary3ScoreTp1']) if response['p1secondary3ScoreTp1'] else 0,
+                        'second': int(response['p1secondary3ScoreTp2']) if response['p1secondary3ScoreTp2'] else 0,
+                        'third': int(response['p1secondary3ScoreTp3']) if response['p1secondary3ScoreTp3'] else 0,
+                        'fourth': int(response['p1secondary3ScoreTp4']) if response['p1secondary3ScoreTp4'] else 0,
+                    }
+                }
+            },
+            player2.username: {
+                'steamId': player2.steamId,
+                'initiative': [
+                    True if 'p2InitTp1' in response.keys() else False,
+                    True if 'p2InitTp2' in response.keys() else False,
+                    True if 'p2InitTp3' in response.keys() else False,
+                    True if 'p2InitTp4' in response.keys() else False
+                ],
+                'scouting': response['scouting2'],
+                'faction': faction2.name,
+                'primaries': {
+                    'first': int(response['p2primaryScoreTp1']) if response['p2primaryScoreTp1'] else 0,
+                    'second': int(response['p2primaryScoreTp2']) if response['p2primaryScoreTp2'] else 0,
+                    'third': int(response['p2primaryScoreTp3']) if response['p2primaryScoreTp3'] else 0,
+                    'fourth': int(response['p2primaryScoreTp4']) if response['p2primaryScoreTp4'] else 0,
+                    'end': int(response['p2primaryScoreEnd']) if response['p2primaryScoreEnd'] else 0,
+                },
+                'secondaries': {
+                    'first': {
+                        'name': sec21.name,
+                        'first': int(response['p2secondary1ScoreTp1']) if response['p2secondary1ScoreTp1'] else 0,
+                        'second': int(response['p2secondary1ScoreTp2']) if response['p2secondary1ScoreTp2'] else 0,
+                        'third': int(response['p2secondary1ScoreTp3']) if response['p2secondary1ScoreTp3'] else 0,
+                        'fourth': int(response['p2secondary1ScoreTp4']) if response['p2secondary1ScoreTp4'] else 0,
+                    },
+                    'second': {
+                        'name': sec22.name,
+                        'first': int(response['p2secondary2ScoreTp1']) if response['p2secondary2ScoreTp1'] else 0,
+                        'second': int(response['p2secondary2ScoreTp2']) if response['p2secondary2ScoreTp2'] else 0,
+                        'third': int(response['p2secondary2ScoreTp3']) if response['p2secondary2ScoreTp3'] else 0,
+                        'fourth': int(response['p2secondary2ScoreTp4']) if response['p2secondary2ScoreTp4'] else 0,
+                    },
+                    'third': {
+                        'name': sec23.name,
+                        'first': int(response['p2secondary3ScoreTp1']) if response['p2secondary3ScoreTp1'] else 0,
+                        'second': int(response['p2secondary3ScoreTp2']) if response['p2secondary3ScoreTp2'] else 0,
+                        'third': int(response['p2secondary3ScoreTp3']) if response['p2secondary3ScoreTp3'] else 0,
+                        'fourth': int(response['p2secondary3ScoreTp4']) if response['p2secondary3ScoreTp4'] else 0,
+                    }
+                }
+            }
+        }
+        structure[player1.username]['primaries']['total'] = structure[player1.username]['primaries']['first'] + \
+                                                            structure[player1.username]['primaries']['second'] + \
+                                                            structure[player1.username]['primaries']['third'] + \
+                                                            structure[player1.username]['primaries']['fourth'] + \
+                                                            structure[player1.username]['primaries']['end']
+
+        structure[player1.username]['secondaries']['first']['score'] = \
+        structure[player1.username]['secondaries']['first']['first'] + \
+        structure[player1.username]['secondaries']['first']['second'] + \
+        structure[player1.username]['secondaries']['first']['third'] + \
+        structure[player1.username]['secondaries']['first']['fourth']
+        structure[player1.username]['secondaries']['second']['score'] = \
+        structure[player1.username]['secondaries']['second']['first'] + \
+        structure[player1.username]['secondaries']['second']['second'] + \
+        structure[player1.username]['secondaries']['second']['third'] + \
+        structure[player1.username]['secondaries']['second']['fourth']
+        structure[player1.username]['secondaries']['third']['score'] = \
+        structure[player1.username]['secondaries']['third']['first'] + \
+        structure[player1.username]['secondaries']['third']['second'] + \
+        structure[player1.username]['secondaries']['third']['third'] + \
+        structure[player1.username]['secondaries']['third']['fourth']
+
+        structure[player1.username]['secondaries']['total'] = structure[player1.username]['secondaries']['first']['score'] + \
+                                                              structure[player1.username]['secondaries']['second']['score'] + \
+                                                              structure[player1.username]['secondaries']['third']['score']
+
+        structure[player2.username]['primaries']['total'] = structure[player2.username]['primaries']['first'] + \
+                                                            structure[player2.username]['primaries']['second'] + \
+                                                            structure[player2.username]['primaries']['third'] + \
+                                                            structure[player2.username]['primaries']['fourth'] + \
+                                                            structure[player2.username]['primaries']['end']
+
+        structure[player2.username]['secondaries']['first']['score'] = \
+            structure[player2.username]['secondaries']['first']['first'] + \
+            structure[player2.username]['secondaries']['first']['second'] + \
+            structure[player2.username]['secondaries']['first']['third'] + \
+            structure[player2.username]['secondaries']['first']['fourth']
+        structure[player2.username]['secondaries']['second']['score'] = \
+            structure[player2.username]['secondaries']['second']['first'] + \
+            structure[player2.username]['secondaries']['second']['second'] + \
+            structure[player2.username]['secondaries']['second']['third'] + \
+            structure[player2.username]['secondaries']['second']['fourth']
+        structure[player2.username]['secondaries']['third']['score'] = \
+            structure[player2.username]['secondaries']['third']['first'] + \
+            structure[player2.username]['secondaries']['third']['second'] + \
+            structure[player2.username]['secondaries']['third']['third'] + \
+            structure[player2.username]['secondaries']['third']['fourth']
+
+        structure[player2.username]['secondaries']['total'] = structure[player2.username]['secondaries']['first'][
+                                                                  'score'] + \
+                                                              structure[player2.username]['secondaries']['second'][
+                                                                  'score'] + \
+                                                              structure[player2.username]['secondaries']['third'][
+                                                                  'score']
+        structure[player1.username]['total'] = structure[player1.username]['primaries']['total'] + \
+                                               structure[player1.username]['secondaries']['total']
+        structure[player2.username]['total'] = structure[player2.username]['primaries']['total'] + \
+                                               structure[player2.username]['secondaries']['total']
+        structure['winner'] = player1.username if structure[player1.username]['total'] >= structure[player2.username]['total'] else player2.username
+        structure['loser'] = player2.username if structure[player1.username]['total'] >= structure[player2.username]['total'] else player1.username
+        structure['tie'] = structure[player1.username]['total'] == structure[player2.username]['total']
+        return handleGameData(structure, db)
+    return "You are not the TO"
+
+
 def checkData(response):
     template = {
         'mission': {
@@ -314,6 +489,7 @@ def checkData(response):
         'gameType': "",
         'rollOffWinner': "",
         'rollOffWinnerSelection': "",
+        "tie": False,
         response['winner']: {
             'steamId': 0,
             'initiative': [],

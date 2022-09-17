@@ -1,17 +1,18 @@
 import json
 
-from flask import Blueprint, request, render_template, current_app, request
+from flask import Blueprint, request, render_template, current_app, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
 from utils import getUpdates
 from utils.games import getGames, getGame, getGameTypes, getEditions
-from utils.dataHandlers import handleGameData
+from utils.dataHandlers import handleGameData, handleManualGameData
 from utils.decorators import only_adamantium
 from utils.faction import getFactions
 from utils.mission import getMissions
 from utils.secondary import getSecondaries
 from utils.player import getPlayers
 from utils.log import logAccess
+from utils.tournament import getTournaments
 
 
 gameBP = Blueprint('gameBluePrint', __name__)
@@ -74,6 +75,10 @@ def game(gm):
 @only_adamantium
 def addGame():
     logAccess('/game/add', current_user, request)
+    if request.method == "POST":
+        info = request.form
+        flash(handleManualGameData(info, current_user, current_app.config['database']))
+        redirect(url_for('genericBluePrint.general'))
     return render_template(
         'addgame.html',
         title="New Game",
@@ -83,5 +88,6 @@ def addGame():
         secondaries=getSecondaries(1, 1, 1),
         players=getPlayers(1, 1, 1),
         gameTypes=getGameTypes(),
-        editions=getEditions()
+        editions=getEditions(),
+        tournaments=getTournaments(1, 1, 1)
     )
