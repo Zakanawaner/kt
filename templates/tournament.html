@@ -15,17 +15,15 @@
                         <div class="header__item">{{ _('Tierate') }}</div>
                     </div>
                     <div class="table-content">
-                        {% for player in tournament['rates']['players'].items() %}
-                            {% if fact['games'] > 0 %}
-                                <div class="table-row">
-                                    <div onclick="location.href='/player/{{ player.id }}';" class="table-data table-link">{{ player.name }}</div>
-                                    <div class="table-data">{{ tournament['rates']['playerRates'][player.id|str]['total'] }}</div>
-                                    <div onclick="location.href='/faction/{{ tournament['rates']['playerRates']['faction'].id }}';" class="table-data table-link">{{ tournament['rates']['playerRates']['faction'].name }}</div>
-                                    <div class="table-data">{{{ tournament['rates']['playerRates']['winRate'] }}%</div>
-                                    <div class="table-data">{{ tournament['rates']['playerRates']['loseRate'] }}%</div>
-                                    <div class="table-data">{{ tournament['rates']['playerRates']['tieRate'] }}%</div>
-                                </div>
-                            {% endif %}
+                        {% for player in tournament['rates']['playerRates'].items() %}
+                            <div class="table-row">
+                                <div onclick="location.href='/player/{{ player[1]['sql'].id }}';" class="table-data table-link">{{ player[1]['sql'].username }}</div>
+                                <div onclick="location.href='/faction/{{ player[1]['faction'].id }}';" class="table-data table-link">{{ player[1]['faction'].name }}</div>
+                                <div class="table-data">{{ player[1]['total'] }}</div>
+                                <div class="table-data">{{ player[1]['winRate'] }}%</div>
+                                <div class="table-data">{{ player[1]['loseRate'] }}%</div>
+                                <div class="table-data">{{ player[1]['tieRate'] }}%</div>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>

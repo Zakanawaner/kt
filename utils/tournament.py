@@ -127,9 +127,9 @@ def getTournament(tour, up, tp, ed):
     bestPlayer = {'winRate': 0}
     for player in tournament['playerRates'].keys():
         try:
-            tournament['playerRates'][player]['winRate'] = (tournament['playerRates'][player]['wins'] * 100) / tournament['playerRates'][player]['total']
-            tournament['playerRates'][player]['loseRate'] = (tournament['playerRates'][player]['loses'] * 100) / tournament['playerRates'][player]['total']
-            tournament['playerRates'][player]['tieRate'] = (tournament['playerRates'][player]['ties'] * 100) / tournament['playerRates'][player]['total']
+            tournament['playerRates'][player]['winRate'] = round((tournament['playerRates'][player]['wins'] * 100) / tournament['playerRates'][player]['total'], 2)
+            tournament['playerRates'][player]['loseRate'] = round((tournament['playerRates'][player]['loses'] * 100) / tournament['playerRates'][player]['total'], 2)
+            tournament['playerRates'][player]['tieRate'] = round((tournament['playerRates'][player]['ties'] * 100) / tournament['playerRates'][player]['total'], 2)
         except ZeroDivisionError:
             tournament['playerRates'][player]['winRate'] = 0
             tournament['playerRates'][player]['loseRate'] = 0
@@ -137,9 +137,9 @@ def getTournament(tour, up, tp, ed):
         bestPlayer = tournament['playerRates'][player] if tournament['playerRates'][player]['winRate'] > bestPlayer['winRate'] else bestPlayer
     for faction in tournament['factionRates'].keys():
         try:
-            tournament['factionRates'][faction]['winRate'] = (tournament['factionRates'][faction]['wins'] * 100) / tournament['factionRates'][faction]['total']
-            tournament['factionRates'][faction]['loseRate'] = (tournament['factionRates'][faction]['loses'] * 100) / tournament['factionRates'][faction]['total']
-            tournament['factionRates'][faction]['tieRate'] = (tournament['factionRates'][faction]['ties'] * 100) / tournament['factionRates'][faction]['total']
+            tournament['factionRates'][faction]['winRate'] = round((tournament['factionRates'][faction]['wins'] * 100) / tournament['factionRates'][faction]['total'], 2)
+            tournament['factionRates'][faction]['loseRate'] = round((tournament['factionRates'][faction]['loses'] * 100) / tournament['factionRates'][faction]['total'], 2)
+            tournament['factionRates'][faction]['tieRate'] = round((tournament['factionRates'][faction]['ties'] * 100) / tournament['factionRates'][faction]['total'], 2)
         except ZeroDivisionError:
             tournament['factionRates'][faction]['winRate'] = 0
             tournament['factionRates'][faction]['loseRate'] = 0

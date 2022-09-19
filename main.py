@@ -45,8 +45,7 @@ if __name__ == '__main__':
 #       Falta tournament detail
 #       Chequear tudo
 #    }
-#  - Añadir juego manual
-#  - Tabla tournament organizer -> Ojo llamar al endpoint correspondiente!
+#  - Problema con la actualización. Los players no se actualizan!!!!!!
 
 # TODO Future
 #  - Hacer el timeline de la partida como me mostró GoodPerson
