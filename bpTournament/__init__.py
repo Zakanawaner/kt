@@ -5,8 +5,8 @@ from flask_login import current_user, login_required
 
 from utils import getUpdates
 from utils.games import getGames, getGame, getGameTypes, getEditions
-from utils.tournament import getTournaments, addNewTournament, getTournament
-from utils.decorators import only_tournament_organizer
+from utils.tournament import getTournaments, addNewTournament, getTournament, updateTournaments
+from utils.decorators import only_tournament_organizer, only_admin
 from utils.faction import getFactions
 from utils.mission import getMissions
 from utils.secondary import getSecondaries
@@ -77,3 +77,16 @@ def addTournament():
         gameTypes=getGameTypes(),
         editions=getEditions()
     )
+
+
+@tournamentBP.route("/tournament/update", methods={"GET", "POST"})
+@login_required
+@only_admin
+def updateTournament():
+    logAccess('/tournament/update', current_user, request)
+    result = updateTournaments(current_app.config['database'])
+    if result:
+        flash("OK")
+        return redirect(url_for('tournamentBluePrint.tournaments'))
+    flash("NOK")
+    return redirect(url_for('tournamentBluePrint.tournaments'))

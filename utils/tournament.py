@@ -2,7 +2,7 @@ from sqlalchemy import extract, desc
 from datetime import datetime
 from collections import OrderedDict
 from database import (
-    Tournament, Player, Faction, TournamentOrganizers
+    Tournament, Player, Faction, TournamentOrganizers, Game
 )
 
 
@@ -147,3 +147,23 @@ def getTournament(tour, up, tp, ed):
     tournamentGl['rates'] = tournament
     # TODO set winner if tournament ended
     return tournamentGl
+
+
+def updateTournaments(db):
+    tours = Tournament.query.all()
+    for tour in tours:
+        games = Game.query.filter_by(tournament=tour.id).all()
+        for game in games:
+            if game not in tour.games:
+                tour.games.append(game)
+                winner = Player.query.filter_by(steamId=game.winnerId).filter_by(allowSharing=True).first()
+                loser = Player.query.filter_by(steamId=game.loserId).filter_by(allowSharing=True).first()
+                if winner:
+                    if winner not in tour.players:
+                        tour.players.append(winner)
+                if loser:
+                    if loser not in tour.players:
+                        tour.players.append(loser)
+        db.session.add(tour)
+        db.session.commit()
+
