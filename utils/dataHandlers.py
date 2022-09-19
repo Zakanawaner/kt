@@ -86,12 +86,12 @@ def handleSecondaries(db, response, opt):
 
 def handleTournament(db, response):
     if 'tournament' in response.keys():
-        if not Tournament.query.filter_by(name=response['tournament']).first():
+        if not Tournament.query.filter_by(shortName=response['tournament'].lower().replace(" ", "")).first():
             response['tournament'] = Tournament(name=response['tournament'],
                                                 shortName=response['tournament'].lower().replace(' ', ''), )
             db.session.add(response['tournament'])
         else:
-            response['tournament'] = Tournament.query.filter_by(name=response['tournament']).first()
+            response['tournament'] = Tournament.query.filter_by(shortName=response['tournament'].lower().replace(" ", "")).first()
     else:
         response['tournament'] = None
     db.session.commit()

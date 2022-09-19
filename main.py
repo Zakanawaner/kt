@@ -46,7 +46,7 @@ if __name__ == '__main__':
 #       Chequear tudo
 #    }
 #  - Actualizar torneo con jugadores y juegos
-#  - Problema con la actualización. Los players no se actualizan!!!!!!
+#  - Problema con la actualización. Los players no se actualizan!!!!!! -> actualizar torneos con nuevos jugadores
 
 # TODO Future
 #  - Hacer el timeline de la partida como me mostró GoodPerson
