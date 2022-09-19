@@ -28,6 +28,39 @@
                     </div>
                 </div>
             </div>
+            <h2>{{ _('Games') }}</h2>
+            <div class="table-container">
+                <div class="table">
+                    <div class="table-header">
+                        <div class="header__item">{{ _('Date') }}</div>
+                        <div class="header__item">{{ _('Mission') }}</div>
+                        <!--<div class="header__item">Player 1</div>-->
+                        <div class="header__item">{{ _('Faction 1') }}</div>
+                        <!--<div class="header__item">Player 2</div>-->
+                        <div class="header__item">{{ _('Faction 2') }}</div>
+                        <div class="header__item">{{ _('Result') }}</div>
+                        <div class="header__item">{{ _('Winner') }}</div>
+                    </div>
+                    <div class="table-content">
+                        {% for game in tournament['sql'].games %}
+                            <div class="table-row">
+                                <div onclick="location.href='/game/{{ game.id }}';" class="table-data table-link">{{ game.date.strftime("%Y-%m-%d") }}</div>
+                                <div onclick="location.href='/mission/{{ game.mission[0].id }}';" class="table-data table-link">{{ game.mission[0].name }}</div>
+                                <!--<div onclick="location.href='/player/{{ game.winner[0].id }}';" class="table-data table-link">{{ game.winner[0].username }}</div>-->
+                                <div onclick="location.href='/faction/{{ game.winFaction[0].id }}';" class="table-data table-link">{{ game.winFaction[0].name }}</div>
+                                <!--<div onclick="location.href='/player/{{ game.loser[0].id }}';" class="table-data table-link">{{ game.loser[0].username }}</div>-->
+                                <div onclick="location.href='/faction/{{ game.losFaction[0].id }}';" class="table-data table-link">{{ game.losFaction[0].name }}</div>
+                                <div class="table-data">{{ game.winTotal }} - {{ game.losTotal }}</div>
+                                {% if not game.tie %}
+                                    <div onclick="location.href='/faction/{{ game.winFaction[0].id }}';" class="table-data table-link">{{ game.winFaction[0].name }}</div>
+                                {% else %}
+                                    <div class="table-data">{{ _('Tie') }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
