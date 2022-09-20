@@ -2,9 +2,9 @@ from flask import Blueprint, request, render_template, flash, redirect, url_for,
 from flask_login import current_user, login_required
 from flask_babel import gettext
 
-from utils import getUpdates, getPlayers, getPlayer, getGameTypes, setPlayerPermission, getEditions
+from utils import getUpdates, getPlayers, getPlayer, getGameTypes, setPlayerPermission, getEditions, updatePlayers
 from utils.log import logAccess
-from utils.decorators import only_left_hand
+from utils.decorators import only_left_hand, only_admin
 
 
 playerBP = Blueprint('playerBluePrint', __name__)
@@ -82,3 +82,12 @@ def changePlayerPermissions(pl):
         flash("No OK")
     pl = getPlayer(pl, 1, 1, 1)
     return redirect(url_for('playerBluePrint.player', pl=pl['sql'].id))
+
+
+@playerBP.route("/player/update", methods={"GET", "POST"})
+@login_required
+@only_admin
+def updateTournament():
+    logAccess('/player/update', current_user, request)
+    updatePlayers(current_app.config['database'])
+    return redirect(url_for('playerBluePrint.players'))

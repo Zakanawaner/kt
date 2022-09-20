@@ -1,8 +1,9 @@
-from flask import Blueprint, request, render_template
-from flask_login import current_user
+from flask import Blueprint, request, render_template, current_app, redirect, url_for
+from flask_login import current_user, login_required
 
 from utils import getUpdates
-from utils.faction import getFactions, getFaction
+from utils.decorators import only_admin
+from utils.faction import getFactions, getFaction, updateFactions
 from utils.games import getGameTypes, getEditions
 from utils.log import logAccess
 
@@ -51,3 +52,12 @@ def faction(fact):
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
         language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
     )
+
+
+@factionBP.route("/faction/update", methods={"GET", "POST"})
+@login_required
+@only_admin
+def updateTournament():
+    logAccess('/faction/update', current_user, request)
+    updateFactions(current_app.config['database'])
+    return redirect(url_for('factionBluePrint.factions'))

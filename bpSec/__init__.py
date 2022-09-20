@@ -1,8 +1,9 @@
-from flask import Blueprint, request, render_template
-from flask_login import current_user
+from flask import Blueprint, request, render_template, current_app, url_for, redirect
+from flask_login import current_user, login_required
 
 from utils import getUpdates
-from utils.secondary import getSecondaries, getSecondary
+from utils.decorators import only_admin
+from utils.secondary import getSecondaries, getSecondary, updateSecondaries
 from utils.games import getGameTypes, getEditions
 from utils.log import logAccess
 
@@ -51,3 +52,12 @@ def secondary(sc):
         preferred=request.cookies['preferred_update'] if 'preferred_update' in request.cookies.keys() else '1',
         language=request.cookies['preferred_language'] if 'preferred_language' in request.cookies.keys() else 'en'
     )
+
+
+@secondaryBP.route("/player/update", methods={"GET", "POST"})
+@login_required
+@only_admin
+def updateTournament():
+    logAccess('/secondary/update', current_user, request)
+    updateSecondaries(current_app.config['database'])
+    return redirect(url_for('secondaryBluePrint.secondaries'))
