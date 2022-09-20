@@ -317,7 +317,7 @@ def handleManualGameData(response, sender, db):
     sec21 = Secondary.query.filter_by(id=int(response['sec21'])).first()
     sec22 = Secondary.query.filter_by(id=int(response['sec22'])).first()
     sec23 = Secondary.query.filter_by(id=int(response['sec23'])).first()
-    if TournamentOrganizers.query.filter_by(tournament=tournament.id).filter_by(organizer=sender.id).first():
+    if TournamentOrganizers.query.filter_by(tournament=tournament.id).filter_by(organizer=sender.id).first() or sender.permissions >= 14:
         structure = {
             'mission': {
                 'code': mission.code,
