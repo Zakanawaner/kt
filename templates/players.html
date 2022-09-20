@@ -4,7 +4,6 @@
         <div class="table">
             <div class="table-header">
                 <div class="header__item">{{ _('Name') }}</div>
-                <div class="header__item">{{ _('Rank') }}</div>
                 <div class="header__item">{{ _('Winrate') }}</div>
                 <div class="header__item">{{ _('Games') }}</div>
                 <div class="header__item">{{ _('Wins') }}</div>
@@ -19,7 +18,6 @@
                 {% for player in players %}
                     <div class="table-row">
                         <div onclick="location.href='/player/{{ player['sql'].id }}';" class="table-data table-link">{{ player['name'] }}</div>
-                        <div onclick="location.href='/rank/{{ player['sql'].rank[0].id }}';" class="table-data table-link">{{ player['sql'].rank[0].name }}</div>
                         <div class="table-data">{{ player['rates']['winRate'] }}%</div>
                         <div class="table-data">{{ player['rates']['totalGames'] }}</div>
                         <div class="table-data">{{ player['rates']['wins'] }}</div>
