@@ -28,6 +28,30 @@
                     </div>
                 </div>
             </div>
+            <h2>{{ _('Factions') }}</h2>
+            <div class="table-container">
+                <div class="table">
+                    <div class="table-header">
+                        <div class="header__item">{{ _('Faction') }}</div>
+                        <div class="header__item">{{ _('Popularity') }}</div>
+                        <div class="header__item">{{ _('Winrate') }}</div>
+                        <div class="header__item">{{ _('Loserate') }}</div>
+                        <div class="header__item">{{ _('Tierate') }}</div>
+                    </div>
+                    <div class="table-content">
+                        {% for faction in tournament['rates']['factionRates'].items() %}
+                            <div class="table-row">
+                                <div onclick="location.href='/faction/{{ faction[1]['sql'].id }}';" class="table-data table-link">{{ faction[1]['sql'].name }}</div>
+                                <div class="table-data">{{ faction[1]['popularity'] }}%</div>
+                                <div class="table-data">{{ faction[1]['winRate'] }}%</div>
+                                <div class="table-data">{{ faction[1]['loseRate'] }}%</div>
+                                <div class="table-data">{{ faction[1]['tieRate'] }}%</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
             <h2>{{ _('Games') }}</h2>
             <div class="table-container">
                 <div class="table">

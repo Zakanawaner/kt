@@ -116,12 +116,12 @@ def getTournament(tour, up, tp, ed):
                 'ties': 0,
                 'total': 0
             }
-            faction['wins'] += 1 if not game.tie else 0
+            faction['loses'] += 1 if not game.tie else 0
             faction['ties'] += 1 if game.tie else 0
             faction['total'] += 1
             tournament['factionRates'][str(losFaction.id)] = faction
         else:
-            tournament['factionRates'][str(losFaction.id)]['wins'] += 1 if not game.tie else 0
+            tournament['factionRates'][str(losFaction.id)]['loses'] += 1 if not game.tie else 0
             tournament['factionRates'][str(losFaction.id)]['ties'] += 1 if game.tie else 0
             tournament['factionRates'][str(losFaction.id)]['total'] += 1
     bestPlayer = {'winRate': 0}
@@ -137,6 +137,7 @@ def getTournament(tour, up, tp, ed):
         bestPlayer = tournament['playerRates'][player] if tournament['playerRates'][player]['winRate'] > bestPlayer['winRate'] else bestPlayer
     for faction in tournament['factionRates'].keys():
         try:
+            tournament['factionRates'][faction]['popularity'] = round((tournament['factionRates'][faction]['total'] * 100) / (len(tournamentGl['sql'].games) * 2), 2)
             tournament['factionRates'][faction]['winRate'] = round((tournament['factionRates'][faction]['wins'] * 100) / tournament['factionRates'][faction]['total'], 2)
             tournament['factionRates'][faction]['loseRate'] = round((tournament['factionRates'][faction]['loses'] * 100) / tournament['factionRates'][faction]['total'], 2)
             tournament['factionRates'][faction]['tieRate'] = round((tournament['factionRates'][faction]['ties'] * 100) / tournament['factionRates'][faction]['total'], 2)
