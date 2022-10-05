@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, flash, redirect, url_for,
 from flask_login import current_user, login_required
 from flask_babel import gettext
 
-from utils import getUpdates, getPlayers, getPlayer, getGameTypes, setPlayerPermission, getEditions, updatePlayers
+from utils import getUpdates, getPlayers, getPlayer, getGameTypes, setPlayerPermission, getEditions, updatePlayers, updatePlayer
 from utils.log import logAccess
 from utils.decorators import only_left_hand, only_admin
 
@@ -87,7 +87,16 @@ def changePlayerPermissions(pl):
 @playerBP.route("/player/update", methods={"GET", "POST"})
 @login_required
 @only_admin
-def updateTournament():
+def updatePlayerGl():
     logAccess('/player/update', current_user, request)
     updatePlayers(current_app.config['database'])
+    return redirect(url_for('playerBluePrint.players'))
+
+
+@playerBP.route("/player/update/<pl>", methods={"GET", "POST"})
+@login_required
+@only_admin
+def updatePlayerUnique(pl):
+    logAccess('/player/update', current_user, request)
+    updatePlayer(current_app.config['database'], int(pl))
     return redirect(url_for('playerBluePrint.players'))

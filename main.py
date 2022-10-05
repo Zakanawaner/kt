@@ -46,6 +46,7 @@ if __name__ == '__main__':
 #       Chequear tudo
 #    }
 #  - Actualizar torneo con jugadores y juegos
+#  - Boton de update para cada jugador
 #  - Problema con la actualización. Los players no se actualizan!!!!!! -> actualizar torneos con nuevos jugadores
 
 # TODO Future

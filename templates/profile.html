@@ -10,6 +10,9 @@
                     <h3>{{ _('Games lost') }}: {{ player['rates']['loses'] }}</h3>
                     <h3>{{ _('Games tied') }}: {{ player['rates']['ties'] }}</h3>
                 </div>
+                <div class="login player-super-container">
+                    <button onclick="location.href='/player/update/{{ player['sql'].id }}';">{{ _('Update my data') }}</button>
+                </div>
                 <div class="player-super-container">
                     <div class="pie-container at-0-8">
                         <div class="pie-inner">
